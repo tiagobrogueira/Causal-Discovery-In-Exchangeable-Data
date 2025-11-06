@@ -1,4 +1,4 @@
-from methods.source_implementations.LCube_main.LCube import infer_causal_direction
+from bicausal.methods.source_implementations.LCube_main.LCube import infer_causal_direction
 import numpy as np
 
 #adapted directly from paper (since it is absent from implementation)

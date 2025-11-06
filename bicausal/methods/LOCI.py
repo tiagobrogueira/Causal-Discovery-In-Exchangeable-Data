@@ -1,5 +1,5 @@
 import numpy as np
-from methods.source_implementations.loci_main.causa.loci import loci as loci_original
+from bicausal.methods.source_implementations.loci_main.causa.loci import loci as loci_original
 
 def loci(d):
     x,y=d

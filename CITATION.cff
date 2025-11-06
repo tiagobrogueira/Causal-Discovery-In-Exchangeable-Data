@@ -1,0 +1,15 @@
+# CITATION.cff
+cff-version: 1.2.0
+message: "If you use this package, please cite as follows:"
+authors:
+  - family-names: Brogueira
+    given-names: Tiago
+    affiliation: Instituto Superior Técnico, Universidade de Lisboa
+    email: tiago.brogueira@tecnico.ulisboa.pt
+  - family-names: Figueiredo
+    given-names: Mário A. T.
+title: "The Lisbon benchmark: a new real-world multi-domain bivariate causal discovery dataset"
+year: 2025
+version: 0.1.1
+type: unpublished
+note: "Manuscript in preparation"

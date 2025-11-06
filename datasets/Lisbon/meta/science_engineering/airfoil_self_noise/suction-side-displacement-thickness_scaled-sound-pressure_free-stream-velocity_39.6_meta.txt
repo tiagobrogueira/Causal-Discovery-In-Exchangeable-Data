@@ -1,0 +1,14 @@
+Dataset file: suction-side-displacement-thickness_scaled-sound-pressure_free-stream-velocity_39.6.txt
+Number of entries: 480
+
+Variables:
+- X: suction-side-displacement-thickness
+- Y: scaled-sound-pressure
+
+Filtered by: free-stream-velocity = 39.6
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0328 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=-0.4271, p=1.048e-22 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=-0.3436, p=9.476e-15 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.2332 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

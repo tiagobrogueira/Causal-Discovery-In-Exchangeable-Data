@@ -1,0 +1,12 @@
+Dataset file: AveragePrice_Large_Bags.txt
+Number of entries: 5615
+
+Variables:
+- X: AveragePrice
+- Y: Large Bags
+
+Independence tests:
+- **Hoeffding’s D**: D=0.1226 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=-0.2175, p=3.933e-61 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=-0.5896, p=0 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=1.2637 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

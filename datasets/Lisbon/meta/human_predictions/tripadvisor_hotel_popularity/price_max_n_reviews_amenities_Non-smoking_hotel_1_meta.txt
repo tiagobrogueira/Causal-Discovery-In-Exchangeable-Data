@@ -1,0 +1,14 @@
+Dataset file: price_max_n_reviews_amenities_Non-smoking_hotel_1.txt
+Number of entries: 1804
+
+Variables:
+- X: price_max
+- Y: n_reviews
+
+Filtered by: amenities_Non-smoking hotel = 1
+
+Independence tests:
+- **Hoeffding’s D**: D=0.04977 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.1964, p=3.918e-17 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.3957, p=1.153e-68 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.1505 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

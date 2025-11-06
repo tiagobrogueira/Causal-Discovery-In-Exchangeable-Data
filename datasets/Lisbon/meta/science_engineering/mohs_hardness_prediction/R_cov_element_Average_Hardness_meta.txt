@@ -1,0 +1,12 @@
+Dataset file: R_cov_element_Average_Hardness.txt
+Number of entries: 622
+
+Variables:
+- X: R_cov_element_Average
+- Y: Hardness
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0293 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.1386, p=0.000526 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.1690, p=2.279e-05 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.7219 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

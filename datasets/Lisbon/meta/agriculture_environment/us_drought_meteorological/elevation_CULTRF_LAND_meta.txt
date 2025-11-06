@@ -1,0 +1,12 @@
+Dataset file: elevation_CULTRF_LAND.txt
+Number of entries: 3109
+
+Variables:
+- X: elevation
+- Y: CULTRF_LAND
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0206 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=-0.2580, p=1.808e-48 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=-0.1241, p=3.773e-12 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.8300 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

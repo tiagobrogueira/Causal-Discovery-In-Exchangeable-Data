@@ -1,0 +1,14 @@
+Dataset file: Rings_Diameter_Sex_I.txt
+Number of entries: 1342
+
+Variables:
+- X: Rings
+- Y: Diameter
+
+Filtered by: Sex = I
+
+Independence tests:
+- **Hoeffding’s D**: D=0.2416 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.6951, p=2.881e-194 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.7720, p=4.926e-266 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.5356 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

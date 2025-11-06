@@ -1,0 +1,12 @@
+Dataset file: soil_moisture_494.txt
+Number of entries: 679
+
+Variables:
+- X: soil_moisture
+- Y: 494
+
+Independence tests:
+- **Hoeffding’s D**: D=0.2029 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=-0.6575, p=2.739e-85 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=-0.5868, p=4.539e-64 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=1.9293 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

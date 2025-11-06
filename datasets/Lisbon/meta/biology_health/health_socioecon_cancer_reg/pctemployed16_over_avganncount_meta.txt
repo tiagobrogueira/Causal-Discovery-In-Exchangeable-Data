@@ -1,0 +1,12 @@
+Dataset file: pctemployed16_over_avganncount.txt
+Number of entries: 591
+
+Variables:
+- X: pctemployed16_over
+- Y: avganncount
+
+Independence tests:
+- **Hoeffding’s D**: D=0.04942 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.1767, p=1.581e-05 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.3395, p=2.214e-17 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.2052 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

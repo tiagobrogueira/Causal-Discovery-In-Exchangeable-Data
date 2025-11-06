@@ -1,0 +1,10 @@
+Dataset file: Energy_use__GJ__Emissions__kt_.txt
+Number of entries: 2075
+
+Variables:
+- X: Energy use (GJ)
+- Y: Emissions (kt)
+
+Source information:
+- URL: https://www.kaggle.com/datasets/imtkaggleteam/canadas-greenhouse-gases
+- Citation: ImtkaggleTeam. Canada’s Greenhouse Gases [Dataset]. Kaggle. https://www.kaggle.com/datasets/imtkaggleteam/canadas-greenhouse-gases

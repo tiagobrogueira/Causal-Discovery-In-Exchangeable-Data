@@ -1,0 +1,14 @@
+Dataset file: person_income_loan_percent_income_loan_intent_DEBTCONSOLIDATION.txt
+Number of entries: 7145
+
+Variables:
+- X: person_income
+- Y: loan_percent_income
+
+Filtered by: loan_intent = DEBTCONSOLIDATION
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0387 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=-0.2992, p=9.63e-148 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=-0.3653, p=1.664e-224 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=1.0954 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

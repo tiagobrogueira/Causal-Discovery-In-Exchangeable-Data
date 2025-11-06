@@ -1,0 +1,14 @@
+Dataset file: runtime_numVotes_Biography.txt
+Number of entries: 10076
+
+Variables:
+- X: runtime (IMDb field)
+- Y: numVotes (IMDb field)
+
+Filtered by: genre = Biography
+
+Independence tests:
+- **Hoeffding’s D**: D=0.09672 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.188, p=7.752e-81 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.5257, p=0 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.2165 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

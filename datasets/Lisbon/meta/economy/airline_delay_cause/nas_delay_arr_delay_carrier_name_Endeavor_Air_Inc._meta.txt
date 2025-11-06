@@ -1,0 +1,14 @@
+Dataset file: nas_delay_arr_delay_carrier_name_Endeavor_Air_Inc..txt
+Number of entries: 5513
+
+Variables:
+- X: nas_delay
+- Y: arr_delay
+
+Filtered by: carrier_name = Endeavor Air Inc.
+
+Independence tests:
+- **Hoeffding’s D**: D=0.339 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.8682, p=0 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.8536, p=0 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.9803 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

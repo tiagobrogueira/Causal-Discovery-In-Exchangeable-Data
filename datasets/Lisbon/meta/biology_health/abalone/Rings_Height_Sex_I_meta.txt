@@ -1,0 +1,14 @@
+Dataset file: Rings_Height_Sex_I.txt
+Number of entries: 1342
+
+Variables:
+- X: Rings
+- Y: Height
+
+Filtered by: Sex = I
+
+Independence tests:
+- **Hoeffding’s D**: D=0.2347 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.7200, p=7.077e-215 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.7697, p=2.046e-263 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.6511 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

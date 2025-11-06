@@ -1,0 +1,12 @@
+Dataset file: headshots_win_percent.txt
+Number of entries: 78210
+
+Variables:
+- X: headshots
+- Y: win_percent
+
+Independence tests:
+- **Hoeffding’s D**: D=0.01362 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=-0.1021, p=2.421e-180 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=-0.09441, p=2.617e-154 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=1.37 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

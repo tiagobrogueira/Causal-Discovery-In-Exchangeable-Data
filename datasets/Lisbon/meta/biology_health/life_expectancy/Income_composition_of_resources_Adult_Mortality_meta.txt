@@ -1,0 +1,12 @@
+Dataset file: Income_composition_of_resources_Adult_Mortality.txt
+Number of entries: 301
+
+Variables:
+- X: Income composition of resources
+- Y: Adult Mortality
+
+Independence tests:
+- **Hoeffding’s D**: D=0.1064 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=-0.3371, p=2.1e-09 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=-0.4602, p=3.979e-17 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.4447 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

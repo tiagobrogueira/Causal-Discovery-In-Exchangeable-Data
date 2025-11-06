@@ -1,0 +1,14 @@
+Dataset file: drinks_number_of_half-pint_equivalents_of_alcoholic_beverages_gammagt_gamma-glutamyl_transpeptdase.txt
+Number of entries: 345
+
+Variables:
+- X: drinks	number of half-pint equivalents of alcoholic beverages
+- Y: gammagt 	gamma-glutamyl transpeptdase
+
+Filtered by: none
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0321 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.3412, p=7.942e-11 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.345, p=4.757e-11 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.1509 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

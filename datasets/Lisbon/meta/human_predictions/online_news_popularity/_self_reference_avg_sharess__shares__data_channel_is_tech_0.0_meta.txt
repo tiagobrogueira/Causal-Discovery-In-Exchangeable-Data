@@ -1,0 +1,14 @@
+Dataset file: _self_reference_avg_sharess__shares__data_channel_is_tech_0.0.txt
+Number of entries: 32298
+
+Variables:
+- X:  self_reference_avg_sharess
+- Y:  shares
+
+Filtered by:  data_channel_is_tech = 0.0
+
+Independence tests:
+- **Hoeffding’s D**: D=0.01281 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.0719, p=2.766e-38 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.1911, p=3.958e-263 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.6318 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

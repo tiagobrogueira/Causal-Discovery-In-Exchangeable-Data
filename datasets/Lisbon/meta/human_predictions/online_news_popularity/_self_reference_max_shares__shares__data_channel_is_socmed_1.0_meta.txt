@@ -1,0 +1,14 @@
+Dataset file: _self_reference_max_shares__shares__data_channel_is_socmed_1.0.txt
+Number of entries: 2323
+
+Variables:
+- X:  self_reference_max_shares
+- Y:  shares
+
+Filtered by:  data_channel_is_socmed = 1.0
+
+Independence tests:
+- **Hoeffding’s D**: D=0.01774 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.07282, p=0.0004452 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.2256, p=3.571e-28 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.1116 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

@@ -1,0 +1,12 @@
+Dataset file: soil_temperature_782.txt
+Number of entries: 679
+
+Variables:
+- X: soil_temperature
+- Y: 782
+
+Independence tests:
+- **Hoeffding’s D**: D=0.1180 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.6297, p=2.836e-76 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.4917, p=1.266e-42 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=1.3161 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

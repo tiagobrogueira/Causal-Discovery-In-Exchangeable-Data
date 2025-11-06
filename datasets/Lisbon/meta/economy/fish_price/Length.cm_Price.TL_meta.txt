@@ -1,0 +1,12 @@
+Dataset file: Length.cm_Price.TL.txt
+Number of entries: 2281
+
+Variables:
+- X: Length.cm
+- Y: Price.TL
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0154 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.2338, p=1.078e-29 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.2292, p=1.389e-28 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.0300 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

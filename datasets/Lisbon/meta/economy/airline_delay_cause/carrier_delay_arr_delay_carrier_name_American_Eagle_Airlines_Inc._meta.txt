@@ -1,0 +1,14 @@
+Dataset file: carrier_delay_arr_delay_carrier_name_American_Eagle_Airlines_Inc..txt
+Number of entries: 15404
+
+Variables:
+- X: carrier_delay
+- Y: arr_delay
+
+Filtered by: carrier_name = American Eagle Airlines Inc.
+
+Independence tests:
+- **Hoeffding’s D**: D=0.4205 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.9241, p=0 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.8896, p=0 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.9892 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

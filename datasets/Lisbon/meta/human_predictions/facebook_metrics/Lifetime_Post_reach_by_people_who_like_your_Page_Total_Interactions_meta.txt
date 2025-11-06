@@ -1,0 +1,12 @@
+Dataset file: Lifetime_Post_reach_by_people_who_like_your_Page_Total_Interactions.txt
+Number of entries: 495
+
+Variables:
+- X: Lifetime Post reach by people who like your Page
+- Y: Total Interactions
+
+Independence tests:
+- **Hoeffding’s D**: D=0.1153 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.5985, p=2.441e-49 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.5814, p=5.114e-46 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.4364 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

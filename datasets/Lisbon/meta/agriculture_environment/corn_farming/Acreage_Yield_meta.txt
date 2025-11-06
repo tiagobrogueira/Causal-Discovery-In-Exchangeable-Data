@@ -1,0 +1,10 @@
+Dataset file: Acreage_Yield.txt
+Number of entries: 328
+
+Variables:
+- X: Acreage
+- Y: Yield
+
+Source information:
+- URL: https://www.kaggle.com/datasets/japondo/corn-farming-data
+- Citation: Japondo. (2024). Corn Farming Data [Dataset]. Kaggle. https://www.kaggle.com/datasets/japondo/corn-farming-data

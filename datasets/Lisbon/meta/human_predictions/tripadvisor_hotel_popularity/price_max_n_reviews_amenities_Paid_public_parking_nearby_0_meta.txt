@@ -1,0 +1,14 @@
+Dataset file: price_max_n_reviews_amenities_Paid_public_parking_nearby_0.txt
+Number of entries: 1937
+
+Variables:
+- X: price_max
+- Y: n_reviews
+
+Filtered by: amenities_Paid public parking nearby = 0
+
+Independence tests:
+- **Hoeffding’s D**: D=0.04718 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.2068, p=3.763e-20 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.3863, p=6.213e-70 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.1374 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

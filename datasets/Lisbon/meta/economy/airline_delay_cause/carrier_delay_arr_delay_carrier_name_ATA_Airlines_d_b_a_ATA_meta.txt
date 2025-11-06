@@ -1,0 +1,14 @@
+Dataset file: carrier_delay_arr_delay_carrier_name_ATA_Airlines_d_b_a_ATA.txt
+Number of entries: 918
+
+Variables:
+- X: carrier_delay
+- Y: arr_delay
+
+Filtered by: carrier_name = ATA Airlines d/b/a ATA
+
+Independence tests:
+- **Hoeffding’s D**: D=0.2457 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.8444, p=2.91e-250 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.7628, p=1.879e-175 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.6162 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

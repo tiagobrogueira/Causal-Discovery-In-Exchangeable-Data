@@ -1,0 +1,14 @@
+Dataset file: year_price_fuel_Diesel.txt
+Number of entries: 799
+
+Variables:
+- X: year
+- Y: price
+
+Filtered by: fuel = Diesel
+
+Independence tests:
+- **Hoeffding’s D**: D=0.1431 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.5815, p=1.866e-73 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.6085, p=4.127e-82 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.5530 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

@@ -1,0 +1,12 @@
+Dataset file: wtd_mean_atomic_radius_critical_temp.txt
+Number of entries: 21263
+
+Variables:
+- X: wtd_mean_atomic_radius
+- Y: critical_temp
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0581 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=-0.2973, p=0 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=-0.3667, p=0 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.6418 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

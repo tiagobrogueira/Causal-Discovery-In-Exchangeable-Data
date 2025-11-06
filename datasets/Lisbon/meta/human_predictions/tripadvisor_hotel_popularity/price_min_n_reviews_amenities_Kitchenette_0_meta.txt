@@ -1,0 +1,14 @@
+Dataset file: price_min_n_reviews_amenities_Kitchenette_0.txt
+Number of entries: 2026
+
+Variables:
+- X: price_min
+- Y: n_reviews
+
+Filtered by: amenities_Kitchenette = 0
+
+Independence tests:
+- **Hoeffding’s D**: D=0.01742 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.2846, p=4.868e-39 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.2465, p=2.028e-29 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.08065 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

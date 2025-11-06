@@ -1,0 +1,14 @@
+Dataset file: attack-angle_scaled-sound-pressure_free-stream-velocity_31.7.txt
+Number of entries: 281
+
+Variables:
+- X: attack-angle
+- Y: scaled-sound-pressure
+
+Filtered by: free-stream-velocity = 31.7
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0155 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=-0.2446, p=3.406e-05 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=-0.2470, p=2.822e-05 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.1360 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

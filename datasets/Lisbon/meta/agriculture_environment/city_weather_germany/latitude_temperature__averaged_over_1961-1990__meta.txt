@@ -1,0 +1,14 @@
+Dataset file: latitude_temperature__averaged_over_1961-1990_.txt
+Number of entries: 349
+
+Variables:
+- X: latitude
+- Y: temperature (averaged over 1961-1990)
+
+Filtered by: none
+
+Independence tests:
+- **Hoeffding’s D**: D=0.04305 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.2741, p=2.043e-07 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.2938, p=2.331e-08 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.426 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

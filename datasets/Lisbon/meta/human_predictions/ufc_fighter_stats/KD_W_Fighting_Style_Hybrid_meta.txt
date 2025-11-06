@@ -1,0 +1,14 @@
+Dataset file: KD_W_Fighting_Style_Hybrid.txt
+Number of entries: 765
+
+Variables:
+- X: KD
+- Y: W
+
+Filtered by: Fighting Style = Hybrid
+
+Independence tests:
+- **Hoeffding’s D**: D=0.01705 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.1883, p=1.579e-07 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.2764, p=7.281e-15 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.06638 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

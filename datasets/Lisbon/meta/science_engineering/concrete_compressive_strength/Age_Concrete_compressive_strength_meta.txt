@@ -1,0 +1,12 @@
+Dataset file: Age_Concrete_compressive_strength.txt
+Number of entries: 1030
+
+Variables:
+- X: Age
+- Y: Concrete compressive strength
+
+Independence tests:
+- **Hoeffding’s D**: D=0.1117 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.3289, p=2.106e-27 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.5960, p=4.439e-100 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.4998 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

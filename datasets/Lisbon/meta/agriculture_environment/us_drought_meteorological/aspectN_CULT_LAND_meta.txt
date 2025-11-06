@@ -1,0 +1,12 @@
+Dataset file: aspectN_CULT_LAND.txt
+Number of entries: 3109
+
+Variables:
+- X: aspectN
+- Y: CULT_LAND
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0360 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=-0.3275, p=1.287e-78 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=-0.2997, p=1.499e-65 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.2122 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

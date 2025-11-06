@@ -1,0 +1,12 @@
+Dataset file: MYCT_PRP.txt
+Number of entries: 209
+
+Variables:
+- X: MYCT
+- Y: PRP
+
+Independence tests:
+- **Hoeffding’s D**: D=0.1766 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=-0.3071, p=6.102e-06 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=-0.6923, p=3.693e-31 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.4802 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

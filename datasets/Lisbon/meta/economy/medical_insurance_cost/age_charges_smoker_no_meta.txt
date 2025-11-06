@@ -1,0 +1,14 @@
+Dataset file: age_charges_smoker_no.txt
+Number of entries: 1064
+
+Variables:
+- X: age
+- Y: charges
+
+Filtered by: smoker = no
+
+Independence tests:
+- **Hoeffding’s D**: D=0.5271 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.6278, p=1.348e-117 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.8205, p=6.221e-260 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=1.486 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

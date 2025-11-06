@@ -1,0 +1,14 @@
+Dataset file: Rings_Shell_weight_Sex_F.txt
+Number of entries: 1307
+
+Variables:
+- X: Rings
+- Y: Shell_weight
+
+Filtered by: Sex = F
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0489 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.4059, p=5.196e-53 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.3996, p=2.745e-51 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.1627 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

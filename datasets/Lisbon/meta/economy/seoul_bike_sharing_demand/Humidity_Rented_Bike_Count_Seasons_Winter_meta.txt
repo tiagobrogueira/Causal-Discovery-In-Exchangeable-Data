@@ -1,0 +1,14 @@
+Dataset file: Humidity_Rented_Bike_Count_Seasons_Winter.txt
+Number of entries: 2160
+
+Variables:
+- X: Humidity
+- Y: Rented Bike Count
+
+Filtered by: Seasons = Winter
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0141 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=-0.1920, p=2.248e-19 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=-0.2179, p=1.248e-24 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.0973 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

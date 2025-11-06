@@ -1,0 +1,12 @@
+Dataset file: pcths25_over_target_deathrate.txt
+Number of entries: 591
+
+Variables:
+- X: pcths25_over
+- Y: target_deathrate
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0556 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.3796, p=1.158e-21 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.4086, p=3.782e-25 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.1347 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

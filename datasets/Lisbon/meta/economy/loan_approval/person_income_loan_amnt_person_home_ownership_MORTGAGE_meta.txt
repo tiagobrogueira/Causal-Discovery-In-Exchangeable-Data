@@ -1,0 +1,14 @@
+Dataset file: person_income_loan_amnt_person_home_ownership_MORTGAGE.txt
+Number of entries: 18489
+
+Variables:
+- X: person_income
+- Y: loan_amnt
+
+Filtered by: person_home_ownership = MORTGAGE
+
+Independence tests:
+- **Hoeffding’s D**: D=0.0340 — 0 = independence (range [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.1751, p=3.674e-127 — higher p → more independence (p in [0,1]; r in [-1,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.3400, p=0 — higher p → more independence (p in [0,1]; ρ in [-1,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=1.2072 — 0 = independence (≥0) (ref: Runge, J., AISTATS 2018: 'Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information')

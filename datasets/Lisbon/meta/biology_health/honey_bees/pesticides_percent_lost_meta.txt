@@ -1,0 +1,10 @@
+Dataset file: pesticides_percent_lost.txt
+Number of entries: 1453
+
+Variables:
+- X: pesticides
+- Y: percent_lost
+
+Source information:
+- URL: https://www.kaggle.com/datasets/m000sey/save-the-honey-bees
+- Citation: m000sey. Save the Honey Bees [Dataset]. Kaggle. https://www.kaggle.com/datasets/m000sey/save-the-honey-bees

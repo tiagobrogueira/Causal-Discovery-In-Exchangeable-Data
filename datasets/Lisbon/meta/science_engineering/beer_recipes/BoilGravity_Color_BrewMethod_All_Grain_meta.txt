@@ -1,0 +1,14 @@
+Dataset file: BoilGravity_Color_BrewMethod_All_Grain.txt
+Number of entries: 43956
+
+Variables:
+- X: BoilGravity
+- Y: Color
+
+Filtered by: BrewMethod = All Grain
+
+Independence tests:
+- **Hoeffding’s D**: D=0.02105 — smaller → more independence (D in [0,1]) (ref: https://en.wikipedia.org/wiki/Hoeffding%27s_independence_test)
+- Pearson: r=0.009511, p=0.04616 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Pearson_correlation_coefficient)
+- Spearman: ρ=0.2622, p=0 — higher p → more independence (p in [0,1]) (ref: https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient)
+- KMutualInformation: MI=0.1357 — 0 ≈ independence (MI ≥ 0, unbounded) (ref: Runge, J. (2018). Conditional independence testing based on a nearest-neighbor estimator of conditional mutual information. AISTATS 2018, PMLR 84:938–947)

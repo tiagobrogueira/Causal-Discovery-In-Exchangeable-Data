@@ -1,6 +1,6 @@
 source("bicausal/helpers/runners.R")
-source("bicausal/methods/bQCDR.R")
-source("bicausal/methods/SlopeR.R")
+source("bicausal/methods/BQCD.R")
+source("bicausal/methods/SLOPE.R")
 
 #NOTES:
 # 1) Always run from root (bicausal/) directory. (Note the imports)
@@ -11,6 +11,6 @@ test_file="bicausal/datasets/Lisbon/data/economy/taxi_fare_prediction/distance_t
 
 
 #Slope
-benchmark_function(SlopeR,test_file = test_file) #FALTA TRATAR DO BENCHMARK!!!!!
+benchmark_function(slope,test_file = test_file) #FALTA TRATAR DO BENCHMARK!!!!!
 #run_tuebingen(SlopeR)
 #run_lisbon(SlopeR)

@@ -4,7 +4,7 @@ source("bicausal/methods/source_implementations/bqcd/bqcd.R")
 max_points <- 1000
 
 
-bQCDR <- function(data, ...) {
+bqcd <- function(data, ...) {
   # Determine number of points to sample
   n_points <- min(max_points, nrow(data))
 

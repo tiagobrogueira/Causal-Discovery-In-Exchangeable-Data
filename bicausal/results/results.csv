@@ -1,0 +1,4 @@
+method,parameters,dataset,Alameda,AUROC
+IGCI,,Tübingen,0.7287335681728848,0.4994380845879205
+IGCI,"{""kwargs"":{""norm"":""gaussian""}}",Tübingen,0.6940807950302985,0.4677955206333032
+LiNGAM,,Tübingen,0.5106331799230632,0.5164858603339065

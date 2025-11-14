@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from bicausal.helpers.utils import getTuebingen, serialize_params, normalize_str
-
+from bicausal.helpers.namemap import get_method_name
 
 
 
@@ -19,7 +19,7 @@ def run_tuebingen(func, read_dir="datasets/Tuebingen", write_dir="results", over
     os.makedirs(write_dir, exist_ok=True)
     path = os.path.join(write_dir, "tuebingen_scores.csv")
 
-    method_name = func.__name__
+    method_name = get_method_name(func)
     parameters = serialize_params(args, kwargs)
 
     # Load or create dataframe
@@ -86,7 +86,7 @@ def run_lisbon(func, read_dir="datasets/Lisbon/data", write_dir="results", overw
     os.makedirs(write_dir, exist_ok=True)
     output_path = os.path.join(write_dir, "lisbon_scores.csv")
     parameters = serialize_params(args, kwargs)
-    method_name = func.__name__
+    method_name = get_method_name(func)
 
     if os.path.exists(output_path):
         df_results = pd.read_csv(output_path)
@@ -169,7 +169,7 @@ def benchmark_function(func, test_file, write_dir="results", overwrite=False, se
     if sizes[-1] != n_total:
         sizes.append(n_total)
 
-    method_name = func.__name__
+    method_name = get_method_name(func)
     parameters = serialize_params(args, kwargs)
 
     if os.path.exists(output_path):

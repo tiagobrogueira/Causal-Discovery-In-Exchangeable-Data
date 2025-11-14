@@ -1,3 +1,6 @@
+#TO BE DELETED!!!!!
+
+
 #Methods return one number which is the score: If the score is negative it is the opposite direction: Y->X
 def test_tuebingen(func,*args, **kwargs):
     data, weights = getTuebingen() #labels are always one!

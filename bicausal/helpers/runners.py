@@ -10,7 +10,7 @@ from bicausal.helpers.namemap import get_method_name
 
 
 
-def run_tuebingen(func, read_dir="datasets/Tuebingen", write_dir="results", overwrite=False, *args, **kwargs):
+def run_tuebingen(func, read_dir="benchmarks/Tuebingen", write_dir="results", overwrite=False, *args, **kwargs):
     """
     Runs func on the Tübingen dataset and saves results to a shared CSV file.
     Columns: ['method', 'parameters', 'Pair', 'score', 'weight', 'timestamp']
@@ -24,7 +24,7 @@ def run_tuebingen(func, read_dir="datasets/Tuebingen", write_dir="results", over
 
     # Load or create dataframe
     if os.path.exists(path):
-        df_existing = pd.read_csv(path)
+        df_existing = pd.read_csv(path, keep_default_na=False)
         df_existing["parameters"] = df_existing["parameters"].map(normalize_str)
     else:
         df_existing = pd.DataFrame(columns=["method", "parameters", "Pair", "score", "weight", "timestamp"])
@@ -46,6 +46,9 @@ def run_tuebingen(func, read_dir="datasets/Tuebingen", write_dir="results", over
         except Exception as e:
             print(f"⚠️ Skipping Pair {i+1} due to error: {e}")
             continue
+
+        if np.isnan(score):
+            score = "NA"
 
         results.append({
             "method": method_name,
@@ -77,7 +80,7 @@ def run_tuebingen(func, read_dir="datasets/Tuebingen", write_dir="results", over
     return path
 
 
-def run_lisbon(func, read_dir="datasets/Lisbon/data", write_dir="results", overwrite=False, *args, **kwargs):
+def run_lisbon(func, read_dir="benchmarks/Lisbon/data", write_dir="results", overwrite=False, *args, **kwargs):
     """
     Applies func(x, y, *args, **kwargs) to all .txt files under read_dir recursively.
     Saves results to a shared CSV file:

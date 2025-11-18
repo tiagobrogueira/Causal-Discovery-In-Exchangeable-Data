@@ -7,9 +7,6 @@ from datetime import datetime
 from bicausal.helpers.utils import getTuebingen, serialize_params, normalize_str
 from bicausal.helpers.namemap import get_method_name
 
-
-
-
 def run_tuebingen(func, read_dir="benchmarks/Tuebingen", write_dir="results", overwrite=False, *args, **kwargs):
     """
     Runs func on the Tübingen dataset and saves results to a shared CSV file.
@@ -149,78 +146,3 @@ def run_lisbon(func, read_dir="benchmarks/Lisbon/data", write_dir="results", ove
     print(f"✅ All Lisbon results saved to {output_path}")
 
 
-def benchmark_function(func, test_file, write_dir="results", overwrite=False, seed=42, *args, **kwargs):
-    """
-    Benchmarks execution time of func([x, y], *args, **kwargs) as a function of sample size.
-    Saves to shared CSV: ['method', 'parameters', 'npoints', 'execution_time', 'timestamp']
-    """
-    np.random.seed(seed)
-    os.makedirs(write_dir, exist_ok=True)
-    output_path = os.path.join(write_dir, "times.csv")
-
-    df = pd.read_csv(test_file, sep=None, engine="python", header=None)
-    x, y = df.iloc[:, 0].to_numpy(), df.iloc[:, 1].to_numpy()
-    idx = np.random.permutation(len(x))
-    x, y = x[idx], y[idx]
-    n_total = len(x)
-
-    sizes = []
-    n = 10
-    while n < n_total:
-        sizes.append(n)
-        n = int(n * 1.7 + 10)
-    if sizes[-1] != n_total:
-        sizes.append(n_total)
-
-    method_name = get_method_name(func)
-    parameters = serialize_params(args, kwargs)
-
-    if os.path.exists(output_path):
-        times_df = pd.read_csv(output_path)
-        times_df["parameters"] = times_df["parameters"].map(normalize_str)
-    else:
-        times_df = pd.DataFrame(columns=["method", "parameters", "npoints", "execution_time", "timestamp"])
-
-    for n_points in sizes:
-        exists = (
-            (times_df["method"] == method_name)
-            & (times_df["parameters"] == parameters)
-            & (times_df["npoints"] == n_points)
-        ).any()
-        if exists and not overwrite:
-            print(f"⏩ Skipping n={n_points} for {method_name} (already computed with same parameters)")
-            continue
-
-        subset = [x[:n_points].reshape(-1, 1), y[:n_points].reshape(-1, 1)]
-        print(f"⏱ Running {method_name} with {n_points} points...")
-
-        start = time.time()
-        try:
-            func(subset, *args, **kwargs)
-        except Exception as e:
-            print(f"⚠️ Error at n={n_points}: {e}")
-            continue
-        elapsed = time.time() - start
-
-        new_row = {
-            "method": method_name,
-            "parameters": parameters,
-            "npoints": n_points,
-            "execution_time": elapsed,
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
-
-        if overwrite:
-            times_df = times_df[
-                ~(
-                    (times_df["method"] == method_name)
-                    & (times_df["parameters"] == parameters)
-                    & (times_df["npoints"] == n_points)
-                )
-            ]
-
-        times_df = pd.concat([times_df, pd.DataFrame([new_row])], ignore_index=True)
-        times_df.to_csv(output_path, index=False)
-        print(f"✅ Completed {n_points} points in {elapsed:.4f}s.")
-
-    print(f"📊 Benchmark results saved to {output_path}")

@@ -1,10 +1,18 @@
 import numpy as np
 if not hasattr(np, "trapezoid"):
     np.trapezoid = np.trapz
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
+
+
+#Note: The trapezoid function approximates the function by drawing straight lines between points (linear interpolation).
 def compute_alameda(scores, weights):
     weights = weights[~np.isnan(scores)]  
     scores=scores[~np.isnan(scores)] 
+    scores = scores[weights > 0]
+    weights = weights[weights > 0]
+
     guesses=np.where(scores > 0, 1, np.where(scores < 0, 0, 0.5))
 
     #Alameda
@@ -21,6 +29,76 @@ def compute_alameda(scores, weights):
     dr = np.concatenate(([0], dr))
     
     alameda=2*np.trapezoid(cum_acc,dr)   
+    return alameda,cum_acc,dr
+
+def alameda(scores,weights):
+    alameda,_,_=compute_alameda(scores,weights)
     return alameda
 
-#Note: The trapezoid function approximates the function by drawing straight lines between points (linear interpolation).
+#Supports plotting inside larger pipeline.
+def plot_alameda(method_results,ax=None,baselines=True):
+    """
+    method_results: list of tuples in format
+        (method_name, scores_vector, weights_vector)
+
+    save_imgs: external function to save figure
+    """
+    fig = None
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(7, 6))
+    for method_name, scores, weights in method_results:
+        alameda, cum_acc, dr = compute_alameda(scores, weights)
+        ax.plot(dr, cum_acc, label=f"{method_name} ({alameda*100:.1f})")
+
+    if baselines:
+        x = np.linspace(0, 1, 100)
+        ax.plot(x, x, "--", color="gray", label="Ideal Method")
+        ax.plot(x, x / 2, "--", color="lightgray", label="Random baseline")
+
+    ax.set_xlabel("Decision Rate")
+    ax.set_ylabel("Cumulative Accuracy")
+    ax.set_title("Alameda Curves")
+    ax.legend()
+
+
+def plot_alameda_vs(method_results_A, method_results_B, cmap_A=None, cmap_B=None,
+                    ax=None, baselines=True):
+
+    fig = None
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(7, 6))
+
+    # Define color gradients
+    if cmap_A is None:
+        base_cmap = cm.get_cmap("Greens")
+        cmap_A = base_cmap(np.linspace(0.5, 1, len(method_results_A)))
+    if cmap_B is None:
+        base_cmap = cm.get_cmap("Reds")
+        cmap_B = base_cmap(np.linspace(0.5, 1, len(method_results_B)))
+
+    # --- Plot Group A ---
+    for idx, (method_name, scores, weights) in enumerate(method_results_A):
+        alameda, cum_acc, dr = compute_alameda(scores, weights)
+        ax.plot(dr, cum_acc, color=cmap_A[idx],
+                label=f"{method_name} ({alameda*100:.1f})")
+
+    # --- Plot Group B ---
+    for idx, (method_name, scores, weights) in enumerate(method_results_B):
+        alameda, cum_acc, dr = compute_alameda(scores, weights)
+        ax.plot(dr, cum_acc, color=cmap_B[idx],
+                label=f"{method_name} ({alameda*100:.1f})")
+
+    # Baselines
+    if baselines:
+        x = np.linspace(0, 1, 100)
+        ax.plot(x, x, "--", color="gray", label="Ideal")
+        ax.plot(x, x/2, "--", color="lightgray", label="Random")
+
+    ax.set_xlabel("Decision Rate")
+    ax.set_ylabel("Cumulative Accuracy")
+    
+    ax.legend()
+
+
+
+

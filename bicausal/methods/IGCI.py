@@ -65,7 +65,7 @@ def integral_approx_estimator(x, y):
 
 
 # %%
-def igci(d,method="entropy",norm="uniform"):
+def igci(d,mode="entropy",norm="uniform"):
     x,y=d
     if x.shape[1]>1 or y.shape[1]>1:
         return np.nan
@@ -76,7 +76,7 @@ def igci(d,method="entropy",norm="uniform"):
     x=scaler.fit_transform(x)
     y=scaler.fit_transform(y)
 
-    if method=="entropy":
+    if mode=="entropy":
         result= eval_entropy(x)-eval_entropy(y)
     else:
         result= integral_approx_estimator(x,y)

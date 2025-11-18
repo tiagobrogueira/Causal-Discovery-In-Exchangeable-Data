@@ -329,27 +329,17 @@ def test_independence(x,y,method="pearson", **kwargs):
         dist_true=np.array([x,y])
         dist_perm=np.array([x,y_perm])
         return - wasserstein_distance(dist_true,dist_perm)
-    
+
 def serialize_params(args, kwargs):
-    """Convert args/kwargs into a clean, minimal JSON string for CSV storage."""
-    if not args and not kwargs:
+    """Serialize only kwargs as compact JSON string for CSV storage."""
+    if not kwargs:
         return ""
     try:
-        # Only include non-empty components
-        param_dict = {}
-        if args:
-            param_dict["args"] = args
-        if kwargs:
-            param_dict["kwargs"] = kwargs
-        return json.dumps(param_dict, sort_keys=True, separators=(",", ":"))
+        return json.dumps(kwargs, sort_keys=True, separators=(",", ": "))
     except Exception:
-        # Fallback to readable string if JSON fails
-        parts = []
-        if args:
-            parts.append(f"args={args}")
-        if kwargs:
-            parts.append(f"kwargs={kwargs}")
-        return ", ".join(parts)
+        # Fallback: readable string
+        return str(kwargs)
+
 
 def normalize_str(value):
     """

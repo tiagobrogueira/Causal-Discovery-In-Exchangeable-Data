@@ -1,23 +1,22 @@
-from importlib_metadata import metadata
 import pandas as pd
 import numpy as np
 import os
 from datetime import datetime
 
-from bicausal.metrics.accuracy import compute_accuracy
-from bicausal.metrics.auroc import compute_auroc
-from bicausal.metrics.alameda import compute_alameda
-from bicausal.metrics.audrc import compute_audrc
-from bicausal.benchmarks.Lisbon.lisbon_utils import load_lisbon_metadata
+from bicausal.helpers.processers import process_tuebingen_scores, process_lisbon_scores
+from bicausal.metrics.accuracy import accuracy
+from bicausal.metrics.auroc import auroc
+from bicausal.metrics.alameda import alameda
+from bicausal.metrics.audrc import audrc
 
 computations_map = {
-    "Accuracy": compute_accuracy,
-    "AUROC": compute_auroc,
-    "Alameda": compute_alameda,
-    "AUDRC": compute_audrc,
+    "accuracy": accuracy,
+    "AUROC": auroc,
+    "Alameda": alameda,
+    "AUDRC": audrc,
 }
 
-metric_order = ["Alameda", "Accuracy", "AUROC", "AUDRC"]
+metric_order = ["Alameda", "accuracy", "AUROC", "AUDRC"]
 
 def evaluate_and_save(
     dataset_name,
@@ -27,6 +26,10 @@ def evaluate_and_save(
     weights,
     results_path="results/results.csv"
 ):  
+    if not methods_params:
+        print(f"No valid method/parameter combinations to evaluate for {dataset_name}.")
+        return None
+
     for m in metrics:
         if m not in computations_map:
             raise ValueError(
@@ -99,62 +102,15 @@ def evaluate_and_save(
 
 
 def evaluate_tuebingen(
-    metrics=["AUROC", "Alameda"],
+    metrics=["Alameda", "accuracy"],
     methods=[],
     scores_path="results/tuebingen_scores.csv",
     results_path="results/results.csv"
 ):
-    df = pd.read_csv(scores_path, keep_default_na=False)
-    df = df.replace("NA", np.nan)
-    df["parameters"] = df["parameters"].fillna("").astype(str)
-
-    # --- Filter methods if required ---
-    if methods:
-        df = df[df["method"].isin(methods)]
-
-    all_pairs = sorted(df["Pair"].unique())
-    pair_weights = (
-        df[["Pair", "weight"]]
-        .drop_duplicates(subset=["Pair"])
-        .set_index("Pair")["weight"]
-        .astype(float)
+    method_param_list, scores_list, weights = process_tuebingen_scores(
+        methods=methods,
+        scores_path=scores_path
     )
-
-    weights = pair_weights.loc[all_pairs].values
-
-    # --- Group by method and parameters ---
-    grouped = df.groupby(["method", "parameters"], dropna=False)
-
-    method_param_list = []
-    scores_list = []
-    for (method, params), subdf in grouped:
-        # Extract scores indexed by Pair
-        scores_by_pair = (
-            subdf[["Pair", "score"]]
-            .set_index("Pair")["score"]
-            .astype(float)
-        )
-
-        # Check whether this method/param covers *all* pairs
-        missing_pairs = [p for p in all_pairs if p not in scores_by_pair.index]
-
-        if missing_pairs:
-            print(
-                f"Skipping method={method}, params={params!r} "
-                f"because missing pairs: {missing_pairs}"
-            )
-            continue
-
-        # Create score vector matching the ordering of all_pairs
-        score_vector = scores_by_pair.loc[all_pairs].values
-
-        method_param_list.append((method, params))
-        scores_list.append(score_vector)
-
-    # If nothing is left after filtering
-    if not method_param_list:
-        print("No valid method/parameter combinations to evaluate.")
-        return None
 
     return evaluate_and_save(
         dataset_name="Tübingen",
@@ -165,75 +121,25 @@ def evaluate_tuebingen(
         results_path=results_path
     )
 
+
+
+
 def evaluate_lisbon(
     dataset_dir="benchmarks/Lisbon",
-    metrics=["AUROC", "Alameda"],
+    metrics=["Alameda", "accuracy"],
     methods=[],
     scores_path="results/lisbon_scores.csv",
     results_path="results/results.csv",
     fields=True
 ):
-    # --- Load scores ---
-    df = pd.read_csv(scores_path, keep_default_na=False)
-    df = df.replace("NA", np.nan)
-    df["parameters"] = df["parameters"].fillna("").astype(str)
-
-    # --- Filter methods if required ---
-    if methods:
-        df = df[df["method"].isin(methods)]
-
-    # --- Load metadata ---
-    metadata = load_lisbon_metadata(dataset_dir)
-    all_fields = sorted(set(info["field"] for info in metadata.values()))
-
-    # --- Define datasets to evaluate ---
-    datasets_to_evaluate = ["Lisbon"]
-    if fields:
-        datasets_to_evaluate += [f"Lisbon - {f}" for f in all_fields]
-
-    results_accumulated = []
-
-    for dataset_name in datasets_to_evaluate:
-        if dataset_name == "Lisbon":
-            relevant_fields = all_fields
-            relevant_files = list(metadata.keys())
-        else:
-            field = dataset_name.replace("Lisbon - ", "")
-            relevant_fields = [field]
-            relevant_files = [fname for fname, info in metadata.items() if info["field"] == field]
-
-
-        # --- Determine weights per dataset ---
-        weights = np.array([metadata[fname]["weight"] for fname in relevant_files])
-
-        # --- Group by method/parameters ---
-        grouped = df.groupby(["method", "parameters"], dropna=False)
-        method_param_list = []
-        scores_list = []
-
-        for (method, params), subdf in grouped:
-            # Filter for relevant fields
-            subdf_fields = subdf[subdf["filename"].isin(relevant_files)]
-            
-            missing_files = [f for f in relevant_files if f not in subdf_fields["filename"].values]
-            if missing_files:
-                print(f"⚠️ Skipping method={method}, params={params!r} for {dataset_name} due to missing files: {missing_files}")
-                continue
-
-            # Create score vector in correct order
-            scores_by_file = subdf_fields.set_index("filename")["score"].astype(float)
-            score_vector = np.array([scores_by_file[fname] for fname in relevant_files])
-            
-            if np.isnan(score_vector).any():
-                print(f"⚠️ Skipping method={method}, params={params!r} for {dataset_name} due to NaN values in scores")
-                continue
-
-            method_param_list.append((method, params))
-            scores_list.append(score_vector)
-
-        if not method_param_list:
-            print(f"No valid method/parameter combinations to evaluate for {dataset_name}.")
-            continue
+    methods_params_list_list, scores_list_list, weights_list, dataset_names = process_lisbon_scores(
+        methods=methods,
+        scores_path=scores_path,
+        dataset_dir=dataset_dir,
+        fields=fields
+    )
+    overall_result=None
+    for dataset_name, method_param_list, scores_list, weights in zip(dataset_names, methods_params_list_list, scores_list_list, weights_list):
 
         # --- Evaluate and save ---
         res = evaluate_and_save(
@@ -244,6 +150,10 @@ def evaluate_lisbon(
             weights=weights,
             results_path=results_path
         )
-        results_accumulated.append(res)
+        if dataset_name=="Lisbon":
+            overall_result=res
     
-    return results_accumulated[0]
+    return overall_result
+
+
+

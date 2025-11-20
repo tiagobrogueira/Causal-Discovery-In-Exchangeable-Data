@@ -23,6 +23,7 @@ def lingam(d):
     X=np.concatenate((x,y),axis=1)
     if X.shape[0]<3:
         return np.nan
+        
     ica = FastICA()
     ica.fit_transform(X)
     W = ica.components_        # W=I-B

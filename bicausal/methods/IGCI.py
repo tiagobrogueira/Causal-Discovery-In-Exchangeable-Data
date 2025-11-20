@@ -11,6 +11,7 @@ warnings.filterwarnings('ignore', category=RuntimeWarning)
 
 # %%
 #From cdt: entropy calculation
+
 def eval_entropy(x):
     """Evaluate the entropy of the input variable.
 

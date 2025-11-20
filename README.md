@@ -15,6 +15,7 @@ You can add more fields and more examples in the lisbon dataset!
 In order to do so,...
 
 
+run_ce inverts the vectors for negative labels, thus making sure all labels are positive.
 
 
 

@@ -8,8 +8,6 @@ def compute_auroc(scores,weights):
     scores=scores[~np.isnan(scores)] 
     scores = scores[weights > 0]
     weights = weights[weights > 0]
-
-
     #AUROC
     y_true = np.random.choice([0, 1], size=scores.shape)
     y_predicted = scores.copy()

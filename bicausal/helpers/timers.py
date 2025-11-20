@@ -85,15 +85,27 @@ def benchmark_function(func, test_file, write_dir="results", overwrite=False, se
 
 def plot_execution_times(
     data_dir="results",
-    img_dir="analysis/interesting_plots",
+    img_dir="plots",
     target_time=30,
 ):
     """
-    Plots execution time vs number of points for each (method, parameters) combo.
-    - Each method/parameter combination is shown as a separate line.
-    - Draws a dashed line at target_time seconds.
-    - Saves figure and prints crossing points (where runtime ≈ target_time).
+    Plots execution time vs number of points for each method.
+    Stores the largest sample size for each method in storage/max_points_cache.json,
+    only if the crossing point <= largest tested npoints.
     """
+    import os, json
+
+    STORAGE_DIR = "storage"
+    os.makedirs(STORAGE_DIR, exist_ok=True)
+    CACHE_FILE = os.path.join(STORAGE_DIR, "max_points_cache.json")
+
+    # Load persistent cache
+    if os.path.exists(CACHE_FILE):
+        with open(CACHE_FILE, "r") as f:
+            max_npoints_cache = json.load(f)
+    else:
+        max_npoints_cache = {}
+
     filename = "times.csv"
     csv_path = os.path.join(data_dir, filename)
     if not os.path.exists(csv_path):
@@ -105,7 +117,6 @@ def plot_execution_times(
     if not required_cols.issubset(df.columns):
         raise ValueError(f"❌ Missing columns in CSV: expected {required_cols}")
 
-    # Normalize and clean
     df["parameters"] = df["parameters"].apply(normalize_str)
     df["npoints"] = pd.to_numeric(df["npoints"], errors="coerce")
     df["execution_time"] = pd.to_numeric(df["execution_time"], errors="coerce")
@@ -113,51 +124,69 @@ def plot_execution_times(
     if df.empty:
         raise ValueError("❌ No valid data found in CSV.")
 
-    # === Plot setup ===
     plt.figure(figsize=(8, 6))
     plt.axhline(target_time, color="gray", linestyle="--", linewidth=1)
     cross_points = {}
 
-    # === Group by (method, parameters) ===
-    for (method, params), group in df.groupby(["method", "parameters"], dropna=False):
+    for method, group in df.groupby("method"):
         group = group.sort_values("npoints")
         x = group["npoints"].values
         y = group["execution_time"].values
         if len(x) < 2:
             continue
 
-        # Interpolate to find the sample size that hits target_time
         try:
             f = interp1d(y, x, kind="linear", fill_value="extrapolate")
             point_at_target = float(f(target_time))
         except Exception:
             point_at_target = np.nan
 
-        cross_points[f"{method} ({params})"] = point_at_target
-
+        cross_points[method] = point_at_target
         readable_name = name_map.get(method, method)
-        # Simplify empty parameters in label
-        label_text = f"{readable_name}" if params == "" else f"{readable_name} ({params})"
+        plt.plot(x, y, marker="o", label=readable_name)
 
-        plt.plot(x, y, marker="o", label=label_text)
+        # Only save to cache if crossing point <= max tested npoints
+        if not np.isnan(point_at_target) and point_at_target <= max(x):
+            max_npoints_cache[method] = int(max(x))
 
-    # === Final styling ===
     plt.xlabel("Number of Points")
     plt.ylabel("Execution Time (s)")
     plt.title(f"Execution Time vs Sample Size (target={target_time}s)")
-    plt.legend(title="Method / Parameters", loc="best", fontsize="small")
+    plt.legend(title="Method", loc="best", fontsize="small")
     plt.grid(True, linestyle="--", alpha=0.6)
     plt.tight_layout()
 
     save_imgs(img_dir, "execution_times_vs_points")
     plt.show()
 
-    # === Print numeric summary ===
+    # Save cache
+    with open(CACHE_FILE, "w") as f:
+        json.dump(max_npoints_cache, f)
+
     print("\n📊 Crossing Points (time ≈ target_time):")
-    for combo, value in cross_points.items():
+    for method, value in cross_points.items():
         if np.isnan(value):
             continue
-        print(f"{combo}: ≈ {value:.2f} points")
+        print(f"{method}: ≈ {value:.2f} points")
 
     return cross_points
+
+
+def get_max_points(method, storage_path=None):
+    """
+    Returns the cached max number of points for a given method.
+    Returns None if no value is stored.
+    """
+    import os, json
+
+    storage_path = storage_path or "storage/max_points_cache.json"
+    if not os.path.exists(storage_path):
+        return None
+
+    with open(storage_path, "r") as f:
+        cache = json.load(f)
+
+    return cache.get(method)
+
+
 

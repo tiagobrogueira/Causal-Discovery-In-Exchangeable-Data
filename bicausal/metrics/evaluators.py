@@ -3,7 +3,7 @@ import numpy as np
 import os
 from datetime import datetime
 
-from bicausal.helpers.processers import process_tuebingen_scores, process_lisbon_scores
+from bicausal.helpers.processers import process_tuebingen_scores, process_lisbon_scores, process_ce_scores
 from bicausal.metrics.accuracy import accuracy
 from bicausal.metrics.auroc import auroc
 from bicausal.metrics.alameda import alameda
@@ -29,12 +29,6 @@ def evaluate_and_save(
     if not methods_params:
         print(f"No valid method/parameter combinations to evaluate for {dataset_name}.")
         return None
-
-    for m in metrics:
-        if m not in computations_map:
-            raise ValueError(
-                f"Unknown metric '{m}'. Valid options: {list(computations_map.keys())}"
-            )
 
     # --- Load or initialize results file ---
     if os.path.exists(results_path):
@@ -156,4 +150,25 @@ def evaluate_lisbon(
     return overall_result
 
 
+def evaluate_ce(
+    metrics=["Alameda", "accuracy"],
+    methods=[],
+    scores_path="results/CE_scores.csv",
+    results_path="results/results.csv"):
 
+    methods_params_list_list, scores_list_list, weights_list, dataset_names = process_ce_scores(
+        methods=methods,
+        scores_path=scores_path        
+    )
+    overall_result=None
+    for dataset_name, method_param_list, scores_list, weights in zip(dataset_names, methods_params_list_list, scores_list_list, weights_list):
+
+        # --- Evaluate and save ---
+        res = evaluate_and_save(
+            dataset_name=dataset_name,
+            methods_params=method_param_list,
+            metrics=metrics,
+            scores=scores_list,
+            weights=weights,
+            results_path=results_path
+        )

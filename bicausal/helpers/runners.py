@@ -146,3 +146,114 @@ def run_lisbon(func, read_dir="benchmarks/Lisbon/data", write_dir="results", ove
     print(f"✅ All Lisbon results saved to {output_path}")
 
 
+def run_ce(func, datasets=None, read_dir="benchmarks/synthetic/CE-Guyon",write_dir="results", overwrite=False, *args, **kwargs):
+    # The CE datasets
+    ALL_CE = ["CE-Cha", "CE-Gauss", "CE-Multi", "CE-Net"]
+
+    # Dataset selection
+    if datasets is None or len(datasets) == 0:
+        datasets = ALL_CE
+    else:
+        for d in datasets:
+            if d not in ALL_CE:
+                raise ValueError(f"Invalid CE dataset: {d}. Must be one of {ALL_CE}")
+
+    # Prepare output
+    os.makedirs(write_dir, exist_ok=True)
+    path = os.path.join(write_dir, "CE_scores.csv")
+
+    method_name = get_method_name(func)
+    parameters = serialize_params(args, kwargs)
+
+    # Load or create previous results
+    if os.path.exists(path):
+        df_existing = pd.read_csv(path, keep_default_na=False)
+        df_existing["parameters"] = df_existing["parameters"].map(normalize_str)
+    else:
+        df_existing = pd.DataFrame(columns=[
+            "method", "parameters", "dataset", "Pair",
+            "score", "weight", "timestamp"
+        ])
+
+    # ----------------------------------------------------
+    # Main loop over datasets
+    # ----------------------------------------------------
+    for dataset in datasets:
+        print(f"\n🚀 Running CE dataset: {dataset}")
+
+        # -------------------------------
+        # Inline CE data loading (old getOld)
+        # -------------------------------
+        pairs_file   = f"{read_dir}/{dataset}_pairs.csv"
+        targets_file = f"{read_dir}/{dataset}_targets.csv"
+
+        if not os.path.isfile(pairs_file):
+            raise FileNotFoundError(f"Pairs file not found: {pairs_file}")
+        if not os.path.isfile(targets_file):
+            raise FileNotFoundError(f"Targets file not found: {targets_file}")
+
+        df_pairs   = pd.read_csv(pairs_file)
+        df_targets = pd.read_csv(targets_file)
+
+        if len(df_pairs) != len(df_targets):
+            raise ValueError(
+                f"Row count mismatch: {len(df_pairs)} in pairs vs {len(df_targets)} in targets"
+            )
+
+        weight= 1 / len(df_pairs)
+
+        for idx, pair_row in df_pairs.iterrows():
+            x_str = str(pair_row.iloc[1])
+            y_str = str(pair_row.iloc[2])
+
+            x = np.array([float(v) for v in x_str.split()]).reshape(-1, 1)
+            y = np.array([float(v) for v in y_str.split()]).reshape(-1, 1)
+
+            # Swap if target is -1
+            if df_targets.iloc[idx, 1] == -1:
+                x, y = y, x
+
+            pair_idx = idx + 1
+
+            # Check for existing row
+            exists = (
+                (df_existing["method"] == method_name)
+                & (df_existing["parameters"] == parameters)
+                & (df_existing["dataset"] == dataset)
+                & (df_existing["Pair"] == pair_idx)
+            ).any()
+
+            if exists and not overwrite:
+                print(f"⏩ Skipping {dataset} Pair {pair_idx} (already computed)")
+                continue
+
+            # Compute score
+            try:
+                score = func([x,y], *args, **kwargs)
+            except Exception as e:
+                print(f"⚠️ Error on {dataset} Pair {pair_idx}: {e}")
+                continue
+
+            if np.isnan(score):
+                score = "NA"
+
+            # ----------------------------------------------------
+            # Inline row append (KeyboardInterrupt-safe)
+            # ----------------------------------------------------
+            new_row = {
+                "method": method_name,
+                "parameters": parameters,
+                "dataset": dataset,
+                "Pair": pair_idx,
+                "score": score,
+                "weight": weight,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+
+            df_existing = pd.concat([df_existing, pd.DataFrame([new_row])],
+                                    ignore_index=True)
+            df_existing.to_csv(path, index=False)
+            print(f"✔ Saved {dataset} Pair {pair_idx}")
+
+    print(f"\n✅ Saved CE results to {path}")
+    return path

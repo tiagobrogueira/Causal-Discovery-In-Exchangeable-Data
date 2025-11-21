@@ -257,3 +257,127 @@ def run_ce(func, datasets=None, read_dir="benchmarks/synthetic/CE-Guyon",write_d
 
     print(f"\n✅ Saved CE results to {path}")
     return path
+
+
+def run_anlsmn(
+        func,
+        datasets=None,
+        read_dir="benchmarks/synthetic/ANLSMN-Tagasovska",
+        write_path="results/ANLSMN_scores.csv",
+        overwrite=False,
+        *args,
+        **kwargs
+    ):
+
+    # -----------------------------
+    # Dataset selection
+    # -----------------------------
+    if datasets is None:
+        datasets = [
+            d for d in os.listdir(read_dir)
+            if os.path.isdir(os.path.join(read_dir, d))
+        ]
+
+    os.makedirs(os.path.dirname(write_path), exist_ok=True)
+
+    method_name = get_method_name(func)
+    parameters  = serialize_params(args, kwargs)
+
+    # -----------------------------
+    # Load previous results (if any)
+    # -----------------------------
+    if os.path.exists(write_path):
+        df_existing = pd.read_csv(write_path, keep_default_na=False)
+        df_existing["parameters"] = df_existing["parameters"].map(normalize_str)
+    else:
+        df_existing = pd.DataFrame(columns=[
+            "method", "parameters", "dataset", "Pair",
+            "score", "weight", "timestamp"
+        ])
+
+    # -----------------------------
+    # Main dataset loop
+    # -----------------------------
+    for ext in datasets:
+        print(f"\n🚀 Running ANLSMN dataset: {ext}")
+
+        dir_ext = os.path.join(read_dir, ext)
+        gt_file = os.path.join(dir_ext, "pairs_gt.txt")
+
+        if not os.path.isfile(gt_file):
+            raise FileNotFoundError(f"Missing ground truth file: {gt_file}")
+
+        # Load ground truth:
+        #   +1 means X->Y
+        #   -1 means Y->X (must be swapped)
+        pairs_gt = pd.read_csv(gt_file, header=None).iloc[:, 0].astype(int).values
+        n_pairs  = len(pairs_gt)
+        weight   = 1 / n_pairs
+
+        # -----------------------------
+        # Pair loop
+        # -----------------------------
+        for i in range(1, n_pairs + 1):
+            pair_idx = i
+
+            # Exists?
+            exists = (
+                (df_existing["method"] == method_name) &
+                (df_existing["parameters"] == parameters) &
+                (df_existing["dataset"] == ext) &
+                (df_existing["Pair"] == pair_idx)
+            ).any()
+
+            if exists and not overwrite:
+                print(f"⏩ Skipping {ext} Pair {i} (already computed)")
+                continue
+
+            # -----------------------------
+            # Load pair file
+            # -----------------------------
+            pair_file = os.path.join(dir_ext, f"pair_{i}.txt")
+            if not os.path.isfile(pair_file):
+                print(f"⚠️ Missing pair file: {pair_file}, skipping.")
+                continue
+
+            df_pair = pd.read_csv(pair_file, sep=",", header=0, index_col=0)
+            x = df_pair.iloc[:, 0].values.reshape(-1, 1)
+            y = df_pair.iloc[:, 1].values.reshape(-1, 1)
+
+            # -----------------------------
+            # Correct direction using GT
+            # -----------------------------
+            if pairs_gt[i - 1] == -1:
+                x, y = y, x     # swap
+
+            # -----------------------------
+            # Run method on correctly oriented (x,y)
+            # -----------------------------
+            try:
+                score = func([x, y], *args, **kwargs)
+            except Exception as e:
+                print(f"⚠️ Error on {ext} Pair {i}: {e}")
+                continue
+
+            if isinstance(score, float) and np.isnan(score):
+                score = "NA"
+
+            # -----------------------------
+            # Append row to CSV
+            # -----------------------------
+            new_row = {
+                "method": method_name,
+                "parameters": parameters,
+                "dataset": ext,
+                "Pair": pair_idx,
+                "score": score,
+                "weight": weight,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+
+            df_existing = pd.concat([df_existing, pd.DataFrame([new_row])],
+                                    ignore_index=True)
+            df_existing.to_csv(write_path, index=False)
+            print(f"✔ Saved {ext} Pair {i}")
+
+    print(f"\n✅ Saved ANLSMN results to {write_path}")

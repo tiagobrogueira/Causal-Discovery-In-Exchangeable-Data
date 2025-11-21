@@ -3,7 +3,7 @@ import numpy as np
 import os
 from datetime import datetime
 
-from bicausal.helpers.processers import process_tuebingen_scores, process_lisbon_scores, process_ce_scores
+from bicausal.helpers.processers import process_tuebingen_scores, process_lisbon_scores, process_synthetic_scores
 from bicausal.metrics.accuracy import accuracy
 from bicausal.metrics.auroc import auroc
 from bicausal.metrics.alameda import alameda
@@ -150,13 +150,22 @@ def evaluate_lisbon(
     return overall_result
 
 
-def evaluate_ce(
+def evaluate_synthetic(
+    datasets,
     metrics=["Alameda", "accuracy"],
     methods=[],
-    scores_path="results/CE_scores.csv",
+    scores_path=None,
     results_path="results/results.csv"):
+    if datasets=="CE" and scores_path is None:
+        scores_path="results/ce_scores.csv"
+    elif datasets=="ANLSMN" and scores_path is None:
+        scores_path="results/ANLSMN_scores.csv"
+    elif datasets=="SIM" and scores_path is None:
+        scores_path="results/SIM_scores.csv"
+    else:
+        raise ValueError(f"Unknown datasets: {datasets}")
 
-    methods_params_list_list, scores_list_list, weights_list, dataset_names = process_ce_scores(
+    methods_params_list_list, scores_list_list, weights_list, dataset_names = process_synthetic_scores(
         methods=methods,
         scores_path=scores_path        
     )

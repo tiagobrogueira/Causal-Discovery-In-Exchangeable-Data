@@ -125,8 +125,11 @@ def process_lisbon_scores(methods=[], scores_path="results/lisbon_scores.csv", d
     return methods_params_list_list, scores_list_list, weights_list, dataset_names
 
 
-def process_ce_scores(methods=[],
-                      scores_path="results/CE_scores.csv"):
+def process_synthetic_scores(methods=[],
+                      scores_path=None):
+
+    if scores_path is None:
+        raise ValueError("scores_path must be provided for synthetic scores processing.")
 
     df = pd.read_csv(scores_path, keep_default_na=False)
     df = df.replace("NA", np.nan)

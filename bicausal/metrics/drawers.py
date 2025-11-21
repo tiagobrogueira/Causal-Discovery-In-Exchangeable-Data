@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
-from bicausal.metrics.alameda import plot_alameda, plot_alameda_vs
+from bicausal.metrics.lxcim import plot_lxcim, plot_lxcim_vs
 from bicausal.metrics.auroc import plot_auroc, plot_auroc_vs
 from bicausal.metrics.audrc import plot_audrc, plot_audrc_vs
 from bicausal.metrics.evaluators import metric_order
@@ -14,7 +14,7 @@ from bicausal.helpers.utils import save_imgs
 def plot_dataset_curves(
     dataset,
     methods=[],
-    metrics=["Alameda"],
+    metrics=["LxCIM"],
     include_variations=False,
     img_dir="plots",
     scores_path=None
@@ -60,8 +60,8 @@ def plot_dataset_curves(
     if num_plots == 1:
         axs = [axs] 
     for ax, metric in zip(axs, selected_metrics):
-        if metric == "Alameda":
-            plot_alameda(method_results, ax=ax, baselines=True)
+        if metric == "LxCIM":
+            plot_lxcim(method_results, ax=ax, baselines=True)
         elif metric == "AUROC":
             plot_auroc(method_results, ax=ax)
         elif metric == "AUDRC":
@@ -77,7 +77,7 @@ def plot_dataset_curves_vs(
     dataset,
     methods_A,                         # required
     methods_B=[],                      # optional, auto-detected if empty
-    metrics=["Alameda"],
+    metrics=["LxCIM"],
     include_variations=False,
     img_dir="plots",
     scores_path=None
@@ -143,8 +143,8 @@ def plot_dataset_curves_vs(
 
     # === Plot using *VS* methods ===
     for ax, metric in zip(axs, selected_metrics):
-        if metric == "Alameda":
-            plot_alameda_vs(method_results_A, method_results_B, ax=ax, baselines=True)
+        if metric == "LxCIM":
+            plot_lxcim_vs(method_results_A, method_results_B, ax=ax, baselines=True)
         elif metric == "AUROC":
             plot_auroc_vs(method_results_A, method_results_B, ax=ax)
         elif metric == "AUDRC":
@@ -173,7 +173,7 @@ def get_all_datasets(method, csv_path="results/results.csv"):
 def plot_method_curves(
     method,
     datasets=[],
-    metrics=["Alameda"],
+    metrics=["LxCIM"],
     include_variations=False,
     img_dir="plots",
     scores_path=None,
@@ -242,8 +242,8 @@ def plot_method_curves(
         axs = [axs]
 
     for ax, metric in zip(axs, selected_metrics):
-        if metric == "Alameda":
-            plot_alameda(method_results, ax=ax, baselines=True)
+        if metric == "LxCIM":
+            plot_lxcim(method_results, ax=ax, baselines=True)
         elif metric == "AUROC":
             plot_auroc(method_results, ax=ax)
         elif metric == "AUDRC":

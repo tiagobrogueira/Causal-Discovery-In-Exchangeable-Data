@@ -7,7 +7,7 @@ import matplotlib.cm as cm
 
 
 #Note: The trapezoid function approximates the function by drawing straight lines between points (linear interpolation).
-def compute_alameda(scores, weights):
+def compute_lxcim(scores, weights):
     weights = weights[~np.isnan(scores)]  
     scores=scores[~np.isnan(scores)] 
     scores = scores[weights > 0]
@@ -28,15 +28,15 @@ def compute_alameda(scores, weights):
     cum_acc = np.concatenate(([0], cum_acc))
     dr = np.concatenate(([0], dr))
     
-    alameda=2*np.trapezoid(cum_acc,dr)   
-    return alameda,cum_acc,dr
+    lxcim=2*np.trapezoid(cum_acc,dr)   
+    return lxcim,cum_acc,dr
 
-def alameda(scores,weights):
-    alameda,_,_=compute_alameda(scores,weights)
-    return alameda
+def lxcim(scores,weights):
+    lxcim,_,_=compute_lxcim(scores,weights)
+    return lxcim
 
 #Supports plotting inside larger pipeline.
-def plot_alameda(method_results,ax=None,baselines=True):
+def plot_lxcim(method_results,ax=None,baselines=True):
     """
     method_results: list of tuples in format
         (method_name, scores_vector, weights_vector)
@@ -47,8 +47,8 @@ def plot_alameda(method_results,ax=None,baselines=True):
     if ax is None:
         fig, ax = plt.subplots(figsize=(7, 6))
     for method_name, scores, weights in method_results:
-        alameda, cum_acc, dr = compute_alameda(scores, weights)
-        ax.plot(dr, cum_acc, label=f"{method_name} ({alameda*100:.1f})")
+        lxcim, cum_acc, dr = compute_lxcim(scores, weights)
+        ax.plot(dr, cum_acc, label=f"{method_name} ({lxcim*100:.1f})")
 
     if baselines:
         x = np.linspace(0, 1, 100)
@@ -57,11 +57,11 @@ def plot_alameda(method_results,ax=None,baselines=True):
 
     ax.set_xlabel("Decision Rate")
     ax.set_ylabel("Cumulative Accuracy")
-    ax.set_title("Alameda Curves")
+    ax.set_title("LxCIM Curves")
     ax.legend()
 
 
-def plot_alameda_vs(method_results_A, method_results_B, cmap_A=None, cmap_B=None,
+def plot_lxcim_vs(method_results_A, method_results_B, cmap_A=None, cmap_B=None,
                     ax=None, baselines=True):
 
     fig = None
@@ -78,15 +78,15 @@ def plot_alameda_vs(method_results_A, method_results_B, cmap_A=None, cmap_B=None
 
     # --- Plot Group A ---
     for idx, (method_name, scores, weights) in enumerate(method_results_A):
-        alameda, cum_acc, dr = compute_alameda(scores, weights)
+        lxcim, cum_acc, dr = compute_lxcim(scores, weights)
         ax.plot(dr, cum_acc, color=cmap_A[idx],
-                label=f"{method_name} ({alameda*100:.1f})")
+                label=f"{method_name} ({lxcim*100:.1f})")
 
     # --- Plot Group B ---
     for idx, (method_name, scores, weights) in enumerate(method_results_B):
-        alameda, cum_acc, dr = compute_alameda(scores, weights)
+        lxcim, cum_acc, dr = compute_lxcim(scores, weights)
         ax.plot(dr, cum_acc, color=cmap_B[idx],
-                label=f"{method_name} ({alameda*100:.1f})")
+                label=f"{method_name} ({lxcim*100:.1f})")
 
     # Baselines
     if baselines:

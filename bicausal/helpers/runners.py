@@ -381,3 +381,138 @@ def run_anlsmn(
             print(f"✔ Saved {ext} Pair {i}")
 
     print(f"\n✅ Saved ANLSMN results to {write_path}")
+
+
+def run_sim(
+        func,
+        datasets=None,
+        read_dir="benchmarks/synthetic/SIM-Mooij",
+        write_path="results/SIM_scores.csv",
+        overwrite=False,
+        *args,
+        **kwargs
+    ):
+
+    # --------------------------------------------
+    # Dataset list
+    # --------------------------------------------
+    if datasets is None:
+        datasets = [
+            d for d in os.listdir(read_dir)
+            if os.path.isdir(os.path.join(read_dir, d))
+        ]
+
+    os.makedirs(os.path.dirname(write_path), exist_ok=True)
+    out_path = write_path
+
+    method_name = get_method_name(func)
+    parameters  = serialize_params(args, kwargs)
+
+    # --------------------------------------------
+    # Load existing CSV if available
+    # --------------------------------------------
+    if os.path.exists(out_path):
+        df_existing = pd.read_csv(out_path, keep_default_na=False)
+        df_existing["parameters"] = df_existing["parameters"].map(normalize_str)
+    else:
+        df_existing = pd.DataFrame(columns=[
+            "method", "parameters", "dataset", "Pair",
+            "score", "weight", "timestamp"
+        ])
+
+    # --------------------------------------------
+    # Loop over datasets
+    # --------------------------------------------
+    for dataset in datasets:
+        print(f"\n🚀 Running SIM dataset: {dataset}")
+
+        dataset_dir = os.path.join(read_dir, dataset)
+        meta_file = os.path.join(dataset_dir, "pairmeta.txt")
+
+        if not os.path.isfile(meta_file):
+            raise FileNotFoundError(f"Missing pairmeta.txt in {dataset_dir}")
+
+        # Load pairmeta.txt with no header
+        meta = pd.read_csv(meta_file, sep=r"\s+", header=None,dtype={0: str})
+        meta.columns = ["pair", "c_start", "c_end", "e_start", "e_end", "weight"]
+
+        # Ensure integer indexing
+        meta["pair"] = meta["pair"].astype(str)
+        meta["c_start"] = meta["c_start"].astype(int)
+        meta["c_end"]   = meta["c_end"].astype(int)
+        meta["e_start"] = meta["e_start"].astype(int)
+        meta["e_end"]   = meta["e_end"].astype(int)
+
+        # --------------------------------------------
+        # Loop through all pairs defined in pairmeta.txt
+        # --------------------------------------------
+        for _, row in meta.iterrows():
+            pair_id  = row["pair"]            # e.g. "0001"
+            pair_idx = int(pair_id)           # numeric for CSV
+
+            # Check overwrite skip
+            exists = (
+                (df_existing["method"] == method_name) &
+                (df_existing["parameters"] == parameters) &
+                (df_existing["dataset"] == dataset) &
+                (df_existing["Pair"] == pair_idx)
+            ).any()
+
+            if exists and not overwrite:
+                print(f"⏩ Skipping {dataset} Pair {pair_id} (already computed)")
+                continue
+
+            # --------------------------------------------
+            # Load corresponding pair file
+            # --------------------------------------------
+            print("Pair",pair_id)
+            pair_file = os.path.join(dataset_dir, f"pair{pair_id}.txt")
+            if not os.path.isfile(pair_file):
+                print(f"⚠️ Missing pair file: {pair_file}, skipping.")
+                continue
+
+            # Load all variable columns
+            df_pair = pd.read_csv(pair_file, sep=r"\s+", header=None)
+            data = df_pair.values  # numpy array, shape (n, d)
+
+            # Extract cause and effect variables (1-indexed in meta)
+            c_start, c_end = row["c_start"], row["c_end"]
+            e_start, e_end = row["e_start"], row["e_end"]
+
+            X = data[:, c_start-1 : c_end].reshape(len(data), -1)
+            Y = data[:, e_start-1 : e_end].reshape(len(data), -1)
+
+            # --------------------------------------------
+            # Run the method
+            # --------------------------------------------
+            try:
+                score = func([X, Y], *args, **kwargs)
+            except Exception as e:
+                print(f"⚠️ Error on {dataset} Pair {pair_id}: {e}")
+                continue
+
+            if isinstance(score, float) and np.isnan(score):
+                score = "NA"
+
+            weight = float(row["weight"])
+
+            # --------------------------------------------
+            # Append row to CSV
+            # --------------------------------------------
+            new_row = {
+                "method": method_name,
+                "parameters": parameters,
+                "dataset": dataset,
+                "Pair": pair_idx,
+                "score": score,
+                "weight": weight,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+
+            df_existing = pd.concat([df_existing, pd.DataFrame([new_row])],
+                                    ignore_index=True)
+            df_existing.to_csv(out_path, index=False)
+            print(f"✔ Saved {dataset} Pair {pair_id}")
+
+    print(f"\n✅ Saved SIM results to {out_path}")
+    return out_path

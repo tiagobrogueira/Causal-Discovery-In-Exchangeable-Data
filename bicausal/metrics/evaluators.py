@@ -2,21 +2,22 @@ import pandas as pd
 import numpy as np
 import os
 from datetime import datetime
+from tabulate import tabulate
 
 from bicausal.helpers.processers import process_tuebingen_scores, process_lisbon_scores, process_synthetic_scores
 from bicausal.metrics.accuracy import accuracy
 from bicausal.metrics.auroc import auroc
-from bicausal.metrics.alameda import alameda
+from bicausal.metrics.lxcim import lxcim
 from bicausal.metrics.audrc import audrc
 
 computations_map = {
     "accuracy": accuracy,
     "AUROC": auroc,
-    "Alameda": alameda,
+    "LxCIM": lxcim,
     "AUDRC": audrc,
 }
 
-metric_order = ["Alameda", "accuracy", "AUROC", "AUDRC"]
+metric_order = ["LxCIM", "accuracy", "AUROC", "AUDRC"]
 
 def evaluate_and_save(
     dataset_name,
@@ -96,7 +97,7 @@ def evaluate_and_save(
 
 
 def evaluate_tuebingen(
-    metrics=["Alameda", "accuracy"],
+    metrics=["LxCIM", "accuracy"],
     methods=[],
     scores_path="results/tuebingen_scores.csv",
     results_path="results/results.csv"
@@ -120,7 +121,7 @@ def evaluate_tuebingen(
 
 def evaluate_lisbon(
     dataset_dir="benchmarks/Lisbon",
-    metrics=["Alameda", "accuracy"],
+    metrics=["LxCIM", "accuracy"],
     methods=[],
     scores_path="results/lisbon_scores.csv",
     results_path="results/results.csv",
@@ -152,7 +153,7 @@ def evaluate_lisbon(
 
 def evaluate_synthetic(
     datasets,
-    metrics=["Alameda", "accuracy"],
+    metrics=["LxCIM", "accuracy"],
     methods=[],
     scores_path=None,
     results_path="results/results.csv"):
@@ -181,3 +182,168 @@ def evaluate_synthetic(
             weights=weights,
             results_path=results_path
         )
+
+
+
+def construct_table(
+    methods=[],
+    datasets=[],
+    readpath="results/results.csv",
+    metrics=["LxCIM", "accuracy"],
+    include_variations=False,
+    writedir="table",
+    outdated=None
+):
+    # =========================================================
+    # Load results file
+    # =========================================================
+    if not os.path.exists(readpath):
+        raise FileNotFoundError(f"Could not find results file at: {readpath}")
+
+    res = pd.read_csv(readpath, keep_default_na=False).replace("NA", np.nan)
+    res["parameters"] = res["parameters"].fillna("").astype(str)
+    res["timestamp"] = pd.to_datetime(res["timestamp"], errors="coerce")
+
+    # =========================================================
+    # Filter by outdated timestamp
+    # =========================================================
+    if outdated is not None:
+        res = res[res["timestamp"] > outdated]
+
+    # =========================================================
+    # Dataset filtering — expand abbreviations manually
+    # =========================================================
+    all_datasets_in_file = set(res["dataset"].unique())
+    datasets_selected = set()
+
+    if datasets:
+        for ds in datasets:
+            ds_lower = ds.lower()
+
+            # Handle Tübingen variants
+            if ds_lower in ["tuebingen", "tübingen", "tubingen", "t\\ubingen"]:
+                for d in all_datasets_in_file:
+                    dl = d.lower()
+                    if "tüb" in dl or "tub" in dl:
+                        datasets_selected.add(d)
+                continue
+
+            # SIM*
+            if ds_lower == "sim":
+                for d in all_datasets_in_file:
+                    if d.lower().startswith("sim"):
+                        datasets_selected.add(d)
+                continue
+
+            # CE*
+            if ds_lower == "ce":
+                for d in all_datasets_in_file:
+                    if d.lower().startswith("ce"):
+                        datasets_selected.add(d)
+                continue
+
+            if "Lisbon-fields" in [d.lower() for d in datasets]:
+                for d in all_datasets_in_file:
+                    if d.lower().startswith("lisbon"):
+                        datasets_selected.add(d)
+                continue
+
+            # AN/LS/MN*
+            if ds_lower == "anlsmn":
+                for d in all_datasets_in_file:
+                    dl = d.lower()
+                    if dl.startswith("an") or dl.startswith("ls") or dl.startswith("mn"):
+                        datasets_selected.add(d)
+                continue
+
+            # Literal dataset name
+            if ds in all_datasets_in_file:
+                datasets_selected.add(ds)
+
+    else:
+        datasets_selected = all_datasets_in_file
+
+    res = res[res["dataset"].isin(datasets_selected)]
+
+    # =========================================================
+    # Method filtering
+    # =========================================================
+    if methods:
+        res = res[res["method"].isin(methods)]
+
+    # =========================================================
+    # Match metrics (case-insensitive, keep original col names)
+    # =========================================================
+    matched_metrics = []
+    for m in metrics:
+        target = m.lower()
+        for col in res.columns:
+            if col.lower() == target:
+                matched_metrics.append(col)
+                break
+
+    # =========================================================
+    # Build table (convert metrics → percentages)
+    # =========================================================
+    rows = []
+    for (method, params, dataset), sub in res.groupby(["method", "parameters", "dataset"]):
+        
+        if not include_variations and params != "":
+            continue
+        row = {
+            "method": method,
+            "parameters": params,
+            "dataset": dataset
+        }
+
+        for m in matched_metrics:
+            val = sub[m].values[0]
+            if pd.isna(val) or val == "":
+                row[m] = ""
+            else:
+                try:
+                    val_float = float(val)
+                    row[m] = f"{100*val_float:.1f}"
+                except (ValueError, TypeError):
+                    row[m] = ""
+
+
+
+        rows.append(row)
+
+    table_df = pd.DataFrame(rows)
+
+    # =========================================================
+    # Remove 'parameters' column if variations not included
+    # =========================================================
+    if not include_variations and "parameters" in table_df.columns:
+        table_df = table_df.drop(columns=["parameters"])
+
+    table_df = table_df.fillna("")
+
+
+    # =========================================================
+    # PRINT — console-friendly using `tabulate`
+    # =========================================================
+    print("\n" + "="*80)
+    print("RESULT TABLE")
+    print("="*80)
+    print(tabulate(table_df, headers="keys", tablefmt="github", showindex=False))
+    print("="*80 + "\n")
+
+    # =========================================================
+    # SAVE — LaTeX (with timestamp in filename)
+    # =========================================================
+    os.makedirs(writedir, exist_ok=True)
+
+    timestamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    latex_path = os.path.join(writedir, f"table_{timestamp_str}.tex")
+
+    latex_text = table_df.to_latex(index=False, escape=True)
+
+    with open(latex_path, "w", encoding="utf-8") as f:
+        f.write(latex_text)
+
+    print(f"Table saved to: {latex_path}")
+
+    return table_df

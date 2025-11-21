@@ -1,17 +1,17 @@
 import numpy as np
-from cdt.causality.pairwise import IGCI
+from cdt.causality.pairwise import RECI
 
-# Instantiate the IGCI model
-igci_model = IGCI()
+# Instantiate the RECI model
+reci_model = RECI()
 
 def max_points():
     try:
         from bicausal.helpers.timers import get_max_points
-        return get_max_points("IGCI")
+        return get_max_points("RECI")
     except ModuleNotFoundError:
         return None
 
-def igci(d):
+def reci(d):
     x, y = d
 
     # Possibly subsample if too many points
@@ -21,5 +21,5 @@ def igci(d):
         x = x[idx]
         y = y[idx]
 
-    # Use the IGCI model to predict
-    return igci_model.predict_proba((x, y))
+    # Use the RECI model to predict
+    return reci_model.predict_proba((x, y))

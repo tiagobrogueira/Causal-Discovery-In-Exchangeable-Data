@@ -24,3 +24,5 @@ NOTE: This repository, library and its functions assume honesty in the part of t
 NOTE: In general, this repository is not built to support methods which require training due to two main reasons: 1) No batching. 2) No implemented framework to deal with similarity between different pairs in the Lisbon and Tuebingen datasets. However, these are changes which could be coded.
 
 NOTE: All functions (apart from the R) have the dirs called as if being called inside "bicausal/".
+
+NOTE: All methods were implemented so that they would work just by themselves + the original implementations. so some code may be repeated.

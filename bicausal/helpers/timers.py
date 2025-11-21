@@ -1,10 +1,12 @@
 import os
 import pandas as pd
 import numpy as np
+import time
+from datetime import datetime
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
-from bicausal.helpers.namemap import name_map  # custom readable name map
-from bicausal.helpers.utils import save_imgs, normalize_str
+from bicausal.helpers.namemap import get_method_name # custom readable name map
+from bicausal.helpers.utils import save_imgs, normalize_str, serialize_params
 
 def benchmark_function(func, test_file, write_dir="results", overwrite=False, seed=42, *args, **kwargs):
     """

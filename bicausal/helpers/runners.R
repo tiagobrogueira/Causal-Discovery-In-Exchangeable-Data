@@ -292,7 +292,7 @@ run_lisbon <- function(func,
 
 benchmark_function <- function(func,
                                test_file,
-                               write_dir = "bicausal/results",
+                               output_path = "bicausal/results/times.csv",
                                overwrite = FALSE,
                                seed = 42,
                                ...) {
@@ -300,8 +300,7 @@ benchmark_function <- function(func,
   # Saves to shared CSV: ['method', 'parameters', 'npoints', 'execution_time', 'timestamp']
 
   set.seed(seed)
-  dir.create(write_dir, showWarnings = FALSE, recursive = TRUE)
-  output_path <- file.path(write_dir, "times.csv")
+  dir.create(dirname(output_path), showWarnings = FALSE, recursive = TRUE)
 
   df <- read_table(test_file, col_names = FALSE)
   x <- df[[1]]
@@ -351,8 +350,8 @@ benchmark_function <- function(func,
 
     cat("⏱ Running", method_name, "with", n_points, "points...\n")
 
-    subset <- cbind(x[1:n_points, , drop = FALSE],
-                y[1:n_points, , drop = FALSE])
+    subset <- cbind(x[1:n_points], y[1:n_points])
+
 
     start <- Sys.time()
     success <- tryCatch({

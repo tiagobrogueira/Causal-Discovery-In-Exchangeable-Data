@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
-from bicausal.helpers.namemap import get_method_name # custom readable name map
+from bicausal.helpers.namemap import get_method_name,name_map # custom readable name map
 from bicausal.helpers.utils import save_imgs, normalize_str, serialize_params
 
 def benchmark_function(func, test_file, write_dir="results", overwrite=False, seed=42, *args, **kwargs):
@@ -144,7 +144,7 @@ def plot_execution_times(
             point_at_target = np.nan
 
         cross_points[method] = point_at_target
-        readable_name = name_map.get(method, method)
+        readable_name = name_map.get(method,method)
         plt.plot(x, y, marker="o", label=readable_name)
 
         # Only save to cache if crossing point <= max tested npoints

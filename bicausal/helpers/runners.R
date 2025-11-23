@@ -32,7 +32,7 @@ normalize_str <- function(value) {
   as.character(value)
 }
 
-getTuebingen <- function(read_dir = "bicausal/datasets/Tuebingen") {
+getTuebingen <- function(read_dir = "bicausal/benchmarks/Tuebingen") {
   # Reads the Tübingen dataset pairs and their weights from the given directory.
   # Returns:
   #   list(
@@ -94,7 +94,7 @@ getTuebingen <- function(read_dir = "bicausal/datasets/Tuebingen") {
 # ------------------------
 
 run_tuebingen <- function(func,
-                          read_dir = "bicausal/datasets/Tuebingen",
+                          read_dir = "bicausal/benchmarks/Tuebingen",
                           write_dir = "bicausal/results",
                           overwrite = FALSE,
                           ...) {
@@ -190,7 +190,7 @@ run_tuebingen <- function(func,
 # ------------------------
 
 run_lisbon <- function(func,
-                       read_dir = "bicausal/datasets/Lisbon/data",
+                       read_dir = "bicausal/benchmarks/Lisbon/data",
                        write_dir = "bicausal/results",
                        overwrite = FALSE,
                        ...) {

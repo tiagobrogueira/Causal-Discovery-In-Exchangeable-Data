@@ -26,3 +26,5 @@ NOTE: In general, this repository is not built to support methods which require 
 NOTE: All functions (apart from the R) have the dirs called as if being called inside "bicausal/".
 
 NOTE: All methods were implemented so that they would work just by themselves + the original implementations. so some code may be repeated.
+
+NOTE: Recalling timers requires deleting the entries manually in the storage.

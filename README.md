@@ -28,3 +28,7 @@ NOTE: All functions (apart from the R) have the dirs called as if being called i
 NOTE: All methods were implemented so that they would work just by themselves + the original implementations. so some code may be repeated.
 
 NOTE: Recalling timers requires deleting the entries manually in the storage.
+
+NOTE: CDCI with CTV was chosen since it performed the best overall in the published paper.
+
+NOTE: GPLVM was chosen the generalized one since the authors argue its better for the Tuebingen (and thus real-world data), which is the main focus of this work.

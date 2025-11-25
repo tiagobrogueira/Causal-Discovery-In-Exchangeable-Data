@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from sklearn.gaussian_process import GaussianProcessRegressor as GPR
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
-from gp_extras.kernels import HeteroscedasticKernel
+from bicausal.methods.source_implementations.FOM_main.libs.gp_extras.kernels_non_stationary import HeteroscedasticKernel
 from sklearn.cluster import KMeans
 import numpy as np
 

@@ -88,7 +88,7 @@ def benchmark_function(func, test_file, write_dir="results", overwrite=False, se
 def plot_execution_times(
     data_dir="results",
     img_dir="plots",
-    target_time=30,
+    target_time=10,
 ):
     """
     Plots execution time vs number of points for each method.
@@ -148,8 +148,8 @@ def plot_execution_times(
         plt.plot(x, y, marker="o", label=readable_name)
 
         # Only save to cache if crossing point <= max tested npoints
-        if not np.isnan(point_at_target) and point_at_target <= max(x):
-            max_npoints_cache[method] = int(max(x))
+        if not np.isnan(point_at_target) and 0 < point_at_target <= max(x):
+            max_npoints_cache[method] = int(point_at_target)
 
     plt.xlabel("Number of Points")
     plt.ylabel("Execution Time (s)")
@@ -158,7 +158,7 @@ def plot_execution_times(
     plt.grid(True, linestyle="--", alpha=0.6)
     plt.tight_layout()
 
-    save_imgs(img_dir, "execution_times_vs_points")
+    save_imgs("execution_times_vs_points", img_dir)
     plt.show()
 
     # Save cache

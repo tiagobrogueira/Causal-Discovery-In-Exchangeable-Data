@@ -1,0 +1,79 @@
+method,dataset,accuracy,AUROC,AUDRC,source
+emd,SIM,0.45,, ,bqcd
+emd,SIM-c,0.40,, ,bqcd
+emd,SIM-ln,0.52,, ,bqcd
+emd,SIM-G,0.58,, ,bqcd
+emd,AN,0.36,, ,bqcd
+emd,AN-s,0.33,, ,bqcd
+emd,LS,0.60,, ,bqcd
+emd,LS-s,0.42,, ,bqcd
+emd,MN-U,0.83,, ,bqcd
+emd,Tuebingen,0.68,0.43,,bqcd
+lingam,SIM,0.42,, ,bqcd
+lingam,SIM-c,0.53,, ,bqcd
+lingam,SIM-ln,0.31,, ,bqcd
+lingam,SIM-G,0.25,, ,bqcd
+lingam,AN,0.00,, ,bqcd
+lingam,AN-s,0.04,, ,bqcd
+lingam,LS,0.07,, ,bqcd
+lingam,LS-s,0.03,, ,bqcd
+lingam,MN-U,0.00,, ,bqcd
+lingam,Tuebingen,0.42,0.3, ,bqcd
+gran,SIM,0.48,, ,bqcd
+gran,SIM-c,0.44,, ,bqcd
+gran,SIM-ln,0.43,, ,bqcd
+gran,SIM-G,0.37,, ,bqcd
+gran,AN,0.05,, ,bqcd
+gran,AN-s,0.06,, ,bqcd
+gran,LS,0.11,, ,bqcd
+gran,LS-s,0.20,, ,bqcd
+gran,MN-U,0.50,, ,bqcd
+gran,Tuebingen,0.50,0.47, ,bqcd
+gpi,SIM,0.82,, ,bqcd
+gpi,SIM-c,0.86,, ,bqcd
+gpi,SIM-ln,0.88,, ,bqcd
+gpi,SIM-G,0.94,, ,bqcd
+gpi,AN,0.95,, ,bqcd
+gpi,AN-s,0.11,, ,bqcd
+gpi,LS,0.91,, ,bqcd
+gpi,LS-s,0.54,, ,bqcd
+gpi,MN-U,0.90,, ,bqcd
+gpi,Tuebingen,0.63,0.61, ,bqcd
+pnl,SIM,0.70,, ,bqcd
+pnl,SIM-c,0.65,, ,bqcd
+pnl,SIM-ln,0.61,, ,bqcd
+pnl,SIM-G,0.64,, ,bqcd
+pnl,AN,0.96,, ,bqcd
+pnl,AN-s,0.63,, ,bqcd
+pnl,LS,0.91,, ,bqcd
+pnl,LS-s,0.44,, ,bqcd
+pnl,MN-U,0.66,, ,bqcd
+pnl,Tuebingen,0.73,0.7, ,bqcd
+cure,Tuebingen,0.61,0.64, ,bqcd
+GRCI,AN,1.00,,1.00,LOCI
+GRCI,AN-s,0.94,,1.00,LOCI
+GRCI,LS,0.98,,1.00,LOCI
+GRCI,LS-s,0.87,,0.95,LOCI
+GRCI,MN-U,0.88,,0.97,LOCI
+GRCI,SIM,0.77,,0.90,LOCI
+GRCI,SIM-c,0.77,,0.92,LOCI
+GRCI,SIM-ln,0.77,,0.92,LOCI
+GRCI,SIM-G,0.70,,0.88,LOCI
+GRCI,Tuebingen,0.82,,0.73,LOCI
+GRCI,Cha,0.70,,0.71,LOCI
+GRCI,Net,0.85,,0.96,LOCI
+GRCI,Multi,0.77,,0.74,LOCI
+COMIC,AN,1.00,1.00, ,COMIC
+COMIC,AN-s,1.00,1.00, ,COMIC
+COMIC,LS,1.00,1.00, ,COMIC
+COMIC,LS-s,1.00,1.00, ,COMIC
+COMIC,MN-U,1.00,1.00, ,COMIC
+COMIC,SIM,0.57,0.58, ,COMIC
+COMIC,SIM-c,0.54,0.59, ,COMIC
+COMIC,SIM-G,0.78,0.85, ,COMIC
+COMIC,SIM-ln,0.89,0.95, ,COMIC
+COMIC,CE-Multi,0.79,0.91, ,COMIC
+COMIC,CE-Net,0.78,0.84, ,COMIC
+COMIC,CE-Cha,0.43,0.47, ,COMIC
+COMIC,Tuebingen,0.67,0.75, ,COMIC
+

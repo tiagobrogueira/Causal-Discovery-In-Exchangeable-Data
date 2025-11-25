@@ -25,7 +25,6 @@ def run_tuebingen(func, read_dir="benchmarks/Tuebingen", write_dir="results", ov
     else:
         df_existing = pd.DataFrame(columns=["method", "parameters", "Pair", "score", "weight", "timestamp"])
 
-    results = []
     for i, ((x, y), w) in enumerate(zip(data, weights)):
         exists = (
             (df_existing["method"] == method_name)
@@ -46,32 +45,30 @@ def run_tuebingen(func, read_dir="benchmarks/Tuebingen", write_dir="results", ov
         if np.isnan(score):
             score = "NA"
 
-        results.append({
+        result_row = {
             "method": method_name,
             "parameters": parameters,
             "Pair": i + 1,
             "score": score,
             "weight": w,
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        })
+        }
+        df_row = pd.DataFrame([result_row])
 
-    if not results:
-        print("❌ No results to save.")
-        return
-
-    df_new = pd.DataFrame(results)
-
-    if overwrite:
+        # remove existing row for this method/parameters/pair before writing new one
         df_existing = df_existing[
             ~(
                 (df_existing["method"] == method_name)
                 & (df_existing["parameters"] == parameters)
-                & (df_existing["Pair"].isin(df_new["Pair"]))
+                & (df_existing["Pair"] == i + 1)
             )
         ]
 
-    df_final = pd.concat([df_existing, df_new], ignore_index=True)
-    df_final.to_csv(path, index=False)
+        # Append in-memory and to CSV file
+        df_existing = pd.concat([df_existing, df_row], ignore_index=True)
+        df_existing.to_csv(path, index=False)
+        print(f"💾 Saved Pair {i+1} to CSV.")
+        
     print(f"✅ Saved Tuebingen results to {path}")
     return path
 

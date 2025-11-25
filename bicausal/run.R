@@ -13,6 +13,15 @@ test_file="bicausal/benchmarks/Lisbon/data/economy/taxi_fare_prediction/distance
 
 
 
-#benchmark_function(cam,test_file = test_file) #FALTA TRATAR DO BENCHMARK!!!!!
+#benchmark_function(grci,test_file = test_file) #FALTA TRATAR DO BENCHMARK!!!!!
 #run_tuebingen(cam)
-run_lisbon(cam)
+#run_lisbon(cam)
+
+#run_tuebingen(bqcd)
+#run_lisbon(bqcd)
+
+run_tuebingen(slope)
+#run_lisbon(slope)
+
+run_tuebingen(sloppy)
+#run_lisbon(sloppy)

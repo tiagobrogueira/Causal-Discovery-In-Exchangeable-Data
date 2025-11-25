@@ -1,5 +1,10 @@
 import numpy as np
 from cdt.causality.pairwise import GNN
+from cdt.utils.Settings import SETTINGS
+
+# 1. Explicitly set the default device for CDT to 'cpu'
+#SETTINGS.default_device = 'cpu'
+#SETTINGS.GPU = 0
 
 # Instantiate the pairwise GNN model
 model = GNN()
@@ -7,10 +12,11 @@ model = GNN()
 def max_points():
     try:
         from bicausal.helpers.timers import get_max_points
-        return get_max_points("GNN")
+        return get_max_points("CGNN")
     except ModuleNotFoundError:
         return None
 
+#preciso de diminiuir a complexidade computacional
 def cgnn(d):
     """
     Compute causal direction score with CDT's GNN (pairwise).

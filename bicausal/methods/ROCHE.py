@@ -7,6 +7,7 @@ def max_points():
         from bicausal.helpers.timers import get_max_points
         return get_max_points("ROCHE")
     except ModuleNotFoundError:
+        return 500 #easy fix - because it never takes less time than this.
         return None  # or set to None
     
 def roche(d):

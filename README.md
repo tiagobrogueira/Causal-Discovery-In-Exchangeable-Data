@@ -32,3 +32,5 @@ NOTE: Recalling timers requires deleting the entries manually in the storage.
 NOTE: CDCI with CTV was chosen since it performed the best overall in the published paper.
 
 NOTE: GPLVM was chosen the generalized one since the authors argue its better for the Tuebingen (and thus real-world data), which is the main focus of this work.
+
+NOTE: GPLVM was altared in line 67 in func optimization_step to ensure library comptability with a newer version of tensorflow.

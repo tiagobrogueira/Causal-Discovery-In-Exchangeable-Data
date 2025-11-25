@@ -15,11 +15,8 @@ def cds(d):
     x, y = d
 
     # Possibly subsample if too many points
-    m = max_points()
-    if m is not None and len(x) > m:
-        idx = np.random.choice(len(x), m, replace=False)
-        x = x[idx]
-        y = y[idx]
+    if x.shape[1]>1 or y.shape[1]>1:
+        return np.nan
 
     # Use the CDS model to predict
     return cds_model.predict_proba((x, y))

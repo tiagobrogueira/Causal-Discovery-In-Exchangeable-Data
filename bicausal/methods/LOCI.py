@@ -4,7 +4,7 @@ from bicausal.methods.source_implementations.loci_main.causa.loci import loci as
 def max_points():
     try:
         from bicausal.helpers.timers import get_max_points
-        return get_max_points("LCube")
+        return get_max_points("LOCI")
     except ModuleNotFoundError:
         return None  # or set to None
         

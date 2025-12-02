@@ -373,3 +373,24 @@ def correct_names(folder: str = "results"):
 
             # Save back to CSV
             df.to_csv(filepath, index=False)
+
+
+def nanning(dir="results"):
+    if not os.path.isdir(dir):
+        raise ValueError(f"Directory '{dir}' does not exist.")
+
+    for filename in os.listdir(dir):
+        if filename.lower().endswith(".csv"):
+            filepath = os.path.join(dir, filename)
+            
+            # Load CSV normally
+            df = pd.read_csv(filepath)
+            
+            # Check if score column exists
+            if df.shape[1] >= 4:  # fourth column exists
+                col_name = df.columns[3]  # fourth column
+                # Replace empty or NaN with "NA"
+                df[col_name] = df[col_name].apply(lambda x: "NA" if pd.isna(x) or x == 0 else x)
+                
+                # Save back
+                df.to_csv(filepath, index=False)

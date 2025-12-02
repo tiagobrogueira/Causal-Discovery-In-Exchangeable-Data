@@ -110,10 +110,12 @@ run_tuebingen <- function(func,
 
   args <- list(...)
   method_name <- deparse(substitute(func))
+  method_name_lower <- tolower(method_name)
   parameters <- serialize_params(list(), args)
 
   if (file.exists(path)) {
     df_existing <- read_csv(path, show_col_types = FALSE)
+    df_existing$method <- tolower(df_existing$method)
     df_existing$parameters <- sapply(df_existing$parameters, normalize_str)
   } else {
     df_existing <- tibble(
@@ -134,10 +136,11 @@ run_tuebingen <- function(func,
     w <- weights[[i]]
 
     exists <- any(
-      df_existing$method == method_name &
+      df_existing$method == method_name_lower &
       df_existing$parameters == parameters &
       df_existing$Pair == i
     )
+
 
     if (exists && !overwrite) {
       cat("⏩ Skipping Pair", i, "for", method_name, "(already computed)\n")
@@ -173,7 +176,7 @@ run_tuebingen <- function(func,
 
   if (overwrite) {
     df_existing <- df_existing %>%
-      filter(!(method == method_name &
+      filter(!(method == method_name_lower &
                parameters == parameters &
                Pair %in% df_new$Pair))
   }
@@ -202,10 +205,12 @@ run_lisbon <- function(func,
 
   args <- list(...)
   method_name <- deparse(substitute(func))
+  method_name_lower <- tolower(method_name)
   parameters <- serialize_params(list(), args)
 
   if (file.exists(output_path)) {
     df_results <- read_csv(output_path, show_col_types = FALSE)
+    df_results$method <- tolower(df_results$method)
     df_results$parameters <- sapply(df_results$parameters, normalize_str)
   } else {
     df_results <- tibble(
@@ -229,7 +234,7 @@ run_lisbon <- function(func,
   for (path in txt_files) {
     fname <- basename(path)
     exists <- any(
-      df_results$method == method_name &
+      df_results$method == method_name_lower &
       df_results$parameters == parameters &
       df_results$filename == fname
     )
@@ -240,7 +245,7 @@ run_lisbon <- function(func,
     }
 
     df <- tryCatch({
-      read_table(path, col_names = FALSE)
+      read_table(path, col_names = FALSE, show_col_types = FALSE)
     }, error = function(e) {
       cat("⚠️ Skipping", fname, "due to error:", e$message, "\n")
       return(NULL)
@@ -274,7 +279,7 @@ run_lisbon <- function(func,
     df_new <- bind_rows(new_rows)
     if (overwrite) {
       df_results <- df_results %>%
-        filter(!(method == method_name &
+        filter(!(method == method_name_lower &
                  parameters == parameters &
                  filename %in% df_new$filename))
     }
@@ -321,10 +326,12 @@ benchmark_function <- function(func,
 
   args <- list(...)
   method_name <- deparse(substitute(func))
+  method_name_lower <- tolower(method_name)
   parameters <- serialize_params(list(), args)
 
   if (file.exists(output_path)) {
     times_df <- read_csv(output_path, show_col_types = FALSE)
+    times_df$method <- tolower(times_df$method)
     times_df$parameters <- sapply(times_df$parameters, normalize_str)
   } else {
     times_df <- tibble(
@@ -338,7 +345,7 @@ benchmark_function <- function(func,
 
   for (n_points in sizes) {
     exists <- any(
-      times_df$method == method_name &
+      times_df$method == method_name_lower &
       times_df$parameters == parameters &
       times_df$npoints == n_points
     )
@@ -375,7 +382,7 @@ benchmark_function <- function(func,
 
     if (overwrite) {
       times_df <- times_df %>%
-        filter(!(method == method_name &
+        filter(!(method == method_name_lower &
                  parameters == parameters &
                  npoints == n_points))
     }

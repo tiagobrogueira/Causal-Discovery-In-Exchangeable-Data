@@ -11,6 +11,7 @@ import ot
 from scipy.stats import spearmanr
 from scipy.stats import pearsonr
 from bicausal.helpers.extra import hsic, XtendedCorrel
+from bicausal.helpers.namemap import name_map
 import openpyxl
 import json
 
@@ -349,3 +350,26 @@ def normalize_str(value):
     if pd.isna(value) or value is None:
         return ""
     return str(value) 
+
+def correct_names(folder: str = "results"):
+
+    # Ensure folder exists
+    if not os.path.isdir(folder):
+        raise FileNotFoundError(f"The folder '{folder}' does not exist.")
+
+    for filename in os.listdir(folder):
+        if filename.lower().endswith(".csv"):
+            filepath = os.path.join(folder, filename)
+
+            # Load CSV
+            df = pd.read_csv(filepath)
+
+            # If "method" column exists, update names
+            if "method" in df.columns:
+                # Replace only names that exist in the mapping
+                df["method"] = df["method"].map(
+                    lambda x: name_map[x] if x in name_map else x
+                )
+
+            # Save back to CSV
+            df.to_csv(filepath, index=False)

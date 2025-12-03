@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import matplotlib as mpl
+plt.rcParams['axes.prop_cycle'] = mpl.cycler(color=plt.cm.tab20.colors)
 
 def compute_audrc(scores, weights):
     weights = weights[~np.isnan(scores)]  
@@ -47,7 +49,8 @@ def plot_audrc(method_results,ax=None,baselines=True):
     ax.set_xlabel("Decision Rate")
     ax.set_ylabel("Accuracy")
     ax.set_title("AUDRC Curves")
-    ax.legend()
+    ax.grid(alpha=0.3, linestyle="--", linewidth=0.6)
+    ax.legend(fontsize='x-small')
 
 
 def plot_audrc_vs(method_results_A, method_results_B,
@@ -85,5 +88,6 @@ def plot_audrc_vs(method_results_A, method_results_B,
 
     ax.set_xlabel("Decision Rate")
     ax.set_ylabel("Accuracy")
-    
-    ax.legend()
+    ax.grid(alpha=0.3, linestyle="--", linewidth=0.6)
+
+    ax.legend(fontsize='x-small')

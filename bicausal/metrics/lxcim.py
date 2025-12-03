@@ -3,6 +3,8 @@ if not hasattr(np, "trapezoid"):
     np.trapezoid = np.trapz
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import matplotlib as mpl
+plt.rcParams['axes.prop_cycle'] = mpl.cycler(color=plt.cm.tab20.colors)
 
 
 
@@ -58,7 +60,8 @@ def plot_lxcim(method_results,ax=None,baselines=True):
     ax.set_xlabel("Decision Rate")
     ax.set_ylabel("Cumulative Accuracy")
     ax.set_title("LxCIM Curves")
-    ax.legend()
+    ax.grid(alpha=0.3, linestyle="--", linewidth=0.6)
+    ax.legend(fontsize='x-small')
 
 
 def plot_lxcim_vs(method_results_A, method_results_B, cmap_A=None, cmap_B=None,
@@ -96,8 +99,8 @@ def plot_lxcim_vs(method_results_A, method_results_B, cmap_A=None, cmap_B=None,
 
     ax.set_xlabel("Decision Rate")
     ax.set_ylabel("Cumulative Accuracy")
-    
-    ax.legend()
+    ax.grid(alpha=0.3, linestyle="--", linewidth=0.6)
+    ax.legend(fontsize='x-small')
 
 
 

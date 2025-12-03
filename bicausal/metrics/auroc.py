@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from sklearn.metrics import roc_auc_score, roc_curve
+import matplotlib as mpl
+plt.rcParams['axes.prop_cycle'] = mpl.cycler(color=plt.cm.tab20.colors)
 
 def compute_auroc(scores,weights):
     weights = weights[~np.isnan(scores)]  
@@ -36,8 +38,9 @@ def plot_auroc(method_results,ax=None,baselines=True):
     ax.set_xlabel("False Positive Rate (FPR)")
     ax.set_ylabel("True Positive Rate (TPR)")
     ax.set_title("AUROC Curves")
-    ax.legend()
-    
+    ax.grid(alpha=0.3, linestyle="--", linewidth=0.6)
+    ax.legend(fontsize='x-small')
+
 def plot_auroc_vs(method_results_A, method_results_B,
                     ax=None, baselines=True, cmap_A=None, cmap_B=None):
 
@@ -73,8 +76,8 @@ def plot_auroc_vs(method_results_A, method_results_B,
 
     ax.set_xlabel("False Positive Rate (FPR)")
     ax.set_ylabel("True Positive Rate (TPR)")
-    
-    ax.legend()
+    ax.grid(alpha=0.3, linestyle="--", linewidth=0.6)
+    ax.legend(fontsize='x-small')
 
 
 

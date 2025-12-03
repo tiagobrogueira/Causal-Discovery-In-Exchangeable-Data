@@ -17,7 +17,8 @@ def plot_dataset_curves(
     metrics=["LxCIM"],
     include_variations=False,
     img_dir="plots",
-    scores_path=None
+    scores_path=None,
+    figure_name=None
 ):
     #Obtain method results
     if dataset == "Tuebingen" or dataset == "Tübingen":
@@ -69,7 +70,9 @@ def plot_dataset_curves(
         ax.set_title(f"{dataset} - {metric}")
 
     # --- Save final figure 
-    save_imgs(f"{dataset} curves", img_dir)
+    if figure_name is None:
+        figure_name = f"{dataset} curves"
+    save_imgs(figure_name, img_dir)
     
     return fig, axs
 
@@ -80,7 +83,8 @@ def plot_dataset_curves_vs(
     metrics=["LxCIM"],
     include_variations=False,
     img_dir="plots",
-    scores_path=None
+    scores_path=None,
+    figure_name=None
 ):
     # === Process dataset scores (IDENTICAL to baseline implementation) ===
     if dataset == "Tuebingen" or dataset == "Tübingen":
@@ -152,7 +156,9 @@ def plot_dataset_curves_vs(
         ax.set_title(f"{dataset} - {metric}")
 
     # === Save figure matching original function ===
-    save_imgs(f"{dataset} curves VS", img_dir)
+    if figure_name is None:
+        figure_name = f"{dataset} curves VS"
+    save_imgs(figure_name, img_dir)
 
     return fig, axs
 
@@ -177,7 +183,8 @@ def plot_method_curves(
     include_variations=False,
     img_dir="plots",
     scores_path=None,
-    results_path="results/results.csv"
+    results_path="results/results.csv",
+    figure_name=None
 ):
 
     method_results = []
@@ -251,7 +258,9 @@ def plot_method_curves(
 
         ax.set_title(f"{method} - {metric}")
 
-    save_imgs(f"{method} curves", img_dir)
+    if figure_name is None:
+        figure_name = f"{method} curves"
+    save_imgs(figure_name, img_dir)
     return fig, axs
 
 
@@ -261,7 +270,8 @@ def plot_with_correctness(
     metric="LxCIM",
     scores_path=None,
     figsize=(6, 6),
-    img_dir="plots"
+    img_dir="plots",
+    figure_name=None
 ):
     """
     Plot a single metric (LxCIM or AUDRC) for a dataset/method,
@@ -347,7 +357,9 @@ def plot_with_correctness(
     ax2.set_title(f"{metric} - {dataset}")
 
     plt.tight_layout()
-    save_imgs(f"{metric}-{method}-{dataset}", img_dir)
+    if figure_name is None:
+        figure_name = f"{metric}-{method}-{dataset}"
+    save_imgs(figure_name, img_dir)
     return fig, (ax1, ax2)
 
 
@@ -356,7 +368,8 @@ def plot_both_with_correctness(
     dataset,
     scores_path=None,
     figsize=(6, 6),
-    img_dir="plots"
+    img_dir="plots",
+    figure_name=None
 ):
     """
     Plot both LxCIM and AUDRC metrics together for a dataset/method,
@@ -441,6 +454,9 @@ def plot_both_with_correctness(
 
     plt.tight_layout()
 
-    save_imgs(f"both-{method}-{dataset}", img_dir)
+    if figure_name is None:
+        figure_name = f"both-{method}-{dataset}"
+        
+    save_imgs(figure_name, img_dir)
 
     return fig, ax1

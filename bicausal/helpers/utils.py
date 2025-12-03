@@ -115,8 +115,8 @@ def switch_signs(vector):
     return new_vector, mask
 
 def sanitize_filename(filename):
-    # Replace non-allowed characters with underscores
-    sanitized = re.sub(r'[^a-zA-Z0-9_.-]', '_', filename)
+    # Allow letters, numbers, underscore, dot, dash, and slash
+    sanitized = re.sub(r'[^a-zA-Z0-9_.\/-]', '_', filename)
     # Collapse multiple underscores into one
     sanitized = re.sub(r'_+', '_', sanitized)
     # Remove leading/trailing underscores

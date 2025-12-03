@@ -23,7 +23,7 @@ def auroc(scores,weights):
 def plot_auroc(method_results,ax=None,baselines=True):
     fig = None
     if ax is None:
-        fig, ax = plt.subplots(figsize=(7, 6))
+        fig, ax = plt.subplots(figsize=(6, 6))
     for method_name, scores, weights in method_results:
         auroc, tpr, fpr = compute_auroc(scores, weights)
         ax.plot(fpr, tpr, label=f"{method_name} ({auroc*100:.1f})")
@@ -43,7 +43,7 @@ def plot_auroc_vs(method_results_A, method_results_B,
 
     fig = None
     if ax is None:
-        fig, ax = plt.subplots(figsize=(7, 6))
+        fig, ax = plt.subplots(figsize=(6, 6))
 
     # Define color gradients
     if cmap_A is None:

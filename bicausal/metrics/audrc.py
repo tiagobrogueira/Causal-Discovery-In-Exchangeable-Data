@@ -34,7 +34,7 @@ def plot_audrc(method_results,ax=None,baselines=True):
     """
     fig = None
     if ax is None:
-        fig, ax = plt.subplots(figsize=(7, 6))
+        fig, ax = plt.subplots(figsize=(6, 6))
     for method_name, scores, weights in method_results:
         audrc, acc, dr = compute_audrc(scores, weights)
         ax.plot(dr, acc, label=f"{method_name} ({audrc*100:.1f})")
@@ -55,7 +55,7 @@ def plot_audrc_vs(method_results_A, method_results_B,
 
     fig = None
     if ax is None:
-        fig, ax = plt.subplots(figsize=(7, 6))
+        fig, ax = plt.subplots(figsize=(6, 6))
 
     # Define color gradients
     if cmap_A is None:

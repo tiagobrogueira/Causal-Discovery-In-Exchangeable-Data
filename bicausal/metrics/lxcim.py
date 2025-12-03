@@ -45,7 +45,7 @@ def plot_lxcim(method_results,ax=None,baselines=True):
     """
     fig = None
     if ax is None:
-        fig, ax = plt.subplots(figsize=(7, 6))
+        fig, ax = plt.subplots(figsize=(6, 6))
     for method_name, scores, weights in method_results:
         lxcim, cum_acc, dr = compute_lxcim(scores, weights)
         ax.plot(dr, cum_acc, label=f"{method_name} ({lxcim*100:.1f})")
@@ -66,7 +66,7 @@ def plot_lxcim_vs(method_results_A, method_results_B, cmap_A=None, cmap_B=None,
 
     fig = None
     if ax is None:
-        fig, ax = plt.subplots(figsize=(7, 6))
+        fig, ax = plt.subplots(figsize=(6, 6))
 
     # Define color gradients
     if cmap_A is None:

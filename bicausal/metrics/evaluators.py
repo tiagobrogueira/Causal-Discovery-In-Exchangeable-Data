@@ -192,6 +192,7 @@ def construct_table(
     metrics=["LxCIM", "accuracy"],
     include_variations=False,
     writedir="table",
+    table_title=None,
     outdated=None
 ):
     # =========================================================
@@ -321,6 +322,22 @@ def construct_table(
 
     table_df = table_df.fillna("")
 
+    sort_cols = table_df.columns.tolist()
+    table_df = table_df.sort_values(by=sort_cols, key=lambda col: col.astype(str).str.lower())
+
+    # =========================================================
+    # Adjust column names
+    # =========================================================
+    # Append "(%)" to metrics
+    metric_columns_with_percent = {m: f"{m} (%)" for m in matched_metrics if m in table_df.columns}
+    table_df.rename(columns=metric_columns_with_percent, inplace=True)
+    
+    # Capitalize all column titles
+    table_df.rename(columns=lambda x: x[0].upper() + x[1:] if x else x, inplace=True)
+
+
+    
+
 
     # =========================================================
     # PRINT — console-friendly using `tabulate`
@@ -337,7 +354,9 @@ def construct_table(
     os.makedirs(writedir, exist_ok=True)
 
     timestamp_str = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    latex_path = os.path.join(writedir, f"table_{timestamp_str}.tex")
+    if table_title is None:
+        table_title=f"table_{timestamp_str}"
+    latex_path = os.path.join(writedir, f"{table_title}.tex")
 
     latex_text = table_df.to_latex(index=False, escape=True)
 

@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
-from bicausal.metrics.lxcim import plot_lxcim, plot_lxcim_vs
+from bicausal.metrics.lxcim import plot_lxcim, plot_lxcim_vs, lxcim
 from bicausal.metrics.auroc import plot_auroc, plot_auroc_vs
-from bicausal.metrics.audrc import plot_audrc, plot_audrc_vs
+from bicausal.metrics.audrc import plot_audrc, plot_audrc_vs, audrc
 from bicausal.metrics.evaluators import metric_order
 from bicausal.helpers.processers import process_tuebingen_scores, process_lisbon_scores
 from bicausal.helpers.utils import save_imgs
@@ -253,3 +253,194 @@ def plot_method_curves(
 
     save_imgs(f"{method} curves", img_dir)
     return fig, axs
+
+
+def plot_with_correctness(
+    method,
+    dataset,
+    metric="LxCIM",
+    scores_path=None,
+    figsize=(6, 6),
+    img_dir="plots"
+):
+    """
+    Plot a single metric (LxCIM or AUDRC) for a dataset/method,
+    with correctness in the background.
+    """
+    metric = metric.upper()
+    if metric not in ("LXCIM", "AUDRC"):
+        raise ValueError("metric must be 'LxCIM' or 'AUDRC'.")
+
+    show_baselines = True  # baselines only make sense for single metric
+
+    # --- Load scores ---
+    if dataset in ("Tuebingen", "Tübingen"):
+        if scores_path is None:
+            scores_path = "results/tuebingen_scores.csv"
+        methods_params, scores_list, weights = process_tuebingen_scores(
+            methods=[method],
+            scores_path=scores_path
+        )
+        dataset = "Tübingen"
+
+    elif dataset.startswith("Lisbon"):
+        if scores_path is None:
+            scores_path = "results/lisbon_scores.csv"
+        (methods_params_list_list,
+         scores_list_list,
+         weights_list,
+         dataset_names) = process_lisbon_scores(
+            methods=[method],
+            scores_path=scores_path
+        )
+        if dataset not in dataset_names:
+            raise ValueError(f"Dataset '{dataset}' not found.")
+        idx = dataset_names.index(dataset)
+        methods_params = methods_params_list_list[idx]
+        scores_list = scores_list_list[idx]
+        weights = weights_list[idx]
+
+    else:
+        raise ValueError(f"Unknown dataset: {dataset}")
+
+    # Extract single method
+    (meth_name, params), scores = methods_params[0], scores_list[0]
+    method_label = meth_name if params == "" else f"{meth_name} ({params})"
+
+    # --- Sort, normalize, correctness ---
+
+    weights=weights[~np.isnan(scores)]
+    scores=scores[~np.isnan(scores)]
+    idx = np.argsort(-np.abs(scores))
+    scores = np.array(scores)[idx]
+    weights = np.array(weights)[idx]
+    weights = weights / np.sum(weights)
+    correct = (scores > 0)
+    xs = np.cumsum(weights)
+
+    # --- Figure ---
+    fig, ax1 = plt.subplots(figsize=figsize)
+    step_out = ax1.step(xs, correct, where="pre", color="green",linewidth=0.5)
+    correctness_handle = step_out[0] if isinstance(step_out, (list, tuple)) else step_out
+    correctness_handle.set_label("Correctness")
+
+    ax1.set_xlabel("Decision Rate")
+    ax1.set_ylabel("Correct (1/0)")
+    ax1.grid(alpha=0.3, linestyle="--", linewidth=0.6)
+
+    ax2 = ax1.twinx()
+
+    # Plot metric
+    if metric == "LXCIM":
+        plot_lxcim([(method_label, scores, weights)], ax=ax2, baselines=show_baselines)
+        val = lxcim(scores, weights) * 100
+    else:
+        plot_audrc([(method_label, scores, weights)], ax=ax2)
+        val = audrc(scores, weights) * 100
+
+    # Adjust legend
+    handles, labels = ax2.get_legend_handles_labels()
+    ax2.legend([correctness_handle] + handles,
+               ["Correctness"] + labels,
+               loc="lower right", fontsize=9, frameon=True, facecolor="white", edgecolor="white")
+
+    ax2.set_title(f"{metric} - {dataset}")
+
+    plt.tight_layout()
+    save_imgs(f"{metric}-{method}-{dataset}", img_dir)
+    return fig, (ax1, ax2)
+
+
+def plot_both_with_correctness(
+    method,
+    dataset,
+    scores_path=None,
+    figsize=(6, 6),
+    img_dir="plots"
+):
+    """
+    Plot both LxCIM and AUDRC metrics together for a dataset/method,
+    with correctness in the background.
+    """
+    metrics = ["LXCIM", "AUDRC"]
+    show_baselines = False  # don't show baselines when multiple metrics
+
+    # --- Load scores ---
+    if dataset in ("Tuebingen", "Tübingen"):
+        if scores_path is None:
+            scores_path = "results/tuebingen_scores.csv"
+        methods_params, scores_list, weights = process_tuebingen_scores(
+            methods=[method],
+            scores_path=scores_path
+        )
+        dataset = "Tübingen"
+
+    elif dataset.startswith("Lisbon"):
+        if scores_path is None:
+            scores_path = "results/lisbon_scores.csv"
+        (methods_params_list_list,
+         scores_list_list,
+         weights_list,
+         dataset_names) = process_lisbon_scores(
+            methods=[method],
+            scores_path=scores_path
+        )
+        if dataset not in dataset_names:
+            raise ValueError(f"Dataset '{dataset}' not found.")
+        idx = dataset_names.index(dataset)
+        methods_params = methods_params_list_list[idx]
+        scores_list = scores_list_list[idx]
+        weights = weights_list[idx]
+
+    else:
+        raise ValueError(f"Unknown dataset: {dataset}")
+
+    # Extract single method
+    (meth_name, params), scores = methods_params[0], scores_list[0]
+    method_label = meth_name if params == "" else f"{meth_name} ({params})"
+
+    # --- Sort, normalize, correctness ---
+    weights=weights[~np.isnan(scores)]
+    scores=scores[~np.isnan(scores)]
+    idx = np.argsort(-np.abs(scores))
+    scores = np.array(scores)[idx]
+    weights = np.array(weights)[idx]
+    weights = weights / np.sum(weights)
+    correct = (scores > 0).astype(float)
+    xs = np.cumsum(weights)
+
+    # --- Figure ---
+    fig, ax1 = plt.subplots(figsize=figsize)
+    step_out = ax1.step(xs, correct, where="pre", color="green",linewidth=0.5)
+    correctness_handle = step_out[0] if isinstance(step_out, (list, tuple)) else step_out
+    correctness_handle.set_label("Correctness")
+
+    metric_values = []
+    metric_handles = []
+
+    for met in metrics:
+        if met == "LXCIM":
+            plot_lxcim([(method_label, scores, weights)], ax=ax1, baselines=False)
+            val = lxcim(scores, weights) * 100
+        else:
+            plot_audrc([(method_label, scores, weights)], ax=ax1, baselines=False)
+            val = audrc(scores, weights) * 100
+        metric_values.append(val)
+        metric_handles.append(ax1.get_lines()[-1])
+    # Legend with metric values
+    ax1.set_xlabel("Decision Rate")
+    ax1.set_ylabel("Correct (1/0)")
+    ax1.grid(alpha=0.3, linestyle="--", linewidth=0.6)
+
+    legend_handles = [correctness_handle] + metric_handles
+    legend_labels = ["Correctness"] + [f"{m} ({v:.1f}%)" for m, v in zip(metrics, metric_values)]
+    ax1.legend(legend_handles, legend_labels, loc="lower right",
+               fontsize=9, frameon=True, facecolor="white", edgecolor="white")
+
+    ax1.set_title(f"{dataset} — {method_label}")
+
+    plt.tight_layout()
+
+    save_imgs(f"both-{method}-{dataset}", img_dir)
+
+    return fig, ax1

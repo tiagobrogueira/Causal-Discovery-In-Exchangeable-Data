@@ -267,3 +267,49 @@ def field_stats_excel(base_dir="benchmarks/Lisbon", excel=True, tex=True, table_
     print(f"Field statistics (including 'all' summary) saved to: {output_path}")
 
     return result
+
+
+def points_sources_stats(base_dir="benchmarks/Lisbon"):
+    """
+    Returns:
+        examples_per_source: list[int]
+        pairs_per_example: list[int]
+    """
+    data_root = os.path.join(base_dir, "data")
+    meta_root = os.path.join(base_dir, "meta")
+    if not os.path.exists(data_root):
+        raise ValueError(f"Data folder not found: {data_root}")
+
+    examples_per_source = []
+    pairs_per_example = []
+
+    for root, dirs, files in os.walk(data_root):
+        if root == data_root:
+            continue
+
+        txt_files = [f for f in files if f.endswith(".txt")]
+        if not txt_files:
+            continue
+
+        # count examples for this source
+        examples_per_source.append(len(txt_files))
+
+        rel_path = os.path.relpath(root, data_root)
+        meta_dir = os.path.join(meta_root, rel_path)
+
+        # gather pairs per example
+        for fname in txt_files:
+            meta_file = os.path.join(meta_dir, fname.replace(".txt", "_meta.txt"))
+            if not os.path.exists(meta_file):
+                continue
+            try:
+                with open(meta_file, "r", encoding="utf-8") as mf:
+                    for line in mf:
+                        if line.strip().startswith("Number of entries:"):
+                            n_points = int(line.split(":", 1)[1].strip())
+                            pairs_per_example.append(n_points)
+                            break
+            except:
+                continue
+
+    return examples_per_source, pairs_per_example

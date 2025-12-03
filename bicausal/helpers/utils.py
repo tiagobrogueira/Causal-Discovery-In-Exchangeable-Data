@@ -394,3 +394,37 @@ def nanning(dir="results"):
                 
                 # Save back
                 df.to_csv(filepath, index=False)
+
+
+def tuebingen_statistics(xlsx_path="benchmarks/Tuebingen/TuebingenAnalysis.xlsx"):
+    df = pd.read_excel(xlsx_path)
+
+    if not {"Datapoints", "weights"}.issubset(df.columns):
+        raise ValueError("Excel must contain columns: datapoints, weight")
+
+    # --- examples per number of points ---
+    datapoints = df["Datapoints"].dropna().astype(int).tolist()
+
+    # --- reconstruct number of examples per source ---
+    # Weight = 1/k => k = 1/weight
+    # Multiple rows with the same weight belong to the same source(s).
+    examples_per_source = []
+
+    # Count how many rows have each distinct weight
+    weight_counts = df["weights"].dropna().value_counts().to_dict()
+
+    for w, count in weight_counts.items():
+        if w <= 0:
+            continue
+        k = int(round(1.0 / float(w)))  # examples per source for this weight
+        if k <= 0:
+            continue
+
+        # number of complete sources represented by these rows
+        num_full_sources = count // k
+        for _ in range(num_full_sources):
+            examples_per_source.append(k)
+
+        remainder = count % k
+
+    return datapoints, examples_per_source

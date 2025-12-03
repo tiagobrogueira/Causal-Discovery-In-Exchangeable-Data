@@ -18,6 +18,7 @@ def plot_dataset_curves(
     include_variations=False,
     img_dir="plots",
     scores_path=None,
+    show_params=True,
     figure_name=None
 ):
     #Obtain method results
@@ -51,7 +52,10 @@ def plot_dataset_curves(
         # Apply variation filter
         if (not include_variations) and (params != ""):
             continue
-        label = f"{method} ({params})" if params != "" else f"{method}"
+        if show_params:
+            label = f"{method} ({params})" if params != "" else f"{method}"
+        else:
+            label = f"{method}"
         method_results.append((label, scores, weights))
 
     # --- Determine plotting layout 
@@ -82,6 +86,7 @@ def plot_dataset_curves_vs(
     methods_B=[],                      # optional, auto-detected if empty
     metrics=["LxCIM"],
     include_variations=False,
+    show_params=True,
     img_dir="plots",
     scores_path=None,
     figure_name=None
@@ -121,7 +126,10 @@ def plot_dataset_curves_vs(
     for (method, params), scores in zip(methods_params, scores_list):
         if (not include_variations) and (params != ""):
             continue
-        label = f"{method} ({params})" if params != "" else f"{method}"
+        if show_params:
+            label = f"{method} ({params})" if params != "" else f"{method}"
+        else:
+            label = f"{method}"
         all_method_results.append((label, scores, weights))
 
     # === Split into Groups A and B ===

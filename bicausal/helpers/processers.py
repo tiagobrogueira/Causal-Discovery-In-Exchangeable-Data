@@ -109,10 +109,6 @@ def process_lisbon_scores(methods=[], scores_path="results/lisbon_scores.csv", d
             # Create score vector in correct order
             scores_by_file = subdf_fields.set_index("filename")["score"].astype(float)
             score_vector = np.array([scores_by_file[fname] for fname in relevant_files])
-            
-            if np.isnan(score_vector).any():
-                print(f"⚠️ Skipping method={method}, params={params!r} for {dataset_name} due to NaN values in scores")
-                continue
 
             method_param_list.append((method, params))
             scores_list.append(score_vector)

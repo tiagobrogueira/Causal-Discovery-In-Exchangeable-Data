@@ -75,7 +75,6 @@ Sloppy = function(t, fun=fitSpline, scoreF=BICscore, params=NULL){
             nParams = resYtoX$nParams
         }
     }
-    print(nParams)
     r = list(epsilon = eps, cd = causd, XtoY.meta=resXtoY, YtoX.meta=resYtoX, nParams=nParams, ER=errorRatio)
     return(r)
 }

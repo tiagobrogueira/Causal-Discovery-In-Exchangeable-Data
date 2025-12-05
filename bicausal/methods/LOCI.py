@@ -15,6 +15,7 @@ def loci(d):
         return np.nan
     if max_points() is not None:
         n = min(max_points(), len(x))
+        print(n)
         idx = np.random.choice(len(x), n, replace=False)
         x = x[idx]
         y = y[idx]

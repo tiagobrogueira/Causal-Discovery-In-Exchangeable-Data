@@ -52,7 +52,9 @@ def plot_dataset_curves(
         # Apply variation filter
         if (not include_variations) and (params != ""):
             continue
-        if show_params:
+        if method=="RDMDL" and params != "":
+            label = "RDMDL*"
+        elif show_params:
             label = f"{method} ({params})" if params != "" else f"{method}"
         else:
             label = f"{method}"
@@ -126,7 +128,9 @@ def plot_dataset_curves_vs(
     for (method, params), scores in zip(methods_params, scores_list):
         if (not include_variations) and (params != ""):
             continue
-        if show_params:
+        if method=="RDMDL" and params != "":
+            label = "RDMDL*"
+        elif show_params:
             label = f"{method} ({params})" if params != "" else f"{method}"
         else:
             label = f"{method}"
@@ -244,8 +248,10 @@ def plot_method_curves(
                 continue
             if (not include_variations) and (params != ""):
                 continue
-
-            label = f"{dataset_name} ({params})" if params != "" else dataset_name
+            if method=="RDMDL" and params != "":
+                label = "RDMDL*"
+            else:
+                label = f"{dataset_name} ({params})" if params != "" else dataset_name
             method_results.append((label, scores, weights))
 
     # === Plotting (same as baseline) ===

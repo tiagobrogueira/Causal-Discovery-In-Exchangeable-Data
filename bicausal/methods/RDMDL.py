@@ -2,6 +2,7 @@ import numpy as np
 import math
 from scipy.optimize import curve_fit
 from sklearn.preprocessing import minmax_scale
+np.seterr(divide='ignore')
 
 def resolution(x):
     x = np.sort(np.asarray(x))

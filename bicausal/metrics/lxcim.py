@@ -79,16 +79,16 @@ def plot_lxcim_vs(method_results_A, method_results_B, cmap_A=None, cmap_B=None,
         base_cmap = cm.get_cmap("Reds")
         cmap_B = base_cmap(np.linspace(0.5, 1, len(method_results_B)))
 
-    # --- Plot Group A ---
-    for idx, (method_name, scores, weights) in enumerate(method_results_A):
-        lxcim, cum_acc, dr = compute_lxcim(scores, weights)
-        ax.plot(dr, cum_acc, color=cmap_A[idx],
-                label=f"{method_name} ({lxcim*100:.1f})")
-
     # --- Plot Group B ---
     for idx, (method_name, scores, weights) in enumerate(method_results_B):
         lxcim, cum_acc, dr = compute_lxcim(scores, weights)
         ax.plot(dr, cum_acc, color=cmap_B[idx],
+                label=f"{method_name} ({lxcim*100:.1f})")
+
+        # --- Plot Group A ---
+    for idx, (method_name, scores, weights) in enumerate(method_results_A):
+        lxcim, cum_acc, dr = compute_lxcim(scores, weights)
+        ax.plot(dr, cum_acc, color=cmap_A[idx],
                 label=f"{method_name} ({lxcim*100:.1f})")
 
     # Baselines

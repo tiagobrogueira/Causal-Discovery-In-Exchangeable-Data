@@ -51,5 +51,10 @@ def lcube(d):
         
     x=x.flatten()
     y=y.flatten()
-    direction, strength = infer_causal_direction(x, y)
+    try:
+        direction, strength = infer_causal_direction(x, y)
+    except Exception as e:
+        print(e)
+    
+    print("dir, str", direction,strength)
     return strength

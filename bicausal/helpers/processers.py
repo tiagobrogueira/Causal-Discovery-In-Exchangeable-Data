@@ -136,12 +136,6 @@ def process_synthetic_scores(methods=[],
 
     all_datasets = sorted(df["dataset"].unique())
 
-    bad = df[df["score"].astype(str).str.strip() == ""]
-    print("EMPTY SCORE ROWS:\n", bad)
-
-    non_numeric = df[~df["score"].astype(str).str.match(r'^-?\d+(\.\d+)?$')]
-    print("NON-NUMERIC SCORE ROWS:\n", non_numeric)
-
     methods_params_list_list = []
     scores_list_list = []
     weights_list     = []

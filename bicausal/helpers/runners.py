@@ -343,7 +343,7 @@ def run_anlsmn(
             # -----------------------------
             # Correct direction using GT
             # -----------------------------
-            if pairs_gt[i - 1] == -1:
+            if pairs_gt[i - 1] == 0:
                 x, y = y, x     # swap
 
             # -----------------------------
@@ -461,7 +461,6 @@ def run_sim(
             # --------------------------------------------
             # Load corresponding pair file
             # --------------------------------------------
-            print("Pair",pair_id)
             pair_file = os.path.join(dataset_dir, f"pair{pair_id}.txt")
             if not os.path.isfile(pair_file):
                 print(f"⚠️ Missing pair file: {pair_file}, skipping.")

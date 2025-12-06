@@ -562,7 +562,7 @@ run_anlsmn <- function(func,
       y <- as.matrix(df_pair[[2]])
 
       # Correct direction using GT
-      if (pairs_gt[pair_idx] == -1) {
+      if (pairs_gt[pair_idx] == 0) {
         tmp <- x
         x <- y
         y <- tmp

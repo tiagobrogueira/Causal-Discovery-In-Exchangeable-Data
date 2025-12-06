@@ -375,6 +375,9 @@ def correct_names(folder: str = "results"):
             df.to_csv(filepath, index=False)
 
 
+import os
+import pandas as pd
+
 def nanning(dir="results"):
     if not os.path.isdir(dir):
         raise ValueError(f"Directory '{dir}' does not exist.")
@@ -382,18 +385,23 @@ def nanning(dir="results"):
     for filename in os.listdir(dir):
         if filename.lower().endswith(".csv"):
             filepath = os.path.join(dir, filename)
+            print("Processing", filepath)
             
             # Load CSV normally
             df = pd.read_csv(filepath)
             
             # Check if score column exists
             if df.shape[1] >= 4:  # fourth column exists
-                col_name = df.columns[3]  # fourth column
-                # Replace empty or NaN with "NA"
-                df[col_name] = df[col_name].apply(lambda x: "NA" if pd.isna(x) or x == 0 else x)
-                
-                # Save back
-                df.to_csv(filepath, index=False)
+                col_name = "score"
+                if col_name in df.columns:
+                    # Track changes
+                    original_values = df[col_name].copy()
+                    
+                    # Replace empty or NaN or 0 with "NA"
+                    df[col_name] = df[col_name].apply(lambda x: "NA" if pd.isna(x) or x == "" or x == 0 else x)
+                    # Save back
+                    df.to_csv(filepath, index=False)
+
 
 
 def tuebingen_statistics(xlsx_path="benchmarks/Tuebingen/TuebingenAnalysis.xlsx"):

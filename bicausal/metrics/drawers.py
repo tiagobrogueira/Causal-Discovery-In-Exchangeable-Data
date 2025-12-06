@@ -47,6 +47,28 @@ def plot_dataset_curves(
         scores_list = scores_list_list[idx]
         weights = weights_list[idx]
 
+    else:
+        if dataset.startswith("CE") and original_scores_path is None:
+            scores_path="results/ce_scores.csv"
+        elif dataset.startswith("SIM") and original_scores_path is None:
+            scores_path="results/SIM_scores.csv"
+        elif original_scores_path is None:
+            scores_path="results/ANLSMN_scores.csv"
+
+
+        methods_params_list_list, scores_list_list, weights_list, dataset_names = process_synthetic_scores(
+                methods=[method],
+                scores_path=scores_path
+            )
+        if dataset not in dataset_names:
+            raise ValueError(f"Dataset '{dataset}' not found")
+
+        idx = dataset_names.index(dataset)
+        methods_params = methods_params_list_list[idx]
+        scores_list = scores_list_list[idx]
+        weights = weights_list[idx]
+        dataset_name = dataset
+
     method_results = []
     for (method, params), scores in zip(methods_params, scores_list):
         # Apply variation filter
@@ -116,6 +138,28 @@ def plot_dataset_curves_vs(
         methods_params = methods_params_list_list[idx]
         scores_list = scores_list_list[idx]
         weights = weights_list[idx]
+
+    else:
+        if dataset.startswith("CE") and original_scores_path is None:
+            scores_path="results/ce_scores.csv"
+        elif dataset.startswith("SIM") and original_scores_path is None:
+            scores_path="results/SIM_scores.csv"
+        elif original_scores_path is None:
+            scores_path="results/ANLSMN_scores.csv"
+
+
+        methods_params_list_list, scores_list_list, weights_list, dataset_names = process_synthetic_scores(
+                methods=[method],
+                scores_path=scores_path
+            )
+        if dataset not in dataset_names:
+            raise ValueError(f"Dataset '{dataset}' not found")
+
+        idx = dataset_names.index(dataset)
+        methods_params = methods_params_list_list[idx]
+        scores_list = scores_list_list[idx]
+        weights = weights_list[idx]
+        dataset_name = dataset
 
     # === Expand method name selectors across parameter variations ===
     # Helper: returns True if method matches selector string

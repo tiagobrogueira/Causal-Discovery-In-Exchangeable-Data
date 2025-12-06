@@ -161,3 +161,45 @@ def rdmdl(d, delta="nbased",scaling="minmax"):
 
     guess=(lytox-lxtoy)/len(x) #indepedent of n 
     return guess
+
+def rdmdl_lx(d,scaling="minmax",delta="nbased"):
+    x,y=d
+    if x.shape[1]>1 or y.shape[1]>1:
+        return np.nan
+    
+    if scaling == "minmax":
+        x = minmax_scale(x)
+        y = minmax_scale(y)
+    elif scaling == "normalize":
+        x = (x - np.mean(x)) / np.std(x)
+        y = (y - np.mean(y)) / np.std(y)
+    x=np.array(x).flatten()
+    y=np.array(y).flatten()
+
+    if delta=="nbased":
+        d=1/len(x)
+    else:
+        d=min(resolution(x), resolution(y))**2/12
+
+
+    lx=len(x)*information_dimension(x)*np.log2(1/d)/2
+    ly=len(y)*information_dimension(y)*np.log2(1/d)/2
+    return ly-lx
+
+def rdmdl_lyx(d,scaling="minmax"):
+    x,y=d
+    if x.shape[1]>1 or y.shape[1]>1:
+        return np.nan
+    
+    if scaling == "minmax":
+        x = minmax_scale(x)
+        y = minmax_scale(y)
+    elif scaling == "normalize":
+        x = (x - np.mean(x)) / np.std(x)
+        y = (y - np.mean(y)) / np.std(y)
+    x=np.array(x).flatten()
+    y=np.array(y).flatten()
+
+    _,lxy=compute_mdl_fit_v2(x,y)
+    _,lyx=compute_mdl_fit_v2(y,x)
+    return lyx-lxy  

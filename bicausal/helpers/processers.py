@@ -173,9 +173,11 @@ def process_synthetic_scores(methods=[],
                 print(f"⚠️ Skipping method={method}, params={params!r} "
                       f"on {dataset_name} due to missing pairs: {missing_pairs}")
                 continue
+            
+            scores_by_pair = sub.set_index("Pair")["score"].astype(float)
 
             # Build score vector in correct Pair order
-            scores_by_pair = sub.set_index("Pair")["score"].astype(float)
+            
             score_vector = np.array([scores_by_pair[p] for p in all_pairs])
 
             # Skip if NaNs inside

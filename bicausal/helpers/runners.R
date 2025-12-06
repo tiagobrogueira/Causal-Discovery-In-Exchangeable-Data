@@ -558,8 +558,8 @@ run_anlsmn <- function(func,
       }
 
       df_pair <- readr::read_csv(pair_file, show_col_types = FALSE)
-      x <- as.matrix(df_pair[[1]])
-      y <- as.matrix(df_pair[[2]])
+      x <- as.matrix(df_pair[[2]])
+      y <- as.matrix(df_pair[[3]])
 
       # Correct direction using GT
       if (pairs_gt[pair_idx] == 0) {
@@ -589,14 +589,17 @@ run_anlsmn <- function(func,
         timestamp = as.POSIXct(Sys.time(), tz = "UTC")
       )
 
-      # Overwrite old entry if needed
+      current_dataset <- dataset
+      current_parameters <- parameters
+
       if (overwrite) {
         df_existing <- df_existing %>%
           dplyr::filter(!(method == method_name &
-                          parameters == parameters &
-                          dataset == dataset &
+                          parameters == current_parameters &
+                          dataset == current_dataset &
                           Pair == pair_idx))
       }
+
 
       df_existing <- dplyr::bind_rows(df_existing, new_row)
       readr::write_csv(df_existing, output_path)

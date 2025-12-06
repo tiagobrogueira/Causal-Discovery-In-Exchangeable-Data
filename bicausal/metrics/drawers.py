@@ -6,7 +6,7 @@ from bicausal.metrics.lxcim import plot_lxcim, plot_lxcim_vs, lxcim
 from bicausal.metrics.auroc import plot_auroc, plot_auroc_vs
 from bicausal.metrics.audrc import plot_audrc, plot_audrc_vs, audrc
 from bicausal.metrics.evaluators import metric_order
-from bicausal.helpers.processers import process_tuebingen_scores, process_lisbon_scores
+from bicausal.helpers.processers import process_tuebingen_scores, process_lisbon_scores, process_synthetic_scores
 from bicausal.helpers.utils import save_imgs
 
 
@@ -128,8 +128,6 @@ def plot_dataset_curves_vs(
     for (method, params), scores in zip(methods_params, scores_list):
         if (not include_variations) and (params != ""):
             continue
-        if method=="RDMDL" and params != "":
-            label = "RDMDL*"
         elif show_params:
             label = f"{method} ({params})" if params != "" else f"{method}"
         else:
@@ -140,7 +138,7 @@ def plot_dataset_curves_vs(
     method_results_A = [mr for mr in all_method_results if method_in_selector(mr[0], methods_A)]
 
     if len(methods_B) == 0:  # auto-assign B = remaining methods
-        method_results_B = [mr for mr in all_method_results if mr not in method_results_A]
+        method_results_B = [mr for mr in all_method_results if mr[0] not in [m[0] for m in method_results_A]]
     else:
         method_results_B = [mr for mr in all_method_results if method_in_selector(mr[0], methods_B)]
 
@@ -150,6 +148,7 @@ def plot_dataset_curves_vs(
     if len(method_results_B) == 0:
         raise ValueError("No method matches B group (auto or provided).")
 
+    method_results_A = ["RDMDL*" if mr[0].startswith("RDMDL (") else mr for mr in method_results_A]
     # === Determine plot layout identical to baseline ===
     selected_metrics = [m for m in metric_order if m.lower() in [x.lower() for x in metrics]]
     num_plots = len(selected_metrics)
@@ -194,7 +193,7 @@ def plot_method_curves(
     metrics=["LxCIM"],
     include_variations=False,
     img_dir="plots",
-    scores_path=None,
+    original_scores_path=None,
     results_path="results/results.csv",
     figure_name=None
 ):
@@ -209,10 +208,10 @@ def plot_method_curves(
 
         # === Load scores for this dataset (original logic preserved) ===
         if dataset in ["Tuebingen", "Tübingen"]:
-            if scores_path is None:
+            if original_scores_path is None:
                 scores_path_tuebingen = "results/tuebingen_scores.csv"
             else:
-                scores_path_tuebingen = scores_path
+                scores_path_tuebingen = original_scores_path
             methods_params, scores_list, weights = process_tuebingen_scores(
                 methods=[method],   # filter method directly
                 scores_path=scores_path_tuebingen
@@ -220,10 +219,10 @@ def plot_method_curves(
             dataset_name = "Tübingen"
 
         elif dataset.startswith("Lisbon"):
-            if scores_path is None:
+            if original_scores_path is None:
                 scores_path_lisbon = "results/lisbon_scores.csv"
             else:
-                scores_path_lisbon = scores_path
+                scores_path_lisbon = original_scores_path
 
             methods_params_list_list, scores_list_list, weights_list, dataset_names = process_lisbon_scores(
                     methods=[method],
@@ -240,7 +239,26 @@ def plot_method_curves(
             dataset_name = dataset
 
         else:
-            raise ValueError(f"Unknown dataset: {dataset}")
+            if dataset.startswith("CE") and original_scores_path is None:
+                scores_path="results/ce_scores.csv"
+            elif dataset.startswith("SIM") and original_scores_path is None:
+                scores_path="results/SIM_scores.csv"
+            elif original_scores_path is None:
+                scores_path="results/ANLSMN_scores.csv"
+
+
+            methods_params_list_list, scores_list_list, weights_list, dataset_names = process_synthetic_scores(
+                    methods=[method],
+                    scores_path=scores_path
+                )
+            if dataset not in dataset_names:
+                raise ValueError(f"Dataset '{dataset}' not found")
+
+            idx = dataset_names.index(dataset)
+            methods_params = methods_params_list_list[idx]
+            scores_list = scores_list_list[idx]
+            weights = weights_list[idx]
+            dataset_name = dataset
 
         # === Collect method results (same logic, inverted labels) ===
         for (m, params), scores in zip(methods_params, scores_list):
@@ -249,7 +267,7 @@ def plot_method_curves(
             if (not include_variations) and (params != ""):
                 continue
             if method=="RDMDL" and params != "":
-                label = "RDMDL*"
+                label = f"{dataset_name}*"
             else:
                 label = f"{dataset_name} ({params})" if params != "" else dataset_name
             method_results.append((label, scores, weights))

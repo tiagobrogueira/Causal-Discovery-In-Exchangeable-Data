@@ -1,68 +1,68 @@
 method,dataset,accuracy,AUROC,AUDRC,source
-EMD,SIM,0.45,NA, ,bqcd
-EMD,SIM-c,0.4,NA, ,bqcd
-EMD,SIM-ln,0.52,NA, ,bqcd
-EMD,SIM-G,0.58,NA, ,bqcd
-EMD,AN,0.36,NA, ,bqcd
-EMD,AN-s,0.33,NA, ,bqcd
-EMD,LS,0.6,NA, ,bqcd
-EMD,LS-s,0.42,NA, ,bqcd
-EMD,MN-U,0.83,NA, ,bqcd
+EMD,SIM,0.45,, ,bqcd
+EMD,SIM-c,0.4,, ,bqcd
+EMD,SIM-ln,0.52,, ,bqcd
+EMD,SIM-G,0.58,, ,bqcd
+EMD,AN,0.36,, ,bqcd
+EMD,AN-s,0.33,, ,bqcd
+EMD,LS,0.6,, ,bqcd
+EMD,LS-s,0.42,, ,bqcd
+EMD,MN-U,0.83,, ,bqcd
 EMD,Tuebingen,0.68,0.43,,bqcd
-LiNGAM,SIM,0.42,NA, ,bqcd
-LiNGAM,SIM-c,0.53,NA, ,bqcd
-LiNGAM,SIM-ln,0.31,NA, ,bqcd
-LiNGAM,SIM-G,0.25,NA, ,bqcd
-LiNGAM,AN,0.0,NA, ,bqcd
-LiNGAM,AN-s,0.04,NA, ,bqcd
-LiNGAM,LS,0.07,NA, ,bqcd
-LiNGAM,LS-s,0.03,NA, ,bqcd
-LiNGAM,MN-U,0.0,NA, ,bqcd
+LiNGAM,SIM,0.42,, ,bqcd
+LiNGAM,SIM-c,0.53,, ,bqcd
+LiNGAM,SIM-ln,0.31,, ,bqcd
+LiNGAM,SIM-G,0.25,, ,bqcd
+LiNGAM,AN,0.0,, ,bqcd
+LiNGAM,AN-s,0.04,, ,bqcd
+LiNGAM,LS,0.07,, ,bqcd
+LiNGAM,LS-s,0.03,, ,bqcd
+LiNGAM,MN-U,0.0,, ,bqcd
 LiNGAM,Tuebingen,0.42,0.3, ,bqcd
-gran,SIM,0.48,NA, ,bqcd
-gran,SIM-c,0.44,NA, ,bqcd
-gran,SIM-ln,0.43,NA, ,bqcd
-gran,SIM-G,0.37,NA, ,bqcd
-gran,AN,0.05,NA, ,bqcd
-gran,AN-s,0.06,NA, ,bqcd
-gran,LS,0.11,NA, ,bqcd
-gran,LS-s,0.2,NA, ,bqcd
-gran,MN-U,0.5,NA, ,bqcd
+gran,SIM,0.48,, ,bqcd
+gran,SIM-c,0.44,, ,bqcd
+gran,SIM-ln,0.43,, ,bqcd
+gran,SIM-G,0.37,, ,bqcd
+gran,AN,0.05,, ,bqcd
+gran,AN-s,0.06,, ,bqcd
+gran,LS,0.11,, ,bqcd
+gran,LS-s,0.2,, ,bqcd
+gran,MN-U,0.5,, ,bqcd
 gran,Tuebingen,0.5,0.47, ,bqcd
-gpi,SIM,0.82,NA, ,bqcd
-gpi,SIM-c,0.86,NA, ,bqcd
-gpi,SIM-ln,0.88,NA, ,bqcd
-gpi,SIM-G,0.94,NA, ,bqcd
-gpi,AN,0.95,NA, ,bqcd
-gpi,AN-s,0.11,NA, ,bqcd
-gpi,LS,0.91,NA, ,bqcd
-gpi,LS-s,0.54,NA, ,bqcd
-gpi,MN-U,0.9,NA, ,bqcd
+gpi,SIM,0.82,, ,bqcd
+gpi,SIM-c,0.86,, ,bqcd
+gpi,SIM-ln,0.88,, ,bqcd
+gpi,SIM-G,0.94,, ,bqcd
+gpi,AN,0.95,, ,bqcd
+gpi,AN-s,0.11,, ,bqcd
+gpi,LS,0.91,, ,bqcd
+gpi,LS-s,0.54,, ,bqcd
+gpi,MN-U,0.9,, ,bqcd
 gpi,Tuebingen,0.63,0.61, ,bqcd
-PNL,SIM,0.7,NA, ,bqcd
-PNL,SIM-c,0.65,NA, ,bqcd
-PNL,SIM-ln,0.61,NA, ,bqcd
-PNL,SIM-G,0.64,NA, ,bqcd
-PNL,AN,0.96,NA, ,bqcd
-PNL,AN-s,0.63,NA, ,bqcd
-PNL,LS,0.91,NA, ,bqcd
-PNL,LS-s,0.44,NA, ,bqcd
-PNL,MN-U,0.66,NA, ,bqcd
+PNL,SIM,0.7,, ,bqcd
+PNL,SIM-c,0.65,, ,bqcd
+PNL,SIM-ln,0.61,, ,bqcd
+PNL,SIM-G,0.64,, ,bqcd
+PNL,AN,0.96,, ,bqcd
+PNL,AN-s,0.63,, ,bqcd
+PNL,LS,0.91,, ,bqcd
+PNL,LS-s,0.44,, ,bqcd
+PNL,MN-U,0.66,, ,bqcd
 PNL,Tuebingen,0.73,0.7, ,bqcd
 cure,Tuebingen,0.61,0.64, ,bqcd
-GRCI,AN,1.0,NA,1.00,LOCI
-GRCI,AN-s,0.94,NA,1.00,LOCI
-GRCI,LS,0.98,NA,1.00,LOCI
-GRCI,LS-s,0.87,NA,0.95,LOCI
-GRCI,MN-U,0.88,NA,0.97,LOCI
-GRCI,SIM,0.77,NA,0.90,LOCI
-GRCI,SIM-c,0.77,NA,0.92,LOCI
-GRCI,SIM-ln,0.77,NA,0.92,LOCI
-GRCI,SIM-G,0.7,NA,0.88,LOCI
-GRCI,Tuebingen,0.82,NA,0.73,LOCI
-GRCI,Cha,0.7,NA,0.71,LOCI
-GRCI,Net,0.85,NA,0.96,LOCI
-GRCI,Multi,0.77,NA,0.74,LOCI
+GRCI,AN,1.0,,1.00,LOCI
+GRCI,AN-s,0.94,,1.00,LOCI
+GRCI,LS,0.98,,1.00,LOCI
+GRCI,LS-s,0.87,,0.95,LOCI
+GRCI,MN-U,0.88,,0.97,LOCI
+GRCI,SIM,0.77,,0.90,LOCI
+GRCI,SIM-c,0.77,,0.92,LOCI
+GRCI,SIM-ln,0.77,,0.92,LOCI
+GRCI,SIM-G,0.7,,0.88,LOCI
+GRCI,Tuebingen,0.82,,0.73,LOCI
+GRCI,Cha,0.7,,0.71,LOCI
+GRCI,Net,0.85,,0.96,LOCI
+GRCI,Multi,0.77,,0.74,LOCI
 COMIC,AN,1.0,1.0, ,COMIC
 COMIC,AN-s,1.0,1.0, ,COMIC
 COMIC,LS,1.0,1.0, ,COMIC

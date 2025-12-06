@@ -2,28 +2,38 @@
 \toprule
 Method & Parameters & Dataset & LxCIM (\%) & Accuracy (\%) \\
 \midrule
-bQCD &  & AN & 49.6 & 51.0 \\
-bQCD &  & AN-s & 58.6 & 60.0 \\
+anm &  & AN & 47.6 & 48.0 \\
+anm &  & AN-s & 56.3 & 53.5 \\
+ANM &  & CE-Cha & 38.3 & 43.2 \\
+ANM &  & CE-Gauss & 46.1 & 47.7 \\
+ANM &  & CE-Multi & 50.1 & 50.5 \\
+ANM &  & CE-Net & 55.9 & 54.3 \\
+anm &  & LS & 56.5 & 54.5 \\
+anm &  & LS-s & 49.1 & 49.5 \\
+anm &  & MN-U & 43.1 & 45.5 \\
+bqcd &  & AN & 100.0 & 100.0 \\
+bqcd &  & AN-s & 90.5 & 83.0 \\
 bQCD &  & CE-Cha & 56.3 & 55.0 \\
 bQCD &  & CE-Gauss & 48.1 & 54.3 \\
 bQCD &  & CE-Multi & 53.2 & 49.0 \\
 bQCD &  & CE-Net & 90.7 & 81.3 \\
-bQCD &  & LS & 54.9 & 57.0 \\
-bQCD &  & LS-s & 51.4 & 50.0 \\
-bQCD &  & MN-U & 46.3 & 45.0 \\
+bqcd &  & LS & 100.0 & 100.0 \\
+bqcd &  & LS-s & 100.0 & 100.0 \\
+bQCD &  & MN-U & 100.0 & 100.0 \\
+bqcd &  & MN-U & 100.0 & 100.0 \\
 bQCD &  & SIM & 69.9 & 68.0 \\
 bQCD &  & SIM-c & 80.8 & 77.0 \\
 bQCD &  & SIM-G & 71.7 & 67.0 \\
 bQCD &  & SIM-ln & 91.9 & 87.0 \\
-CAM &  & AN & 53.1 & 48.0 \\
-CAM &  & AN-s & 44.3 & 39.0 \\
+cam &  & AN & 100.0 & 100.0 \\
+cam &  & AN-s & 100.0 & 100.0 \\
 CAM &  & CE-Cha & 58.6 & 53.3 \\
 CAM &  & CE-Gauss & 30.0 & 25.0 \\
 CAM &  & CE-Multi & 38.3 & 35.3 \\
 CAM &  & CE-Net & 81.6 & 78.3 \\
-CAM &  & LS & 47.4 & 50.0 \\
-CAM &  & LS-s & 43.9 & 43.0 \\
-CAM &  & MN-U & 53.1 & 50.0 \\
+cam &  & LS & 99.9 & 98.0 \\
+cam &  & LS-s & 36.9 & 52.0 \\
+cam &  & MN-U & 81.2 & 86.0 \\
 CAM &  & SIM & 62.3 & 56.0 \\
 CAM &  & SIM-c & 64.3 & 62.0 \\
 CAM &  & SIM-G & 88.2 & 82.0 \\
@@ -36,15 +46,10 @@ CDS &  & CE-Cha & 69.2 & 71.0 \\
 CDS &  & CE-Gauss & 90.6 & 84.0 \\
 CDS &  & CE-Multi & 41.2 & 43.7 \\
 CDS &  & CE-Net & 88.6 & 78.3 \\
-FOM &  & AN & 58.0 & 55.0 \\
-FOM &  & AN-s & 54.9 & 52.0 \\
 FOM &  & CE-Cha & 42.0 & 44.3 \\
 FOM &  & CE-Gauss & 56.4 & 53.0 \\
 FOM &  & CE-Multi & 10.4 & 20.0 \\
 FOM &  & CE-Net & 27.0 & 35.0 \\
-FOM &  & LS & 44.8 & 50.0 \\
-FOM &  & LS-s & 50.2 & 54.0 \\
-FOM &  & MN-U & 68.6 & 61.0 \\
 HECI &  & CE-Cha & 55.6 & 56.7 \\
 HECI &  & CE-Gauss & 51.9 & 48.3 \\
 HECI &  & CE-Multi & 97.5 & 90.7 \\
@@ -53,47 +58,59 @@ IGCI &  & CE-Cha & 55.9 & 55.0 \\
 IGCI &  & CE-Gauss & 16.0 & 21.3 \\
 IGCI &  & CE-Multi & 78.0 & 68.0 \\
 IGCI &  & CE-Net & 57.2 & 57.0 \\
-LOCI &  & AN & 55.3 & 55.0 \\
-LOCI &  & AN-s & 53.6 & 53.0 \\
+IGCI &  & SIM & 32.2 & 36.0 \\
+IGCI &  & SIM-c & 37.8 & 42.0 \\
+IGCI &  & SIM-G & 94.4 & 86.0 \\
+IGCI &  & SIM-ln & 65.3 & 59.0 \\
 LOCI &  & CE-Cha & 56.9 & 57.3 \\
 LOCI &  & CE-Gauss & 82.7 & 73.0 \\
 LOCI &  & CE-Multi & 71.4 & 70.0 \\
-RDMDL &  & AN & 54.8 & 52.0 \\
-RDMDL &  & AN-s & 51.5 & 49.0 \\
+RDMDL &  & AN & 17.2 & 27.0 \\
+rdmdl &  & AN & 82.8 & 73.0 \\
+RDMDL &  & AN-s & 48.7 & 49.0 \\
+rdmdl &  & AN-s & 51.3 & 51.0 \\
 RDMDL &  & CE-Cha & 64.2 & 60.7 \\
 RDMDL &  & CE-Gauss & 64.1 & 58.7 \\
 RDMDL &  & CE-Multi & 96.6 & 88.7 \\
 RDMDL &  & CE-Net & 80.7 & 72.0 \\
-RDMDL &  & LS & 49.0 & 53.0 \\
-RDMDL &  & LS-s & 44.0 & 46.0 \\
-RDMDL &  & MN-U & 35.4 & 40.0 \\
+RDMDL &  & LS & 24.0 & 34.0 \\
+rdmdl &  & LS & 76.0 & 66.0 \\
+rdmdl &  & LS-s & 7.6 & 13.0 \\
+RDMDL &  & LS-s & 92.4 & 87.0 \\
+rdmdl &  & MN-U & 1.4 & 7.0 \\
+RDMDL &  & MN-U & 98.6 & 93.0 \\
 RDMDL &  & SIM & 61.2 & 55.0 \\
 RDMDL &  & SIM-c & 66.3 & 64.0 \\
 RDMDL &  & SIM-G & 66.0 & 57.0 \\
 RDMDL &  & SIM-ln & 91.2 & 79.0 \\
-RDMDL & \{"delta": "res"\} & AN & 52.9 & 51.0 \\
-RDMDL & \{"delta": "res"\} & AN-s & 49.9 & 51.0 \\
+rdmdl & \{"delta": "res"\} & AN & 43.9 & 44.0 \\
+RDMDL & \{"delta": "res"\} & AN & 56.1 & 56.0 \\
+rdmdl & \{"delta": "res"\} & AN-s & 38.2 & 35.0 \\
+RDMDL & \{"delta": "res"\} & AN-s & 61.8 & 65.0 \\
 RDMDL & \{"delta": "res"\} & CE-Cha & 62.6 & 60.3 \\
 RDMDL & \{"delta": "res"\} & CE-Gauss & 58.0 & 54.3 \\
 RDMDL & \{"delta": "res"\} & CE-Multi & 97.0 & 90.0 \\
 RDMDL & \{"delta": "res"\} & CE-Net & 73.4 & 67.0 \\
-RDMDL & \{"delta": "res"\} & LS & 46.6 & 45.0 \\
-RDMDL & \{"delta": "res"\} & LS-s & 40.1 & 42.0 \\
-RDMDL & \{"delta": "res"\} & MN-U & 35.1 & 40.0 \\
+RDMDL & \{"delta": "res"\} & LS & 41.5 & 48.0 \\
+rdmdl & \{"delta": "res"\} & LS & 58.5 & 52.0 \\
+rdmdl & \{"delta": "res"\} & LS-s & 21.1 & 25.0 \\
+RDMDL & \{"delta": "res"\} & LS-s & 78.9 & 75.0 \\
+rdmdl & \{"delta": "res"\} & MN-U & 1.4 & 7.0 \\
+RDMDL & \{"delta": "res"\} & MN-U & 98.6 & 93.0 \\
 RDMDL & \{"delta": "res"\} & SIM & 49.8 & 48.0 \\
 RDMDL & \{"delta": "res"\} & SIM-c & 55.7 & 55.0 \\
 RDMDL & \{"delta": "res"\} & SIM-G & 61.3 & 55.0 \\
 RDMDL & \{"delta": "res"\} & SIM-ln & 82.0 & 70.0 \\
-ROCHE &  & AN & 50.7 & 55.0 \\
-ROCHE &  & AN-s & 50.9 & 52.0 \\
-ROCHE &  & LS & 49.7 & 49.0 \\
-ROCHE &  & LS-s & 48.6 & 54.0 \\
-ROCHE &  & MN-U & 64.7 & 61.0 \\
+reci &  & AN & 8.4 & 18.0 \\
+RECI &  & AN & 91.6 & 82.0 \\
+reci &  & AN-s & 24.7 & 35.0 \\
+RECI &  & AN-s & 75.2 & 65.0 \\
+RECI &  & LS & 84.8 & 78.0 \\
+RECI &  & LS-s & 61.0 & 56.0 \\
+RECI &  & MN-U & 94.4 & 87.0 \\
 Slope &  & CE-Net & 67.1 & 62.3 \\
-Slope &  & MN-U & 100.0 & 100.0 \\
 Slope &  & SIM-ln & 44.5 & 47.0 \\
 Sloppy &  & CE-Net & 70.1 & 62.3 \\
-Sloppy &  & MN-U & 100.0 & 100.0 \\
 Sloppy &  & SIM-ln & 56.9 & 54.0 \\
 \bottomrule
 \end{tabular}

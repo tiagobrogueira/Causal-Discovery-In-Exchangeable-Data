@@ -222,6 +222,18 @@ def run_ce(func, datasets=None, read_dir="benchmarks/synthetic/CE-Guyon",write_d
             if exists and not overwrite:
                 print(f"⏩ Skipping {dataset} Pair {pair_idx} (already computed)")
                 continue
+            
+            mask = (
+                (df_existing["method"].str.lower() == method_name.lower()) &
+                (df_existing["parameters"] == parameters) &
+                (df_existing["dataset"] == dataset) &
+                (df_existing["Pair"] == pair_idx)
+            )
+
+            if mask.any():
+                if overwrite:
+                    # Drop the existing row to overwrite it
+                    df_existing = df_existing[~mask]
 
             # Compute score
             try:
@@ -318,7 +330,7 @@ def run_anlsmn(
 
             # Exists?
             exists = (
-                (df_existing["method"] == method_name) &
+                (df_existing["method"].str.lower() == method_name.lower()) &
                 (df_existing["parameters"] == parameters) &
                 (df_existing["dataset"] == ext) &
                 (df_existing["Pair"] == pair_idx)
@@ -327,7 +339,17 @@ def run_anlsmn(
             if exists and not overwrite:
                 print(f"⏩ Skipping {ext} Pair {i} (already computed)")
                 continue
+            mask = (
+                (df_existing["method"].str.lower() == method_name.lower()) &
+                (df_existing["parameters"] == parameters) &
+                (df_existing["dataset"] == ext) &
+                (df_existing["Pair"] == pair_idx)
+            )
 
+            if mask.any():
+                if overwrite:
+                    # Drop the existing row to overwrite it
+                    df_existing = df_existing[~mask]
             # -----------------------------
             # Load pair file
             # -----------------------------
@@ -339,11 +361,10 @@ def run_anlsmn(
             df_pair = pd.read_csv(pair_file, sep=",", header=0, index_col=0)
             x = df_pair.iloc[:, 0].values.reshape(-1, 1)
             y = df_pair.iloc[:, 1].values.reshape(-1, 1)
-
             # -----------------------------
             # Correct direction using GT
             # -----------------------------
-            if pairs_gt[i - 1] == 0:
+            if pairs_gt[i - 1] == 1:
                 x, y = y, x     # swap
 
             # -----------------------------
@@ -458,6 +479,17 @@ def run_sim(
                 print(f"⏩ Skipping {dataset} Pair {pair_id} (already computed)")
                 continue
 
+            mask = (
+                (df_existing["method"].str.lower() == method_name.lower()) &
+                (df_existing["parameters"] == parameters) &
+                (df_existing["dataset"] == dataset) &
+                (df_existing["Pair"] == pair_idx)
+            )
+
+            if mask.any():
+                if overwrite:
+                    # Drop the existing row to overwrite it
+                    df_existing = df_existing[~mask]
             # --------------------------------------------
             # Load corresponding pair file
             # --------------------------------------------

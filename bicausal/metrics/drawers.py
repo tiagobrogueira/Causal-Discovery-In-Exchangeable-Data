@@ -46,8 +46,10 @@ def plot_dataset_curves(
         methods_params = methods_params_list_list[idx]
         scores_list = scores_list_list[idx]
         weights = weights_list[idx]
-
+        if dataset=="Lisbon - human_predictions":
+            dataset="Lisbon - human preferences"
     else:
+        original_scores_path=scores_path
         if dataset.startswith("CE") and original_scores_path is None:
             scores_path="results/ce_scores.csv"
         elif dataset.startswith("SIM") and original_scores_path is None:
@@ -57,7 +59,6 @@ def plot_dataset_curves(
 
 
         methods_params_list_list, scores_list_list, weights_list, dataset_names = process_synthetic_scores(
-                methods=[method],
                 scores_path=scores_path
             )
         if dataset not in dataset_names:
@@ -139,7 +140,10 @@ def plot_dataset_curves_vs(
         scores_list = scores_list_list[idx]
         weights = weights_list[idx]
 
+        if dataset=="Lisbon - human_predictions":
+            dataset="Lisbon - human preferences"
     else:
+        original_scores_path=scores_path
         if dataset.startswith("CE") and original_scores_path is None:
             scores_path="results/ce_scores.csv"
         elif dataset.startswith("SIM") and original_scores_path is None:
@@ -149,7 +153,6 @@ def plot_dataset_curves_vs(
 
 
         methods_params_list_list, scores_list_list, weights_list, dataset_names = process_synthetic_scores(
-                methods=[method],
                 scores_path=scores_path
             )
         if dataset not in dataset_names:
@@ -281,6 +284,9 @@ def plot_method_curves(
             scores_list = scores_list_list[idx]
             weights = weights_list[idx]
             dataset_name = dataset
+
+            if dataset=="Lisbon - human_predictions":
+                dataset_name="Lisbon - human preferences"
 
         else:
             if dataset.startswith("CE") and original_scores_path is None:

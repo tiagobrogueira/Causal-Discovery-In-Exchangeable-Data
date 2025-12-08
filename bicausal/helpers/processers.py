@@ -180,12 +180,6 @@ def process_synthetic_scores(methods=[],
             
             score_vector = np.array([scores_by_pair[p] for p in all_pairs])
 
-            # Skip if NaNs inside
-            if np.isnan(score_vector).any():
-                print(f"⚠️ Skipping method={method}, params={params!r} "
-                      f"on {dataset_name} due to NaN values")
-                continue
-
             method_param_list.append((method, params))
             scores_list.append(score_vector)
 

@@ -368,7 +368,7 @@ def correct_names(folder: str = "results"):
             if "method" in df.columns:
                 # Replace only names that exist in the mapping
                 df["method"] = df["method"].map(
-                    lambda x: name_map[x] if x in name_map else x
+                    lambda x: name_map[x.lower()] if x.lower() in name_map else x
                 )
 
             # Save back to CSV

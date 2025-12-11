@@ -403,8 +403,17 @@ def nanning(dir="results"):
                     # Save back
                     df.to_csv(filepath, index=False)
 
-def delete_repeated_lines(folder: str = "results"):
-    # 1. Ensure folder exists
+KNOWN_TIMESTAMP_FORMATS: List[str] = [
+    '%Y-%m-%dT%H:%M:%SZ',  # ISO 8601 (e.g., 2025-12-05T23:18:22Z)
+    '%Y-%m-%d %H:%M:%S',   # SQL format (e.g., 2025-12-07 21:23:30)
+    # Add any other known formats here if they appear
+]
+
+def delete_repeated_lines(folder: str = "results") -> None:
+    """
+    Ultimate fix: Handles mixed timestamp formats, floating point inconsistencies,
+    and missing data to robustly find and delete older duplicates.
+    """
     if not os.path.isdir(folder):
         raise FileNotFoundError(f"The folder '{folder}' does not exist.")
 
@@ -413,65 +422,75 @@ def delete_repeated_lines(folder: str = "results"):
             filepath = os.path.join(folder, filename)
             
             print(f"--- Processing {filename} ---")
-            
-            # 2. Load CSV
-            try:
-                df = pd.read_csv(filepath)
-            except Exception as e:
-                print(f"Error loading {filename}: {e}")
-                continue
+            df = pd.read_csv(filepath)
 
-            # 3. Check for required column
             if "timestamp" not in df.columns:
                 print(f"File {filename} skipped: Missing 'timestamp' column.")
                 continue
 
-            # 4. Identify the columns to consider for duplicates
-            # Start with all columns
-            duplicate_check_cols: List[str] = list(df.columns)
+            # 1. ROBUST TIMESTAMP PARSING (The key change)
+            print("Attempting robust timestamp parsing...")
             
-            # Exclude 'score' and 'timestamp' from the check list
-            columns_to_exclude: List[str] = ["score", "timestamp"]
-            for col in columns_to_exclude:
-                if col in duplicate_check_cols:
-                    duplicate_check_cols.remove(col)
+            # Start with a column of NaT
+            df['parsed_timestamp'] = pd.NaT 
             
-            # 5. Convert timestamp to datetime objects for comparison
-            # Handle potential parsing errors by coercing non-parsable values to NaT (Not a Time)
-            # This is robust against mixed types or invalid time strings.
-            df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+            # Iterate through all known formats to try and parse the column
+            for fmt in KNOWN_TIMESTAMP_FORMATS:
+                # Only try to parse the timestamps that haven't been successfully parsed yet (are still NaT)
+                unparsed_mask = df['parsed_timestamp'].isna()
+                
+                # Use apply on the subset of unparsed rows for targeted conversion
+                df.loc[unparsed_mask, 'parsed_timestamp'] = pd.to_datetime(
+                    df.loc[unparsed_mask, 'timestamp'], format=fmt, errors='coerce'
+                )
+
+            # Update the original column with the successfully parsed values
+            df['timestamp'] = df['parsed_timestamp']
+            df.drop(columns=['parsed_timestamp'], inplace=True)
             
-            # Drop rows where the timestamp couldn't be parsed, as they cannot be ordered reliably
+            # Now, drop the rows that *still* couldn't be parsed after trying all formats
             original_size = len(df)
             df.dropna(subset=['timestamp'], inplace=True)
-            if len(df) < original_size:
-                print(f"Warning: Dropped {original_size - len(df)} rows with invalid timestamps in {filename}.")
-                
+            dropped_invalid = original_size - len(df)
+
+            if dropped_invalid > 0:
+                print(f"Final warning: Dropped {dropped_invalid} rows with completely unparsable timestamps.")
+            
             if df.empty:
-                print(f"File {filename} is empty or only contained invalid timestamps after cleaning. Skipping save.")
+                print(f"File {filename} empty after cleaning. Skipping save.")
                 continue
 
-            # 6. Sort by the timestamp in descending order (newest first)
-            # This is the crucial step: when `drop_duplicates` runs, it keeps the FIRST occurrence.
-            # By sorting descending, the newest record becomes the first occurrence.
+            # 2. Define columns to exclude and check (Same as before)
+            columns_to_exclude = {"score", "timestamp"}
+            duplicate_check_cols = [
+                col for col in df.columns if col not in columns_to_exclude
+            ]
+
+            # 3. Robustness for Float and Missing Data (Same as before)
+            for col in duplicate_check_cols:
+                # Fill NaN with a distinct string ('MISSING') to treat blanks as equal
+                df[col].fillna('MISSING', inplace=True) 
+                
+                if pd.api.types.is_float_dtype(df[col]):
+                    # Round floats to 15 decimal places for stable comparison
+                    df[col] = df[col].round(15)
+
+            # 4. Sort and Drop Duplicates
             df.sort_values(by='timestamp', ascending=False, inplace=True)
-            
-            # 7. Drop duplicates based on the derived columns, keeping the first (newest)
             df_cleaned = df.drop_duplicates(
                 subset=duplicate_check_cols, 
                 keep='first'
             )
             
-            # 8. Report and Save
+            # 5. Report and Save
             rows_deleted = len(df) - len(df_cleaned)
             if rows_deleted > 0:
                 print(f"Successfully deleted {rows_deleted} repeated (older) lines from {filename}.")
-                # Save back to CSV, preserving the original column order as much as possible
                 df_cleaned.to_csv(filepath, index=False)
             else:
-                print(f"No repeated lines found in {filename}.")
+                print(f"No new repeated lines found in {filename}.")
 
-    print("\n--- Deduplication complete. ---")
+    print("\n--- Ultimate Deduplication complete. ---")
 
 def tuebingen_statistics(xlsx_path="benchmarks/Tuebingen/TuebingenAnalysis.xlsx"):
     df = pd.read_excel(xlsx_path)

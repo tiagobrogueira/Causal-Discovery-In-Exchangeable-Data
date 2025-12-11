@@ -14,6 +14,7 @@ from bicausal.helpers.extra import hsic, XtendedCorrel
 from bicausal.helpers.namemap import name_map
 import openpyxl
 import json
+from typing import List, Optional
 
 # %%
 seedR = random.Random(42)
@@ -402,7 +403,75 @@ def nanning(dir="results"):
                     # Save back
                     df.to_csv(filepath, index=False)
 
+def delete_repeated_lines(folder: str = "results"):
+    # 1. Ensure folder exists
+    if not os.path.isdir(folder):
+        raise FileNotFoundError(f"The folder '{folder}' does not exist.")
 
+    for filename in os.listdir(folder):
+        if filename.lower().endswith(".csv"):
+            filepath = os.path.join(folder, filename)
+            
+            print(f"--- Processing {filename} ---")
+            
+            # 2. Load CSV
+            try:
+                df = pd.read_csv(filepath)
+            except Exception as e:
+                print(f"Error loading {filename}: {e}")
+                continue
+
+            # 3. Check for required column
+            if "timestamp" not in df.columns:
+                print(f"File {filename} skipped: Missing 'timestamp' column.")
+                continue
+
+            # 4. Identify the columns to consider for duplicates
+            # Start with all columns
+            duplicate_check_cols: List[str] = list(df.columns)
+            
+            # Exclude 'score' and 'timestamp' from the check list
+            columns_to_exclude: List[str] = ["score", "timestamp"]
+            for col in columns_to_exclude:
+                if col in duplicate_check_cols:
+                    duplicate_check_cols.remove(col)
+            
+            # 5. Convert timestamp to datetime objects for comparison
+            # Handle potential parsing errors by coercing non-parsable values to NaT (Not a Time)
+            # This is robust against mixed types or invalid time strings.
+            df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+            
+            # Drop rows where the timestamp couldn't be parsed, as they cannot be ordered reliably
+            original_size = len(df)
+            df.dropna(subset=['timestamp'], inplace=True)
+            if len(df) < original_size:
+                print(f"Warning: Dropped {original_size - len(df)} rows with invalid timestamps in {filename}.")
+                
+            if df.empty:
+                print(f"File {filename} is empty or only contained invalid timestamps after cleaning. Skipping save.")
+                continue
+
+            # 6. Sort by the timestamp in descending order (newest first)
+            # This is the crucial step: when `drop_duplicates` runs, it keeps the FIRST occurrence.
+            # By sorting descending, the newest record becomes the first occurrence.
+            df.sort_values(by='timestamp', ascending=False, inplace=True)
+            
+            # 7. Drop duplicates based on the derived columns, keeping the first (newest)
+            df_cleaned = df.drop_duplicates(
+                subset=duplicate_check_cols, 
+                keep='first'
+            )
+            
+            # 8. Report and Save
+            rows_deleted = len(df) - len(df_cleaned)
+            if rows_deleted > 0:
+                print(f"Successfully deleted {rows_deleted} repeated (older) lines from {filename}.")
+                # Save back to CSV, preserving the original column order as much as possible
+                df_cleaned.to_csv(filepath, index=False)
+            else:
+                print(f"No repeated lines found in {filename}.")
+
+    print("\n--- Deduplication complete. ---")
 
 def tuebingen_statistics(xlsx_path="benchmarks/Tuebingen/TuebingenAnalysis.xlsx"):
     df = pd.read_excel(xlsx_path)

@@ -364,7 +364,7 @@ def run_anlsmn(
             # -----------------------------
             # Correct direction using GT
             # -----------------------------
-            if pairs_gt[i - 1] == 1:
+            if pairs_gt[i - 1] == 0:
                 x, y = y, x     # swap
 
             # -----------------------------

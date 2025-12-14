@@ -524,3 +524,66 @@ def tuebingen_statistics(xlsx_path="benchmarks/Tuebingen/TuebingenAnalysis.xlsx"
         remainder = count % k
 
     return datapoints, examples_per_source
+
+import pandas as pd
+import numpy as np
+from typing import Union
+
+def flip_scores_by_method(scores_path: str, target_method: str) -> pd.DataFrame:
+    """
+    Loads a CSV file of scores, flips the 'score' column (s = -s) for all
+    rows where the 'method' column matches the target_method. NA scores are
+    preserved.
+
+    Args:
+        scores_path: The file path to the CSV containing the score data.
+        target_method: The value in the 'method' column to filter and flip scores for.
+
+    Returns:
+        A pandas DataFrame with the modified scores.
+    """
+    try:
+        # Load the CSV. keep_default_na=False prevents pandas from interpreting
+        # strings like 'NA' as NaN initially.
+        df = pd.read_csv(scores_path, keep_default_na=False)
+    except FileNotFoundError:
+        print(f"Error: The file '{scores_path}' was not found.")
+        return pd.DataFrame()
+    except Exception as e:
+        print(f"An error occurred while loading the CSV: {e}")
+        return pd.DataFrame()
+
+    # 1. Standardize NA values (as requested)
+    # Replace the string "NA" with the numpy NaN value (for proper handling)
+    df = df.replace("NA", np.nan)
+
+    # 2. Prepare 'parameters' column (as requested)
+    # Fill actual NA/NaN with an empty string and ensure it's a string type
+    df["parameters"] = df["parameters"].fillna("").astype(str)
+
+    # Convert 'score' to numeric, coercing any non-numeric value that resulted 
+    # from the "NA" replacement (now np.nan) to NaN.
+    # The 'score' column must be numeric for the negation operation.
+    df['score'] = pd.to_numeric(df['score'], errors='coerce')
+
+
+    # 3. Apply the conditional score flip
+    
+    # Create a boolean mask where the 'method' matches the target
+    condition = df['method'] == target_method
+    
+    # Select the scores that meet the condition and are NOT NaN (because we
+    # must maintain NA scores)
+    scores_to_flip = df.loc[condition & df['score'].notna(), 'score']
+    
+    # Flip the selected scores in place (s = -s)
+    df.loc[condition & df['score'].notna(), 'score'] = -scores_to_flip
+    
+    # Alternative one-liner for the flip using np.where (slightly cleaner)
+    # df['score'] = np.where(
+    #     (df['method'] == target_method) & df['score'].notna(), 
+    #     -df['score'], 
+    #     df['score']
+    # )
+
+    return df

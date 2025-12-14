@@ -148,8 +148,26 @@ def rdmdl(d, delta="nbased",scaling="minmax"):
 
     if delta=="nbased":
         d=1/len(x)
-    else:
+    elif delta=="res":
         d=min(resolution(x), resolution(y))**2/12
+    elif delta=="sturges":
+        d=1/((1+np.log2(len(x)))**2)
+    elif delta=="rice":
+        d=1/((2*len(x)**(1/3))**2)
+    elif delta=="scott":
+        stdx=np.std(x)
+        stdy=np.std(y)
+        hx=3.5*stdx/(len(x)**(1/3))
+        hy=3.5*stdy/(len(y)**(1/3))
+        d=min(hx,hy)**2
+    elif delta=="freedman-diaconis":
+        q75x, q25x = np.percentile(x, [75 ,25])
+        q75y, q25y = np.percentile(y, [75 ,25])
+        iqr_x = q75x - q25x
+        iqr_y = q75y - q25y
+        hx=2*iqr_x/(len(x)**(1/3))
+        hy=2*iqr_y/(len(y)**(1/3))
+        d=min(hx,hy)**2
 
 
     lx=len(x)*information_dimension(x)*np.log2(1/d)/2

@@ -213,7 +213,7 @@ def run_ce(func, datasets=None, read_dir="benchmarks/synthetic/CE-Guyon",write_d
 
             # Check for existing row
             exists = (
-                (df_existing["method"] == method_name)
+                (df_existing["method"].str.lower() == method_name.lower())
                 & (df_existing["parameters"] == parameters)
                 & (df_existing["dataset"] == dataset)
                 & (df_existing["Pair"] == pair_idx)

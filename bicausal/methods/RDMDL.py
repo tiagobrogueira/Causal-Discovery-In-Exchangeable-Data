@@ -132,7 +132,7 @@ def compute_mdl_fit_v2(x, y):
 
 
 
-def rdmdl(d, delta="nbased",scaling="minmax"):
+def rdmdl(d, delta="nbased",scaling="minmax", estimator="rd",diff=False):
     x,y=d
     if x.shape[1]>1 or y.shape[1]>1:
         return np.nan
@@ -147,19 +147,28 @@ def rdmdl(d, delta="nbased",scaling="minmax"):
     y=np.array(y).flatten()
 
     if delta=="nbased":
-        d=1/len(x)
+        dx=1/len(x)
+        dy=dx
     elif delta=="res":
-        d=min(resolution(x), resolution(y))**2/12
+        dx=min(resolution(x), resolution(y))**2/12
+        dy=dx
     elif delta=="sturges":
-        d=1/((1+np.log2(len(x)))**2)
+        dx=1/((1+np.log2(len(x)))**2)
+        dy=dx
     elif delta=="rice":
-        d=1/((2*len(x)**(1/3))**2)
+        dx=1/((2*len(x)**(1/3))**2)
+        dy=dx
     elif delta=="scott":
         stdx=np.std(x)
         stdy=np.std(y)
         hx=3.5*stdx/(len(x)**(1/3))
         hy=3.5*stdy/(len(y)**(1/3))
-        d=min(hx,hy)**2
+        if diff==False:
+            dx= min(hx,hy)**2
+            dy=dx
+        else:
+            dx=hx**2
+            dy=hy**2
     elif delta=="freedman-diaconis":
         q75x, q25x = np.percentile(x, [75 ,25])
         q75y, q25y = np.percentile(y, [75 ,25])
@@ -167,11 +176,19 @@ def rdmdl(d, delta="nbased",scaling="minmax"):
         iqr_y = q75y - q25y
         hx=2*iqr_x/(len(x)**(1/3))
         hy=2*iqr_y/(len(y)**(1/3))
-        d=min(hx,hy)**2
+        if diff==False:
+            dx= min(hx,hy)**2
+            dy=dx
+        else:
+            dx=hx**2
+            dy=hy**2
 
-
-    lx=len(x)*information_dimension(x)*np.log2(1/d)/2
-    ly=len(y)*information_dimension(y)*np.log2(1/d)/2
+    if estimator=="rd":
+        lx=len(x)*information_dimension(x)*np.log2(1/dx)/2
+        ly=len(y)*information_dimension(y)*np.log2(1/dy)/2
+    elif estimator=="hist":
+        lx=len(x)*H(x,1/np.sqrt(dx))
+        ly=len(y)*H(y,1/np.sqrt(dy))
     _,lxy=compute_mdl_fit_v2(x,y)
     _,lyx=compute_mdl_fit_v2(y,x)
     lxtoy=lx+ lxy
@@ -180,7 +197,7 @@ def rdmdl(d, delta="nbased",scaling="minmax"):
     guess=(lytox-lxtoy)/len(x) #indepedent of n 
     return guess
 
-def rdmdl_lx(d,scaling="minmax",delta="nbased"):
+def rdmdl_lx(d,scaling="minmax",delta="nbased",estimator="rd",diff=False):
     x,y=d
     if x.shape[1]>1 or y.shape[1]>1:
         return np.nan
@@ -195,13 +212,48 @@ def rdmdl_lx(d,scaling="minmax",delta="nbased"):
     y=np.array(y).flatten()
 
     if delta=="nbased":
-        d=1/len(x)
-    else:
-        d=min(resolution(x), resolution(y))**2/12
+        dx=1/len(x)
+        dy=dx
+    elif delta=="res":
+        dx=min(resolution(x), resolution(y))**2/12
+        dy=dx
+    elif delta=="sturges":
+        dx=1/((1+np.log2(len(x)))**2)
+        dy=dx
+    elif delta=="rice":
+        dx=1/((2*len(x)**(1/3))**2)
+        dy=dx
+    elif delta=="scott":
+        stdx=np.std(x)
+        stdy=np.std(y)
+        hx=3.5*stdx/(len(x)**(1/3))
+        hy=3.5*stdy/(len(y)**(1/3))
+        if diff==False:
+            dx= min(hx,hy)**2
+            dy=dx
+        else:
+            dx=hx**2
+            dy=hy**2
+    elif delta=="freedman-diaconis":
+        q75x, q25x = np.percentile(x, [75 ,25])
+        q75y, q25y = np.percentile(y, [75 ,25])
+        iqr_x = q75x - q25x
+        iqr_y = q75y - q25y
+        hx=2*iqr_x/(len(x)**(1/3))
+        hy=2*iqr_y/(len(y)**(1/3))
+        if diff==False:
+            dx= min(hx,hy)**2
+            dy=dx
+        else:
+            dx=hx**2
+            dy=hy**2
 
-
-    lx=len(x)*information_dimension(x)*np.log2(1/d)/2
-    ly=len(y)*information_dimension(y)*np.log2(1/d)/2
+    if estimator=="rd":
+        lx=len(x)*information_dimension(x)*np.log2(1/dx)/2
+        ly=len(y)*information_dimension(y)*np.log2(1/dy)/2
+    elif estimator=="hist":
+        lx=len(x)*H(x,1/np.sqrt(dx))
+        ly=len(y)*H(y,1/np.sqrt(dy))
     return ly-lx
 
 def rdmdl_lyx(d,scaling="minmax"):
@@ -215,6 +267,7 @@ def rdmdl_lyx(d,scaling="minmax"):
     elif scaling == "normalize":
         x = (x - np.mean(x)) / np.std(x)
         y = (y - np.mean(y)) / np.std(y)
+
     x=np.array(x).flatten()
     y=np.array(y).flatten()
 

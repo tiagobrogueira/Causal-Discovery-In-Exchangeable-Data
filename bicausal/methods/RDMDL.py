@@ -2,6 +2,7 @@ import numpy as np
 import math
 from scipy.optimize import curve_fit
 from sklearn.preprocessing import minmax_scale
+import matplotlib.pyplot as plt
 np.seterr(divide='ignore')
 
 def resolution(x):
@@ -129,8 +130,23 @@ def compute_mdl_fit_v2(x, y):
 
     return residuals, best_mdl
 
-
-
+def shimazaki_shinomoto(x):
+    # Use Shimazaki-Shinomoto method to find optimal bin width
+    def cost_function(bins, x):
+        counts, _ = np.histogram(x, bins=bins)
+        k = np.mean(counts)
+        #print("coutns shape",counts.shape)
+        v = sum((counts - np.ones(counts.shape) * k)**2) / len(x)
+        #print("v",v)
+        return (2 * k - v) / (bins ** 2)
+    #print(x.shape)
+    bin_candidates = np.arange(1, len(x)-1)
+    #print(bin_candidates.shape)
+    costs = [cost_function(b, x) for b in bin_candidates]
+    bin_index=np.argmin(costs)
+    bin_ideal=bin_candidates[bin_index]
+    print("Optimal number of bins:", bin_ideal)
+    return bin_ideal
 
 def rdmdl(d, delta="nbased",scaling="minmax", estimator="rd",diff=False):
     x,y=d
@@ -153,10 +169,12 @@ def rdmdl(d, delta="nbased",scaling="minmax", estimator="rd",diff=False):
         dx=min(resolution(x), resolution(y))**2/12
         dy=dx
     elif delta=="sturges":
-        dx=1/((1+np.log2(len(x)))**2)
+        h=1/(1+np.log2(len(x)))
+        dx=h**2/12
         dy=dx
     elif delta=="rice":
-        dx=1/((2*len(x)**(1/3))**2)
+        h=1/(2*len(x)**(1/3))
+        dx=h**2/12
         dy=dx
     elif delta=="scott":
         stdx=np.std(x)
@@ -164,24 +182,29 @@ def rdmdl(d, delta="nbased",scaling="minmax", estimator="rd",diff=False):
         hx=3.5*stdx/(len(x)**(1/3))
         hy=3.5*stdy/(len(y)**(1/3))
         if diff==False:
-            dx= min(hx,hy)**2
+            dx= min(hx,hy)**2/12
             dy=dx
         else:
-            dx=hx**2
-            dy=hy**2
+            dx=hx**2/12
+            dy=hy**2/12
     elif delta=="freedman-diaconis":
         q75x, q25x = np.percentile(x, [75 ,25])
         q75y, q25y = np.percentile(y, [75 ,25])
         iqr_x = q75x - q25x
         iqr_y = q75y - q25y
-        hx=2*iqr_x/(len(x)**(1/3))
-        hy=2*iqr_y/(len(y)**(1/3))
+        hx=1.9*iqr_x/(len(x)**(1/3))
+        hy=1.9*iqr_y/(len(y)**(1/3))
         if diff==False:
-            dx= min(hx,hy)**2
+            dx= min(hx,hy)**2/12
             dy=dx
         else:
-            dx=hx**2
-            dy=hy**2
+            dx=hx**2/12
+            dy=hy**2/12
+
+        #1/std * n(2/3) 0.429 scott 0.439 rice 0.456 freedman-diaconis
+    elif delta=="shimazaki-shinomoto":
+        dx=shimazaki_shinomoto(x)**2
+        dy=shimazaki_shinomoto(y)**2
 
     if estimator=="rd":
         lx=len(x)*information_dimension(x)*np.log2(1/dx)/2
@@ -247,6 +270,9 @@ def rdmdl_lx(d,scaling="minmax",delta="nbased",estimator="rd",diff=False):
         else:
             dx=hx**2
             dy=hy**2
+    elif delta=="shimazaki-shinomoto":
+        dx=shimazaki_shinomoto(x)**2
+        dy=shimazaki_shinomoto(y)**2
 
     if estimator=="rd":
         lx=len(x)*information_dimension(x)*np.log2(1/dx)/2

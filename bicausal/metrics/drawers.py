@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+import json
 
 from bicausal.metrics.lxcim import plot_lxcim, plot_lxcim_vs, lxcim
 from bicausal.metrics.auroc import plot_auroc, plot_auroc_vs
@@ -76,6 +77,7 @@ def plot_dataset_curves(
         if (not include_variations) and (params != ""):
             continue
         if method=="RDMDL" and params != "":
+            print("params",params)
             label = "RDMDL*"
         elif show_params:
             label = f"{method} ({params})" if params != "" else f"{method}"
@@ -175,6 +177,21 @@ def plot_dataset_curves_vs(
     for (method, params), scores in zip(methods_params, scores_list):
         if (not include_variations) and (params != ""):
             continue
+        elif method=="RDMDL" and params != "":
+            print("params",params)
+            if isinstance(params, str):
+                params = json.loads(params.replace("'", '"'))
+            print("params get",params.get("delta","nbased"),params.get("estimator","rd"),params.get("scaling","minmax"),params.get("diff",False))
+            if params.get("delta","nbased")=="sturges" and params.get("estimator","rd")=="rd" and params.get("scaling","minmax")=="minmax":
+                label="RDMDL-St"
+            elif params.get("delta","nbased")=="rice" and params.get("estimator","rd")=="rd" and params.get("scaling","minmax")=="minmax":
+                label="RDMDL-R"
+            elif params.get("delta","nbased")=="scott" and params.get("diff",False)==True and params.get("estimator","rd")=="rd" and params.get("scaling","minmax")=="minmax":
+                label="RDMDL-Sc"
+            elif params.get("delta","nbased")=="freedman-diaconis" and params.get("diff",False)==True and params.get("estimator","rd")=="rd" and params.get("scaling","minmax")=="minmax":
+                label="RDMDL-FD"
+            else:
+                continue
         elif show_params:
             label = f"{method} ({params})" if params != "" else f"{method}"
         else:

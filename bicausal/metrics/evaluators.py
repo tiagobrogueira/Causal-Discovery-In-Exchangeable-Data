@@ -100,15 +100,22 @@ def evaluate_tuebingen(
     metrics=["LxCIM", "accuracy"],
     methods=[],
     scores_path="results/tuebingen_scores.csv",
-    results_path="results/results.csv"
+    results_path="results/results.csv",
+    continuous=None
 ):
     method_param_list, scores_list, weights = process_tuebingen_scores(
         methods=methods,
-        scores_path=scores_path
+        scores_path=scores_path,
+        continuous=continuous
     )
+    
+    if continuous is not None:
+        dataset_name = f"Tübingen{continuous}"
+    else:
+        dataset_name = "Tübingen"
 
     return evaluate_and_save(
-        dataset_name="Tübingen",
+        dataset_name=dataset_name,
         methods_params=method_param_list,
         metrics=metrics,
         scores=scores_list,

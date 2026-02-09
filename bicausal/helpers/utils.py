@@ -33,7 +33,7 @@ def getnumpy(df):
         
     return tables
 
-def getTuebingen(read_dir="Tuebingen"):
+def getTuebingen(read_dir="benchmarks/Tuebingen"):
     """
     Reads the Tübingen dataset pairs and their weights from the given directory.
     Returns:

@@ -16,6 +16,7 @@ def process_tuebingen_scores(methods=[], scores_path="results/tuebingen_scores.c
 
     # --- Filter pairs based on "continuous" threshold ---
     valid_pair_indices = []
+    valid_weights=[]
     
     if continuous is not None:
         for i, (x, y) in enumerate(data):
@@ -26,13 +27,15 @@ def process_tuebingen_scores(methods=[], scores_path="results/tuebingen_scores.c
             unique_y = len(np.unique(y))
             
             # Keep only if BOTH variables meet the threshold
-            if unique_x >= continuous and unique_y >= continuous:
+            if unique_x >= len(x)/continuous and unique_y >= len(y)/continuous:
                 valid_pair_indices.append(pair_idx)
+                valid_weights.append(initial_weights[i])
         
         # Filter the dataframe to only include these valid pairs
         df = df[df["Pair"].isin(valid_pair_indices)]
         
     print("Valid pairs:", valid_pair_indices)
+    print("Percentage of valid weight:", sum(valid_weights)/sum(initial_weights))
     # --- Filter methods if required ---
     if methods:
         df = df[df["method"].isin(methods)]

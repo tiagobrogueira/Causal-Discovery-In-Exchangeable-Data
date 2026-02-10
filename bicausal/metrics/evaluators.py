@@ -110,7 +110,7 @@ def evaluate_tuebingen(
     )
     
     if continuous is not None:
-        dataset_name = f"Tübingen{continuous}"
+        dataset_name = f"Tübingen/{continuous}"
     else:
         dataset_name = "Tübingen"
 

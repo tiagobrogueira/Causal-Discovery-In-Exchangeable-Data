@@ -26,11 +26,11 @@ function [DL,INFO_XY,INFO_X] = gpi_mml(X,Y,CFG_XY,CFG_X)
   end
 
   % run GPI
-  [DL_GPI,INFO_XY] = gpi_train(X,Y,CFG_XY);
-
+  [DL_GPI,INFO_XY] = gpi_train2(X,Y,CFG_XY); %custom implementation to go around the bug of the custom implementation of minimizer
+  fprintf("DL_GPI: %f\n", DL_GPI);
   % run MMLGMM (on the X preprocessed by gpi_train)
   [DL_MML,INFO_X] = mmlgmm(INFO_XY.X,CFG_X);
-  
+  fprintf("DL_MML: %f\n", DL_MML);
   % calculate total description length
   DL = DL_GPI + DL_MML;
 

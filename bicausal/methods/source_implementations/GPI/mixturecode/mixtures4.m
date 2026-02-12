@@ -65,7 +65,7 @@ function [bestk,bestpp,bestmu,bestcov,dl,countf,estk0,estpp0,estmu0,estcov0] = m
 % of this software or its fitness for any particular purpose."
 % ----------------------------------------------------------------------
 %
-verb=1; % verbose mode; change to zero for silent mode
+verb=0; % verbose mode; change to zero for silent mode
 bins = 40; % number of bins for the univariate data histograms for visualization
 dl = []; % vector to store the consecutive values of the cost function 
 [dimens,npoints] = size(y);
@@ -453,7 +453,7 @@ end
      transitions2 = [transitions2 countf];
           
      %increment the iterations counter
-     countf = countf+1
+     countf = countf+1;
      
      % ...and compute the loglikelihhod function and the description length
      clear indic

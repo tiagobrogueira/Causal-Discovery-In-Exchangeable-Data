@@ -72,8 +72,9 @@ function [lml,dlml] = gpi_objfun(hyp,CFG,cov_f,X,Y,components)
 
   %calculate GP kernel, cholesky decomposition and alpha
   %and store them in cov_f_CFG because we will need them more than once
-  cov_f_CFG = [];
+  cov_f_CFG = struct(); %our edition, empty struct was not being recognized
   cov_f_CFG.jitter = CFG.jitter;
+  %fprintf("jitter: %f\n", cov_f_CFG.jitter);
   cov_f_CFG = feval(cov_f{:},cov_f_CFG,hyp.cov,X,hyp.e);
   cov_f_CFG.alpha = solve_chol(cov_f_CFG.L',Y);
   cov_f_CFG.Kinv = cov_f_CFG.L'\(cov_f_CFG.L\eye(size(cov_f_CFG.K,1)));

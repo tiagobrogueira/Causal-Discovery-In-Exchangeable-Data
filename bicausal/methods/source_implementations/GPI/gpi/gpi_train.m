@@ -61,7 +61,7 @@ function [DL,INFO] = gpi_train(X,Y,CFG)
 
   %set missing CFG fields to default values
   if ~isfield(CFG,'minimize');
-    CFG.minimize = @minimize_lbfgsb;
+    CFG.minimize = @minimize;
   end;
   if ~isfield(CFG,'initE')
     CFG.initE = true; 

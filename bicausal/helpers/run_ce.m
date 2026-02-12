@@ -56,7 +56,7 @@ function output_path = run_ce(func, datasets, read_dir, write_dir, overwrite, va
     method_name_lower = lower(method_name);
 
     % You can customize this if you already have serialize_params
-    parameters = "";
+    parameters = serialize_params(varargin);
 
     % -----------------------------
     % Load or initialize CSV
@@ -164,7 +164,7 @@ function output_path = run_ce(func, datasets, read_dir, write_dir, overwrite, va
             % Overwrite if needed
             % -----------------------------------------
             if overwrite
-                mask = df_existing.method == method_name_lower & ...
+                mask = lower(df_existing.method) == method_name_lower & ...
                        df_existing.dataset == dataset & ...
                        df_existing.Pair == pair_idx;
                 df_existing(mask,:) = [];
@@ -174,7 +174,7 @@ function output_path = run_ce(func, datasets, read_dir, write_dir, overwrite, va
             % Append row
             % -----------------------------------------
             new_row = { ...
-                method_name_lower, ...
+                method_name, ...
                 parameters, ...
                 dataset, ...
                 pair_idx, ...
@@ -195,5 +195,5 @@ end
 
 function json_str = serialize_params(kwargs)
     json_str="";
-end
+end 
 

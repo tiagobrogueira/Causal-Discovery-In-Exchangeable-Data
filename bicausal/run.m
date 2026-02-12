@@ -25,9 +25,9 @@ overwrite = false;   % set to true if you want to recompute existing scores
 % (No CFG_XY or CFG_X passed -> GPI uses its own defaults)
 % -------------------------------------------------------------------------
 fprintf('🚀 Running GPI on Tuebingen benchmark...\n');
-run_tuebingen(@GPI_lx, read_dir, write_dir, overwrite);
-run_anlsmn(@GPI);
+%run_tuebingen(@GPI_lx, read_dir, write_dir, overwrite);
+%run_anlsmn(@GPI);
+%run_sim(@GPI);
 run_ce(@GPI);
-run_sim(@GPI);
 
 fprintf('✅ Done.\n');

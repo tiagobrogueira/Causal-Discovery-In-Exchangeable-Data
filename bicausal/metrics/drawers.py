@@ -76,9 +76,28 @@ def plot_dataset_curves(
         # Apply variation filter
         if (not include_variations) and (params != ""):
             continue
-        if method=="RDMDL" and params != "":
-            print("params",params)
-            label = "RDMDL*"
+        elif method=="RDMDL":
+            valid_params = [
+                '{"delta": "freedman-diaconis","diff": true}', 
+                '{"delta": "scott","diff": true}', 
+                '{"delta": "sturges"}', 
+                '{"delta": "rice"}'
+            ]
+
+            if method == "RDMDL":
+                # Optional: use .strip() in case there are hidden spaces from the CSV
+                if params.strip() not in valid_params:
+                    continue
+            if "sturges" in params:
+                label="RDMDL-St"
+            elif "rice" in params:
+                label="RDMDL-R"
+            elif "scott" in params:
+                label="RDMDL-Sc"
+            elif "freedman-diaconis" in params:
+                label="RDMDL-FD"
+            else:
+                continue
         elif show_params:
             label = f"{method} ({params})" if params != "" else f"{method}"
         else:
@@ -98,11 +117,15 @@ def plot_dataset_curves(
             plot_auroc(method_results, ax=ax)
         elif metric == "AUDRC":
             plot_audrc(method_results, ax=ax)
-        ax.set_title(f"{dataset} - {metric}")
+        if num_plots == 1:
+            ax.set_title(f"{dataset}")
+        else:
+            ax.set_title(f"{dataset} - {metric}")
 
     # --- Save final figure 
     if figure_name is None:
         figure_name = f"{dataset} curves"
+
     save_imgs(figure_name, img_dir)
     
     return fig, axs
@@ -177,18 +200,25 @@ def plot_dataset_curves_vs(
     for (method, params), scores in zip(methods_params, scores_list):
         if (not include_variations) and (params != ""):
             continue
-        elif method=="RDMDL" and params != "":
-            print("params",params)
-            if isinstance(params, str):
-                params = json.loads(params.replace("'", '"'))
-            print("params get",params.get("delta","nbased"),params.get("estimator","rd"),params.get("scaling","minmax"),params.get("diff",False))
-            if params.get("delta","nbased")=="sturges" and params.get("estimator","rd")=="rd" and params.get("scaling","minmax")=="minmax":
+        elif method=="RDMDL":
+            valid_params = [
+                '{"delta": "freedman-diaconis","diff": true}', 
+                '{"delta": "scott","diff": true}', 
+                '{"delta": "sturges"}', 
+                '{"delta": "rice"}'
+            ]
+
+            if method == "RDMDL":
+                # Optional: use .strip() in case there are hidden spaces from the CSV
+                if params.strip() not in valid_params:
+                    continue
+            if "sturges" in params:
                 label="RDMDL-St"
-            elif params.get("delta","nbased")=="rice" and params.get("estimator","rd")=="rd" and params.get("scaling","minmax")=="minmax":
+            elif "rice" in params:
                 label="RDMDL-R"
-            elif params.get("delta","nbased")=="scott" and params.get("diff",False)==True and params.get("estimator","rd")=="rd" and params.get("scaling","minmax")=="minmax":
+            elif "scott" in params:
                 label="RDMDL-Sc"
-            elif params.get("delta","nbased")=="freedman-diaconis" and params.get("diff",False)==True and params.get("estimator","rd")=="rd" and params.get("scaling","minmax")=="minmax":
+            elif "freedman-diaconis" in params:
                 label="RDMDL-FD"
             else:
                 continue
@@ -228,7 +258,10 @@ def plot_dataset_curves_vs(
             plot_auroc_vs(method_results_A, method_results_B, ax=ax)
         elif metric == "AUDRC":
             plot_audrc_vs(method_results_A, method_results_B, ax=ax)
-        ax.set_title(f"{dataset} - {metric}")
+        if num_plots == 1:
+            ax.set_title(f"{dataset}")
+        else:
+            ax.set_title(f"{dataset} - {metric}")
 
     # === Save figure matching original function ===
     if figure_name is None:

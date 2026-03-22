@@ -148,7 +148,7 @@ def shimazaki_shinomoto(x):
     print("Optimal number of bins:", bin_ideal)
     return bin_ideal
 
-def rdmdl(d, delta="nbased",scaling="minmax", estimator="rd",diff=False):
+def rdmdl(d, delta="freedman-diaconis",scaling="minmax"):
     x,y=d
     if x.shape[1]>1 or y.shape[1]>1:
         return np.nan
@@ -181,12 +181,8 @@ def rdmdl(d, delta="nbased",scaling="minmax", estimator="rd",diff=False):
         stdy=np.std(y)
         hx=3.5*stdx/(len(x)**(1/3))
         hy=3.5*stdy/(len(y)**(1/3))
-        if diff==False:
-            dx= min(hx,hy)**2/12
-            dy=dx
-        else:
-            dx=hx**2/12
-            dy=hy**2/12
+        dx=hx**2/12
+        dy=hy**2/12
     elif delta=="freedman-diaconis":
         q75x, q25x = np.percentile(x, [75 ,25])
         q75y, q25y = np.percentile(y, [75 ,25])
@@ -194,24 +190,15 @@ def rdmdl(d, delta="nbased",scaling="minmax", estimator="rd",diff=False):
         iqr_y = q75y - q25y
         hx=1.9*iqr_x/(len(x)**(1/3))
         hy=1.9*iqr_y/(len(y)**(1/3))
-        if diff==False:
-            dx= min(hx,hy)**2/12
-            dy=dx
-        else:
-            dx=hx**2/12
-            dy=hy**2/12
-
+        dx=hx**2/12
+        dy=hy**2/12
         #1/std * n(2/3) 0.429 scott 0.439 rice 0.456 freedman-diaconis
     elif delta=="shimazaki-shinomoto":
         dx=shimazaki_shinomoto(x)**2
         dy=shimazaki_shinomoto(y)**2
 
-    if estimator=="rd":
-        lx=len(x)*information_dimension(x)*np.log2(1/dx)/2
-        ly=len(y)*information_dimension(y)*np.log2(1/dy)/2
-    elif estimator=="hist":
-        lx=len(x)*H(x,1/np.sqrt(dx))
-        ly=len(y)*H(y,1/np.sqrt(dy))
+    lx=len(x)*information_dimension(x)*np.log2(1/dx)/2
+    ly=len(y)*information_dimension(y)*np.log2(1/dy)/2
     _,lxy=compute_mdl_fit_v2(x,y)
     _,lyx=compute_mdl_fit_v2(y,x)
     lxtoy=lx+ lxy

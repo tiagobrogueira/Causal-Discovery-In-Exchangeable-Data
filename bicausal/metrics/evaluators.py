@@ -233,7 +233,8 @@ def construct_table(
                 for d in all_datasets_in_file:
                     dl = d.lower()
                     if "tüb" in dl or "tub" in dl:
-                        datasets_selected.add(d)
+                        if not any(char.isdigit() for char in dl):
+                            datasets_selected.add(d)
                 continue
 
             # SIM*
@@ -315,7 +316,17 @@ def construct_table(
                 except (ValueError, TypeError):
                     row[m] = ""
 
+        valid_params = [
+            '{"delta": "freedman-diaconis","diff": true}', 
+            '{"delta": "scott","diff": true}', 
+            '{"delta": "sturges"}', 
+            '{"delta": "rice"}'
+        ]
 
+        if method == "RDMDL":
+            # Optional: use .strip() in case there are hidden spaces from the CSV
+            if params.strip() not in valid_params:
+                continue
 
         rows.append(row)
 

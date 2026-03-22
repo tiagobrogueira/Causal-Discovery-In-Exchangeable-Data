@@ -34,8 +34,8 @@ def process_tuebingen_scores(methods=[], scores_path="results/tuebingen_scores.c
         # Filter the dataframe to only include these valid pairs
         df = df[df["Pair"].isin(valid_pair_indices)]
         
-    print("Valid pairs:", valid_pair_indices)
-    print("Percentage of valid weight:", sum(valid_weights)/sum(initial_weights))
+        print("Valid pairs:", valid_pair_indices)
+        print("Percentage of valid weight:", sum(valid_weights)/sum(initial_weights))
     # --- Filter methods if required ---
     if methods:
         df = df[df["method"].isin(methods)]

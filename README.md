@@ -7,18 +7,6 @@ This repository serves two roles at once:
 1. a **research repository** containing datasets, methods, results, figures, tables, and notebooks;
 2. a **Python package** (`bicausal`) that can be installed and used as a normal library.
 
-Useful links:
-
-- **Repository:** https://github.com/tiagobrogueira/Causal-Discovery-In-Exchangeable-Data
-- **PyPI package:** https://pypi.org/project/bicausal/
-- **Python requirement:** `>= 3.8`
-
-It also contains three **original research contributions** beyond the repository infrastructure itself:
-
-- **The Lisbon benchmark** — a new real-world multi-domain bivariate causal discovery benchmark.
-- **RDMDL** — a new bivariate causal discovery method based on rate-distortion MDL and information dimension.
-- **LxCIM** — a new rank-based binary-classifier performance metric invariant to local exchange of classes.
-
 ---
 
 ## Papers stemming from this repository
@@ -121,6 +109,9 @@ pip install bicausal
 ```
 
 That installs the `bicausal` package.
+
+- **PyPI package:** https://pypi.org/project/bicausal/
+- **Python requirement:** `>= 3.8`
 
 Use this mode if your goal is:
 
@@ -271,7 +262,6 @@ Throughout the evaluation pipeline, examples are treated as ordered pairs **`[X,
 - **`X` = cause**
 - **`Y` = effect**
 
-### Synthetic datasets are normalized on load
 
 For the synthetic benchmarks, the repository reorients the data **before** the method is evaluated so that the method always receives the example in the form **cause → effect**, i.e. **`X` as cause** and **`Y` as effect**.
 
@@ -280,12 +270,6 @@ Concretely:
 - in **CE-Guyon**, pairs are swapped when the target label indicates the opposite direction;
 - in **ANLSMN-Tagasovska**, the pair is reoriented using the ground-truth direction file;
 - in **SIM-Mooij**, the cause/effect variable blocks are extracted directly from `pairmeta.txt`.
-
-So the important practical rule is:
-
-> **Synthetic examples are evaluated after orientation correction, always with `X` as cause and `Y` as effect.**
-
-This is easy to miss, so it is worth stating explicitly.
 
 ---
 
@@ -523,42 +507,17 @@ Methods present here include:
 - `SLOPE.R`
 - `SLOPPY.R`
 
-#### `bicausal/methods/RDMDL.py`  **← new contribution**
 
-This file contains **RDMDL**, one of the repository’s original scientific contributions and the method associated with the paper:
-
-> *Bivariate Causal Discovery Using Rate-Distortion MDL: An Information Dimension Approach*
-
-#### `bicausal/methods/source_implementations/`
-
-This is a very important folder.
 
 Methods in the repository are either:
 
 1. obtained through **CausalDiscoveryToolbox (CDT)** wrappers, or
 2. brought in directly from their source/original implementations.
 
-Because of that, `source_implementations/` contains the source-backed material used by the project, such as:
-
-- `CAM`
-- `CDCI_main`
-- `FOM_main`
-- `GPI`
-- `HECI_supplementary_upload`
-- `LCube_main`
-- `ROCHE_main`
-- `bqcd`
-- `loci_main`
-- `slope-20181208`
-- `sloppy-v20190523/ Sloppy`
+#### `bicausal/methods/source_implementations/`
 
 This folder should be read as the place where the repository keeps track of the exact imported or adapted source implementations it uses.
 
-This also explains an important design choice:
-
-> Methods originally implemented in **MATLAB** or **R** are intentionally kept in those languages whenever appropriate, and only the **processing of their scores** and the **metric computation** are unified in Python.
-
-That decision improves reproducibility and preserves fidelity to the original implementations.
 
 ---
 
@@ -574,12 +533,6 @@ Files include:
 - `lxcim.py`  **← new contribution**
 - `evaluators.py`
 - `drawers.py`
-
-#### `bicausal/metrics/lxcim.py`  **← new contribution**
-
-This file contains **LxCIM**, the new rank-based binary-classifier performance metric introduced in the repository and associated with the paper:
-
-> *LxCIM: a new rank-based binary classifier performance metric invariant to local exchange of classes*
 
 #### `bicausal/metrics/evaluators.py`
 
@@ -608,8 +561,6 @@ Typical contents include:
 - `results.csv`
 - `times.csv`
 - `unimplemented_results.csv`
-
-This is one of the most important folders for reproducibility.
 
 The files ending in `_scores.csv` are the raw per-example method outputs.
 
@@ -667,29 +618,6 @@ These files are especially important for users.
 
 ---
 
-### `dist/`
-
-This folder contains local build artifacts for the Python package, such as:
-
-- wheel files (`.whl`)
-- source distributions (`.tar.gz`)
-
-It is useful mostly for packaging and local distribution.
-
----
-
-### `pyproject.toml`
-
-This file contains the Python package metadata and build configuration for `bicausal`.
-
----
-
-### `CITATION.cff`
-
-This file contains citation metadata for the repository.
-
----
-
 ## Important notes and caveats
 
 The points below consolidate the main practical notes underlying the project.
@@ -700,9 +628,9 @@ The repository assumes honest use by the experimenter.
 
 As with any benchmarking framework, a deliberately adversarial or degenerate method could game certain metrics if used dishonestly. The toolkit is built for fair evaluation, not for defending against intentionally pathological usage.
 
-### 2. Training-heavy methods are not the main focus of the current pipeline
+### 2. Training-heavy methods are not considered
 
-The repository is not primarily designed around methods that require substantial training.
+The repository is not designed to encorporate methods that require substantial training.
 
 Two practical reasons are explicitly relevant here:
 
@@ -711,14 +639,9 @@ Two practical reasons are explicitly relevant here:
 
 So the repository is especially natural for pairwise scoring methods, direct wrappers, and source-preserving benchmark evaluation.
 
-### 3. Some methods were excluded from the main benchmark flow
-
-The project notes that **GPLVM** and **RCC** were removed from the main process because of their training-related nature and how they fit into the final benchmark design.
-
 ### 4. Methods are kept self-contained
 
 Methods were implemented or wrapped so they can work as independently as possible.
-
 A consequence is that some code repetition is expected across method files.
 
 ### 5. Relative paths matter
@@ -731,14 +654,6 @@ If you clone the repository and keep its structure intact, things are much easie
 
 If you are recomputing timing experiments, you may need to manually clear entries in the timing/cache storage area.
 
-### 7. The CDCI variant used here is the CTV variant
-
-The repository uses the **CDCI with CTV** variant.
-
-### 8. A generalized GPLVM variant was considered in the broader project context
-
-The notes associated with the project mention the generalized GPLVM variant as preferable for Tübingen/real-world data, together with a compatibility change in `optimization_step` for newer TensorFlow versions.
-
 ### 9. Mixed-language methods are intentional
 
 If you see R or MATLAB files in the methods folder, that is not technical debt to be “cleaned up” away from the repository’s design.
@@ -749,38 +664,6 @@ It is a deliberate reproducibility choice:
 - run it there if needed;
 - save raw scores;
 - evaluate the saved scores in Python together with everything else.
-
----
-
-## Outputs produced by the repository
-
-The repository produces four main kinds of outputs.
-
-### 1. Raw per-example scores
-
-These are the files ending in `_scores.csv`.
-
-They are the primary reproducibility artifacts.
-
-### 2. Aggregate benchmark results
-
-These are typically stored in files such as:
-
-- `results.csv`
-- `unimplemented_results.csv`
-
-### 3. Timing results
-
-These are stored in:
-
-- `times.csv`
-
-### 4. Publication artifacts
-
-These are stored in:
-
-- `plots/` for figures
-- `table/` for LaTeX tables
 
 ---
 
@@ -804,21 +687,3 @@ Please also check `CITATION.cff`.
 This repository is released under the **MIT License**.
 
 See [`LICENSE`](LICENSE) for details.
-
----
-
-## Final summary
-
-If you want the **full research repository**, clone it.
-
-If you want the **Python package**, install:
-
-```bash
-pip install bicausal
-```
-
-If you want to understand the repository in one sentence, it is this:
-
-> **Run methods first, save every per-example score first, and only then compute metrics from the saved score files.**
-
-That separation is the backbone of the project’s reproducibility philosophy.

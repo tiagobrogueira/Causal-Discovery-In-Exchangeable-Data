@@ -1,29 +1,82 @@
 # Causal Discovery in Exchangeable Data
 
-This repository contains the code, benchmark data, evaluation pipeline, and reproduction notebooks associated with the work on **causal discovery in exchangeable data**.
+A reproducible toolbox and benchmark suite for **bivariate causal discovery on exchangeable data**.
 
-At a high level, the repository serves four goals:
+This repository serves two roles at once:
 
-1. **Benchmarking bivariate causal discovery methods** on real-world and synthetic datasets.
-2. **Providing the Lisbon benchmark**, a multi-domain real-world benchmark for bivariate causal discovery.
-3. **Separating score generation from evaluation** to make experiments reproducible and easier to audit.
-4. **Reproducing figures and tables** from the papers/notebooks included in the project.
+1. a **research repository** containing datasets, methods, results, figures, tables, and notebooks;
+2. a **Python package** (`bicausal`) that can be installed and used as a normal library.
+
+Useful links:
+
+- **Repository:** https://github.com/tiagobrogueira/Causal-Discovery-In-Exchangeable-Data
+- **PyPI package:** https://pypi.org/project/bicausal/
+- **Python requirement:** `>= 3.8`
+
+It also contains three **original research contributions** beyond the repository infrastructure itself:
+
+- **The Lisbon benchmark** — a new real-world multi-domain bivariate causal discovery benchmark.
+- **RDMDL** — a new bivariate causal discovery method based on rate-distortion MDL and information dimension.
+- **LxCIM** — a new rank-based binary-classifier performance metric invariant to local exchange of classes.
+
+---
+
+## Papers stemming from this repository
+
+At the moment, no paper URL is public yet, so these are marked as **to come**.
+
+### 1. *Bivariate Causal Discovery Using Rate-Distortion MDL: An Information Dimension Approach*
+- **Status:** accepted at **CLeaR 2026**
+- **Conference:** https://www.cclear.cc/2026
+- **Paper URL:** to come
+- **Notebook:** `bicausal/rdmdl_paper.ipynb`
+- **Main new contribution:** **RDMDL**
+
+### 2. *The Lisbon benchmark: a new real-world multi-domain bivariate causal discovery dataset*
+- **Status:** not yet submitted
+- **Paper URL:** to come
+- **Notebook:** `bicausal/lisbon_paper.ipynb`
+- **Main new contribution:** **the Lisbon benchmark**
+
+### 3. *LxCIM: a new rank-based binary classifier performance metric invariant to local exchange of classes*
+- **Status:** not yet submitted
+- **Paper URL:** to come
+- **Notebook:** `bicausal/lxcim_paper.ipynb`
+- **Main new contribution:** **LxCIM**
+
+> There is **one notebook per paper**, and each paper notebook is intended to reproduce the figures and tables contained in that paper.
+
+---
+
+## What is new in this repository?
+
+A lot of the repository is benchmarking infrastructure or wrappers around existing causal discovery methods. The **new scientific contributions** are:
+
+- **`bicausal/benchmarks/Lisbon/`** → the **Lisbon benchmark**.
+- **`bicausal/methods/RDMDL.py`** → the **RDMDL method**.
+- **`bicausal/metrics/lxcim.py`** → the **LxCIM metric**.
+
+Everything else should mostly be read as one of the following:
+
+- benchmark infrastructure;
+- evaluation and plotting utilities;
+- wrappers around existing methods;
+- exact or adapted source implementations brought into the repository for reproducibility.
+
+This distinction is important throughout the repository and is highlighted again in the file-structure section below.
 
 ---
 
 ## Table of contents
 
-- [What this repository contains](#what-this-repository-contains)
-- [Recommended way to use the repository](#recommended-way-to-use-the-repository)
-  - [Option 1 — Clone the repository (recommended)](#option-1--clone-the-repository-recommended)
-  - [Option 2 — Install with pip](#option-2--install-with-pip)
+- [Installation and usage](#installation-and-usage)
+  - [Option 1 — clone the repository](#option-1--clone-the-repository)
+  - [Option 2 — install from PyPI](#option-2--install-from-pypi)
+  - [Using `bicausal` as a normal library](#using-bicausal-as-a-normal-library)
 - [Core experimental philosophy](#core-experimental-philosophy)
-- [Typical workflow](#typical-workflow)
+- [Benchmarking conventions](#benchmarking-conventions)
 - [Repository structure](#repository-structure)
-- [Folder-by-folder explanation](#folder-by-folder-explanation)
-- [Benchmarks included](#benchmarks-included)
-- [Methods included](#methods-included)
-- [Notebooks](#notebooks)
+- [Folder-by-folder guide](#folder-by-folder-guide)
 - [Important notes and caveats](#important-notes-and-caveats)
 - [Outputs produced by the repository](#outputs-produced-by-the-repository)
 - [Citation](#citation)
@@ -31,35 +84,20 @@ At a high level, the repository serves four goals:
 
 ---
 
-## What this repository contains
+## Installation and usage
 
-This repository contains:
+There are two main ways to use the project.
 
-- the **`bicausal` Python package**;
-- the **Lisbon**, **Tübingen**, and **synthetic** benchmarks;
-- method wrappers and original method sources;
-- evaluation metrics such as **accuracy**, **AUROC**, **AUDRC**, and **LxCIM**;
-- precomputed score files and aggregate result files;
-- figures and LaTeX tables used in the associated papers;
-- notebooks for reproducing the papers and for extending the benchmark/toolbox.
+### Option 1 — clone the repository
 
-The package name is **`bicausal`**.
+This is the best option if you want the **full research artifact**, including:
 
----
-
-## Recommended way to use the repository
-
-There are two main ways to use this project.
-
-### Option 1 — Clone the repository (recommended)
-
-This is the **recommended** option if you want the **full reproducibility package**, including:
-
-- notebooks;
-- benchmark data;
-- R and MATLAB methods;
-- precomputed results, figures, and tables;
-- utilities for reproducing the papers end-to-end.
+- all notebooks;
+- benchmark data in repository layout;
+- precomputed result files;
+- generated plots and LaTeX tables;
+- R and MATLAB method files;
+- the exact folder structure used in the experiments and papers.
 
 ```bash
 git clone https://github.com/tiagobrogueira/Causal-Discovery-In-Exchangeable-Data.git
@@ -67,158 +105,187 @@ cd Causal-Discovery-In-Exchangeable-Data
 pip install -e .
 ```
 
-Why this is the best option:
+Use this mode if your goal is:
 
-- it gives you the full repository exactly as used for the experiments;
-- it is the safest option for reproducing the notebooks and papers;
-- it includes non-Python assets that are **not naturally covered by a lightweight package install**.
+- full reproducibility;
+- reproducing papers;
+- running the notebooks as provided;
+- inspecting all data, scores, tables, and figures together.
 
-After that, you can work with the notebooks inside `bicausal/`, for example:
+### Option 2 — install from PyPI
 
-- `bicausal/run.ipynb`
-- `bicausal/evaluate.ipynb`
-- `bicausal/time.ipynb`
-- `bicausal/lisbon_paper.ipynb`
-- `bicausal/lxcim_paper.ipynb`
-- `bicausal/rdmdl_paper.ipynb`
-
----
-
-### Option 2 — Install with pip
-
-If you only want the Python package interface, you can install it with `pip`.
-
-#### Install directly from GitHub
+If your goal is to use the package as a normal Python library, installation is simply:
 
 ```bash
-pip install git+https://github.com/tiagobrogueira/Causal-Discovery-In-Exchangeable-Data.git
+pip install bicausal
 ```
 
-#### Install from local build artifacts
+That installs the `bicausal` package.
 
-This repository also includes prebuilt distribution files in `dist/`:
+Use this mode if your goal is:
 
-```bash
-pip install dist/bicausal-0.1.1-py3-none-any.whl
-# or
-pip install dist/bicausal-0.1.1.tar.gz
-```
+- calling methods directly on your own pairs;
+- plugging a method into the repository runners/evaluators from Python code;
+- using the evaluation utilities without cloning the full repository.
 
-#### Important distinction: `pip` install vs cloning
+For the **full benchmark assets, notebooks, precomputed results, and paper artifacts**, cloning the repository is still the safest and most complete route.
 
-A `pip` installation is best understood as a **lightweight library install**.
+### Using `bicausal` as a normal library
 
-Cloning the repository is still preferable if you want:
+The package is intentionally organized around **submodules**, so in normal usage you typically import from:
 
-- the notebooks;
-- the full benchmark assets in their original repository layout;
-- the R/MATLAB entry points and method files;
-- the precomputed CSV results, figures, and LaTeX tables;
-- the exact folder structure used in the papers.
+- `bicausal.methods.*`
+- `bicausal.helpers.runners`
+- `bicausal.metrics.evaluators`
 
-In short:
+rather than relying on top-level imports.
 
-- **Clone the repo** if you want the **research repository**.
-- **Use pip** if you want the **Python package**.
-
-#### Downloading benchmark data when using the package
-
-The package includes downloader helpers for at least the main real-world benchmarks:
+### Example 1 — score a single pair with a method
 
 ```python
-from bicausal.helpers.downloaders import download_lisbon, download_tuebingen
+import numpy as np
+from bicausal.methods.RDMDL import rdmdl
 
-download_lisbon()
-download_tuebingen()
+x = np.asarray(x).reshape(-1, 1)
+y = np.asarray(y).reshape(-1, 1)
+
+score = rdmdl([x, y])
+print(score)
 ```
 
-`download_lisbon()` can also skip the `pictures/` subfolder by default, which is useful if you only need the benchmark itself and not the source images.
-
----
-
-## Core experimental philosophy
-
-A central design choice of this repository is the **strict separation between running methods and evaluating methods**.
-
-### Step 1 — Run a method and save raw per-example scores
-
-Whenever a method is run, the repository first stores its **score for each individual example** in CSV files such as:
-
-- `*_scores.csv`
-- for example: `lisbon_scores.csv`, `tuebingen_scores.csv`, `CE_scores.csv`, `ANLSMN_scores.csv`, `SIM_scores.csv`
-
-These CSVs are the raw experimental outputs.
-
-### Step 2 — Load those score files and apply metrics
-
-Only after the raw scores are stored do we load them and compute aggregate metrics such as:
-
-- accuracy
-- AUROC
-- AUDRC
-- LxCIM
-
-This separation is intentional and important.
-
-### Why this separation matters
-
-It serves **reproducibility**:
-
-- the expensive or language-specific method run is done once;
-- the exact raw scores are preserved;
-- metrics can be recomputed later without rerunning the methods;
-- evaluation logic can evolve independently from score generation;
-- tables and figures can be regenerated from saved score files.
-
-This is one of the key organizing principles of the repository.
-
----
-
-## Typical workflow
-
-A typical workflow looks like this:
-
-### 1. Run a method on a benchmark
-
-For Python methods, the repository provides runner utilities that expect a function with a signature like:
+The general convention is that a method receives:
 
 ```python
 func([x, y], *args, **kwargs)
 ```
 
-Typical entry points include:
+and returns a scalar score.
 
-- `run_tuebingen(...)`
-- `run_lisbon(...)`
-- `run_ce(...)`
-- `run_anlsmn(...)`
-- `run_sim(...)`
+### Example 2 — run a method on a benchmark and save raw scores
 
-These save raw scores into the corresponding CSV files inside `bicausal/results/`.
+```python
+from bicausal.methods.RDMDL import rdmdl
+from bicausal.helpers.runners import run_tuebingen
 
-### 2. Evaluate the saved score files
+run_tuebingen(rdmdl)
+```
 
-After scores have been generated, use the evaluation helpers:
+This writes one score per example into the corresponding score file, here typically:
 
-- `evaluate_tuebingen(...)`
-- `evaluate_lisbon(...)`
-- `evaluate_synthetic(...)`
-- `construct_table(...)`
+```text
+results/tuebingen_scores.csv
+```
 
-These load the saved score CSVs, apply the selected metrics, and write aggregate outputs such as `results.csv` and LaTeX tables.
+### Example 3 — evaluate previously saved scores
 
-### 3. Reproduce tables and figures
+```python
+from bicausal.metrics.evaluators import evaluate_tuebingen
 
-Use the paper notebooks and the plotting/table utilities to recreate the figures and tables saved in:
+evaluate_tuebingen(metrics=["LxCIM", "accuracy", "AUROC", "AUDRC"])
+```
 
-- `bicausal/plots/`
-- `bicausal/table/`
+This loads the saved score CSV, applies the selected metrics, and updates the aggregate results file.
 
-### 4. Optionally benchmark run time
+### Example 4 — use your own method with the benchmark infrastructure
 
-Use the timing utilities and notebook to profile execution-time scaling and write results into:
+```python
+import numpy as np
+from bicausal.helpers.runners import run_lisbon
 
-- `bicausal/results/times.csv`
+
+def my_method(d):
+    x, y = d
+    x = np.asarray(x)
+    y = np.asarray(y)
+
+    # return a scalar score for the ordered pair [X, Y]
+    return float(np.mean(x) - np.mean(y))
+
+
+run_lisbon(my_method)
+```
+
+This is one of the core design goals of the package: a method only needs to obey the repository’s simple callable interface, and then it can be benchmarked and evaluated through the same pipeline as the built-in methods.
+
+If you are using the benchmark runners from a plain PyPI install, it is often best to pass explicit dataset/result paths or to work inside a cloned repository layout.
+
+### A practical note on dependencies
+
+`bicausal` can be installed with `pip install bicausal`, but some specific methods still depend on the ecosystems they originally came from or on external libraries used by their wrappers. In particular:
+
+- some methods are wrapped from **CausalDiscoveryToolbox (CDT)**;
+- some methods remain in **R**;
+- some methods remain in **MATLAB**.
+
+This is intentional: the repository preserves original implementations whenever possible, while standardizing **score storage**, **metric computation**, and **benchmark evaluation** in Python.
+
+---
+
+## Core experimental philosophy
+
+The central idea of the repository is a strict separation between **running methods** and **evaluating methods**.
+
+### Step 1 — run a method and save raw per-example scores
+
+Whenever a method is run on a benchmark, the repository first stores the **score of each individual example** in a CSV file ending in `_scores.csv`, such as:
+
+- `tuebingen_scores.csv`
+- `lisbon_scores.csv`
+- `CE_scores.csv`
+- `ANLSMN_scores.csv`
+- `SIM_scores.csv`
+
+These files are the raw experimental outputs.
+
+### Step 2 — load those CSV files and apply metrics
+
+Only after the per-example scores are stored do we load them and apply metrics such as:
+
+- `accuracy`
+- `AUROC`
+- `AUDRC`
+- `LxCIM`
+
+### Why this separation exists
+
+This design is deliberate and serves **reproducibility**.
+
+It means that:
+
+- expensive method runs are separated from evaluation;
+- methods implemented in different languages can still be compared uniformly;
+- metrics can be recomputed later without rerunning the underlying methods;
+- tables and figures can be regenerated directly from saved scores;
+- the exact raw scores used in a paper remain inspectable and auditable.
+
+This is one of the most important ideas in the repository.
+
+---
+
+## Benchmarking conventions
+
+### Ordered-pair convention
+
+Throughout the evaluation pipeline, examples are treated as ordered pairs **`[X, Y]`**, with the intended convention:
+
+- **`X` = cause**
+- **`Y` = effect**
+
+### Synthetic datasets are normalized on load
+
+For the synthetic benchmarks, the repository reorients the data **before** the method is evaluated so that the method always receives the example in the form **cause → effect**, i.e. **`X` as cause** and **`Y` as effect**.
+
+Concretely:
+
+- in **CE-Guyon**, pairs are swapped when the target label indicates the opposite direction;
+- in **ANLSMN-Tagasovska**, the pair is reoriented using the ground-truth direction file;
+- in **SIM-Mooij**, the cause/effect variable blocks are extracted directly from `pairmeta.txt`.
+
+So the important practical rule is:
+
+> **Synthetic examples are evaluated after orientation correction, always with `X` as cause and `Y` as effect.**
+
+This is easy to miss, so it is worth stating explicitly.
 
 ---
 
@@ -233,9 +300,9 @@ Causal-Discovery-In-Exchangeable-Data/
 │   │   │   ├── meta/
 │   │   │   ├── pictures/
 │   │   │   ├── field_stats.xlsx
-│   │   │   ├── source_specs.xlsx
 │   │   │   ├── lisbon_analysers.py
-│   │   │   └── lisbon_utils.py
+│   │   │   ├── lisbon_utils.py
+│   │   │   └── source_specs.xlsx
 │   │   ├── Tuebingen/
 │   │   │   ├── README
 │   │   │   ├── README_polished_may18.tab
@@ -298,7 +365,6 @@ Causal-Discovery-In-Exchangeable-Data/
 │   ├── lisbon_paper.ipynb
 │   ├── lxcim_paper.ipynb
 │   ├── rdmdl_paper.ipynb
-│   ├── rdmdl_paper copy.ipynb
 │   ├── run.ipynb
 │   ├── run.R
 │   ├── run.m
@@ -306,8 +372,8 @@ Causal-Discovery-In-Exchangeable-Data/
 │   ├── time.ipynb
 │   └── utilize.ipynb
 ├── dist/
-│   ├── bicausal-0.1.1-py3-none-any.whl
-│   └── bicausal-0.1.1.tar.gz
+│   ├── bicausal-*.whl
+│   └── bicausal-*.tar.gz
 ├── CITATION.cff
 ├── LICENSE
 ├── README.md
@@ -316,189 +382,46 @@ Causal-Discovery-In-Exchangeable-Data/
 
 ---
 
-## Folder-by-folder explanation
+## Folder-by-folder guide
 
 ### `bicausal/`
-The main package directory. This is where the code, notebooks, datasets, outputs, and helper scripts live.
 
-### `bicausal/benchmarks/`
-Contains the datasets used for evaluation.
-
-#### `bicausal/benchmarks/Lisbon/`
-The Lisbon benchmark, organized into several subcomponents:
-
-- `data/` — the actual benchmark pair files grouped by field/source.
-- `meta/` — metadata for the benchmark, including per-source and per-pair information.
-- `pictures/` — source images or related visual material for Lisbon benchmark sources.
-- `source_specs.xlsx` — source-level specifications/weights.
-- `field_stats.xlsx` — aggregate field-level statistics.
-- `lisbon_utils.py` — utilities for loading Lisbon metadata and weights.
-- `lisbon_analysers.py` — utilities for analysing and summarizing the Lisbon benchmark.
-
-#### `bicausal/benchmarks/Tuebingen/`
-The Tübingen cause-effect benchmark.
+This is the main package directory.
 
 It contains:
 
-- the pair files themselves (`pairXXXX.txt`);
-- pair descriptions (`pairXXXX_des.txt`);
-- benchmark documentation (`README`, `README_polished_may18.tab`);
-- an analysis spreadsheet (`TuebingenAnalysis.xlsx`).
+- the benchmark datasets;
+- method wrappers and source-backed implementations;
+- metric definitions and evaluation logic;
+- saved results;
+- generated plots and LaTeX tables;
+- notebooks and entry points used throughout the project.
 
-#### `bicausal/benchmarks/synthetic/`
-Synthetic datasets used for benchmarking.
-
-The repository includes at least three synthetic suites:
-
-- `ANLSMN-Tagasovska/`
-- `CE-Guyon/`
-- `SIM-Mooij/`
-
-These are handled by dedicated runners and later aggregated through the same evaluation pipeline.
+This folder is the real center of the repository.
 
 ---
 
-### `bicausal/helpers/`
-Utility code for running, downloading, timing, cleaning, and processing experiments.
+### `bicausal/benchmarks/`
 
-Main files:
+This folder contains the datasets used by the repository.
 
-- `runners.py` — Python runners for Lisbon, Tübingen, and synthetic benchmarks.
-- `runners.R` — R-side runners for methods implemented in R.
-- `run_*.m` — MATLAB helpers for datasets/methods handled in MATLAB.
-- `processers.py` — loads raw score CSVs and converts them into aligned score vectors + weights for evaluation.
-- `downloaders.py` — helpers to download benchmark assets from the repository.
-- `timers.py` — execution-time benchmarking and time plots.
-- `utils.py` — dataset loading, cleanup helpers, naming normalization, deduplication, and other utilities.
-- `namemap.py` — canonical method-name mapping.
-- `extra/` — auxiliary helper code (for example statistical dependencies/utilities used by methods/helpers).
-- `storage/` is used together with timing/cache-related logic.
+#### `bicausal/benchmarks/Lisbon/`  **← new contribution**
 
----
+This folder contains the **Lisbon benchmark**, which is one of the main original contributions of the project.
 
-### `bicausal/methods/`
-Contains the method wrappers/implementations used by the benchmark.
+Its purpose is to provide a **new real-world multi-domain benchmark** for bivariate causal discovery.
 
-This folder mixes:
+It is split into:
 
-- Python methods (`.py`)
-- R methods (`.R`)
-- MATLAB methods (`.m`)
+- `data/` — the actual benchmark pair files.
+- `meta/` — metadata associated with the benchmark pairs and sources.
+- `pictures/` — source images and visual material associated with the benchmark sources.
+- `source_specs.xlsx` — source-level specifications and weighting-related information.
+- `field_stats.xlsx` — field-level statistics and summaries.
+- `lisbon_utils.py` — utilities for loading Lisbon metadata and weights.
+- `lisbon_analysers.py` — analysis helpers specific to the Lisbon benchmark.
 
-This is intentional.
-
-#### `bicausal/methods/source_implementations/`
-A very important folder.
-
-This folder contains the **original or source implementations** used/adapted by the repository.
-
-In this project, methods are either:
-
-1. obtained from the **CausalDiscoveryToolbox (CDT)**, or
-2. directly imported/adapted from their original source implementations.
-
-Because of that, `source_implementations/` is part of the repository and should be read as the place where the exact upstream/original implementations used by the project are stored or referenced.
-
-This also explains why some methods remain in **R** or **MATLAB**: the project keeps them in their original language whenever appropriate, and only standardizes the **score processing and evaluation** in Python.
-
-That design makes it easier to preserve fidelity to the original methods while still unifying benchmarking and metrics.
-
----
-
-### `bicausal/metrics/`
-Contains the evaluation logic.
-
-Files include:
-
-- `accuracy.py`
-- `auroc.py`
-- `audrc.py`
-- `lxcim.py`
-- `drawers.py`
-- `evaluators.py`
-
-This folder is responsible for the **second stage** of the pipeline: loading stored scores and converting them into benchmark metrics, tables, and summaries.
-
----
-
-### `bicausal/results/`
-Stores experiment outputs and aggregate result files.
-
-Important files include:
-
-- `lisbon_scores.csv`
-- `tuebingen_scores.csv`
-- `CE_scores.csv`
-- `ANLSMN_scores.csv`
-- `SIM_scores.csv`
-- `results.csv`
-- `times.csv`
-- `unimplemented_results.csv`
-
-This folder is the main place to inspect raw scores and final benchmark summaries.
-
----
-
-### `bicausal/plots/`
-Stores generated figures.
-
-This includes paper figures for:
-
-- the Lisbon paper;
-- the LxCIM paper;
-- the RDMDL paper.
-
-If you want to inspect already-generated figures without rerunning notebooks, this is the first place to look.
-
----
-
-### `bicausal/table/`
-Stores generated LaTeX tables.
-
-This includes:
-
-- Lisbon paper tables and appendices;
-- LxCIM paper tables;
-- RDMDL paper tables;
-- timestamped auto-generated tables.
-
-This is useful if you want the final paper-ready table outputs directly.
-
----
-
-### `bicausal/storage/`
-Stores small cached artifacts.
-
-Currently this includes cache-like data used by timing/execution utilities.
-
----
-
-### `dist/`
-Python distribution artifacts:
-
-- wheel (`.whl`)
-- source distribution (`.tar.gz`)
-
-Useful for local `pip` installation without rebuilding the package.
-
----
-
-### `CITATION.cff`
-Citation metadata for the project.
-
----
-
-### `pyproject.toml`
-Package configuration for `bicausal`, including Python version and package metadata.
-
----
-
-## Benchmarks included
-
-### 1. Lisbon benchmark
-A real-world, multi-domain benchmark included in `bicausal/benchmarks/Lisbon/`.
-
-It is organized by field, and the repository structure shows five field folders under `data/`, `meta/`, and `pictures/`:
+Inside `data/`, the benchmark is organized into five domains:
 
 - `agriculture_environment`
 - `biology_health`
@@ -506,153 +429,355 @@ It is organized by field, and the repository structure shows five field folders 
 - `human_predictions`
 - `science_engineering`
 
-The Lisbon benchmark also contains explicit source-level and pair-level weighting metadata.
+So whenever you see `bicausal/benchmarks/Lisbon/`, read it as:
 
-### 2. Tübingen benchmark
-The classic cause-effect pairs benchmark, stored in raw text form together with descriptions and analysis metadata.
+> **new dataset contribution + its metadata + its analysis utilities**
 
-### 3. Synthetic benchmarks
-Three synthetic families are included:
+#### `bicausal/benchmarks/Tuebingen/`
 
-- CE-Guyon
-- ANLSMN-Tagasovska
-- SIM-Mooij
+This folder contains the **Tübingen cause-effect benchmark**, which is used here as a reference real-world benchmark.
 
-These are useful both for benchmarking methods and for reproducing synthetic-dataset analyses in the project.
+It includes:
 
----
+- the pair data files (`pairXXXX.txt`);
+- textual descriptions for each pair (`pairXXXX_des.txt`);
+- accompanying benchmark documentation (`README`, `README_polished_may18.tab`);
+- an analysis spreadsheet (`TuebingenAnalysis.xlsx`).
 
-## Methods included
+#### `bicausal/benchmarks/synthetic/`
 
-The repository contains implementations/wrappers for a broad set of bivariate causal discovery methods, including:
+This folder contains the synthetic benchmark suites used in the experiments:
 
-- ANM
-- bQCD
-- CAM
-- CDCI
-- CDS
-- CGNN
-- FOM
-- GPI / GPI_lx / GPIn
-- HECI
-- IGCI
-- LCUBE
-- LOCI
-- NNCL
-- RDMDL
-- RECI
-- ROCHE
-- SLOPE
-- SLOPPY
+- `ANLSMN-Tagasovska/`
+- `CE-Guyon/`
+- `SIM-Mooij/`
 
-Some are in Python, some in R, and some in MATLAB.
+These are not just stored here for convenience: they are wired into the benchmark runners and evaluation pipeline.
 
-This mixed-language setup is not accidental: it reflects the repository’s goal of preserving the original implementation language whenever needed while keeping **evaluation and comparison unified in Python**.
+A very important convention for this folder is that the synthetic examples are reoriented on load so that methods are evaluated on **`X` as cause** and **`Y` as effect**.
 
 ---
 
-## Notebooks
+### `bicausal/helpers/`
 
-### Reproduction notebooks for papers
+This folder contains the orchestration logic for running experiments, processing saved scores, timing methods, and handling utility functionality.
 
-There is a notebook for each paper, and these notebooks are intended to reproduce the **tables and figures contained in those papers**:
+Important files here include:
 
-- `lisbon_paper.ipynb`
-- `lxcim_paper.ipynb`
-- `rdmdl_paper.ipynb`
+- `runners.py` — the main Python benchmark runners:
+  - `run_tuebingen(...)`
+  - `run_lisbon(...)`
+  - `run_ce(...)`
+  - `run_anlsmn(...)`
+  - `run_sim(...)`
+- `runners.R` — R-side running utilities for methods that remain in R.
+- `run_tuebingen.m`, `run_ce.m`, `run_anlsmn.m`, `run_sim.m` — MATLAB-side helpers for methods that remain in MATLAB.
+- `processers.py` — the score-processing stage that reads `_scores.csv` files and aligns them into vectors + weights for metric computation.
+- `timers.py` — utilities for time measurements and timing-related caching.
+- `utils.py` — general dataset and helper utilities.
+- `namemap.py` — canonical naming and method-name normalization.
+- `meanwhile.py` and `extra/` — auxiliary helper code.
 
-There is also:
+This folder is where the repository’s reproducibility model is operationalized:
 
-- `rdmdl_paper copy.ipynb`
+1. run a method;
+2. save per-example scores;
+3. later process those scores for evaluation.
 
-which appears to be a working copy / auxiliary variant of the RDMDL notebook.
+---
 
-### Workflow notebooks
+### `bicausal/methods/`
 
-Other notebooks support the benchmarking pipeline itself:
+This folder contains the causal discovery methods used in the repository.
 
-- `run.ipynb` — run methods and generate raw score CSVs.
-- `evaluate.ipynb` — load saved score files and compute metrics/tables.
-- `time.ipynb` — timing/efficiency experiments.
-- `utilize.ipynb` — maintenance and result-cleaning utilities.
-- `add_your_own_dataset.ipynb` — guide for extending the Lisbon benchmark with a new dataset.
-- `test_your_own_method.ipynb` — guide/pipeline for integrating a new method.
+It intentionally mixes multiple languages:
+
+- Python methods (`.py`)
+- R methods (`.R`)
+- MATLAB methods (`.m`)
+
+That mixed-language setup is **by design**, not an accident.
+
+The idea is to preserve methods in the language in which they were originally implemented whenever that is the cleanest or most faithful option, and then unify **benchmark execution**, **score storage**, and **metric evaluation** around a common pipeline.
+
+Methods present here include:
+
+- `ANM.py`
+- `BQCD.R`
+- `CAM.R`
+- `CDCI.py`
+- `CDS.py`
+- `CGNN.py`
+- `FOM.py`
+- `GPI.m`
+- `GPI_lx.m`
+- `GPIn.m`
+- `HECI.py`
+- `IGCI.py`
+- `LCUBE.py`
+- `LOCI.py`
+- `NNCL.py`
+- `RDMDL.py`  **← new contribution**
+- `RECI.py`
+- `ROCHE.py`
+- `SLOPE.R`
+- `SLOPPY.R`
+
+#### `bicausal/methods/RDMDL.py`  **← new contribution**
+
+This file contains **RDMDL**, one of the repository’s original scientific contributions and the method associated with the paper:
+
+> *Bivariate Causal Discovery Using Rate-Distortion MDL: An Information Dimension Approach*
+
+#### `bicausal/methods/source_implementations/`
+
+This is a very important folder.
+
+Methods in the repository are either:
+
+1. obtained through **CausalDiscoveryToolbox (CDT)** wrappers, or
+2. brought in directly from their source/original implementations.
+
+Because of that, `source_implementations/` contains the source-backed material used by the project, such as:
+
+- `CAM`
+- `CDCI_main`
+- `FOM_main`
+- `GPI`
+- `HECI_supplementary_upload`
+- `LCube_main`
+- `ROCHE_main`
+- `bqcd`
+- `loci_main`
+- `slope-20181208`
+- `sloppy-v20190523/ Sloppy`
+
+This folder should be read as the place where the repository keeps track of the exact imported or adapted source implementations it uses.
+
+This also explains an important design choice:
+
+> Methods originally implemented in **MATLAB** or **R** are intentionally kept in those languages whenever appropriate, and only the **processing of their scores** and the **metric computation** are unified in Python.
+
+That decision improves reproducibility and preserves fidelity to the original implementations.
+
+---
+
+### `bicausal/metrics/`
+
+This folder contains the evaluation metrics and the second stage of the benchmarking pipeline.
+
+Files include:
+
+- `accuracy.py`
+- `auroc.py`
+- `audrc.py`
+- `lxcim.py`  **← new contribution**
+- `evaluators.py`
+- `drawers.py`
+
+#### `bicausal/metrics/lxcim.py`  **← new contribution**
+
+This file contains **LxCIM**, the new rank-based binary-classifier performance metric introduced in the repository and associated with the paper:
+
+> *LxCIM: a new rank-based binary classifier performance metric invariant to local exchange of classes*
+
+#### `bicausal/metrics/evaluators.py`
+
+This file contains the main evaluation entry points, such as:
+
+- `evaluate_tuebingen(...)`
+- `evaluate_lisbon(...)`
+- `evaluate_synthetic(...)`
+- `construct_table(...)`
+
+This is the stage that loads stored score CSVs and turns them into aggregate metrics, result tables, and publication-ready outputs.
+
+---
+
+### `bicausal/results/`
+
+This folder stores the main experiment outputs.
+
+Typical contents include:
+
+- `tuebingen_scores.csv`
+- `lisbon_scores.csv`
+- `CE_scores.csv`
+- `ANLSMN_scores.csv`
+- `SIM_scores.csv`
+- `results.csv`
+- `times.csv`
+- `unimplemented_results.csv`
+
+This is one of the most important folders for reproducibility.
+
+The files ending in `_scores.csv` are the raw per-example method outputs.
+
+Everything downstream — metrics, tables, plots, summaries — is built from those saved scores.
+
+---
+
+### `bicausal/plots/`
+
+This folder stores generated plots and figures.
+
+In practice, this is where you look for already-generated publication figures, including figures produced by the paper notebooks.
+
+---
+
+### `bicausal/table/`
+
+This folder stores generated LaTeX tables.
+
+This is where the repository writes publication-oriented tabular outputs derived from the evaluation stage.
+
+---
+
+### `bicausal/storage/`
+
+This folder stores small cached or timing-related artifacts.
+
+It is mostly relevant for timing experiments and auxiliary cached state.
+
+---
+
+### Notebook and entry-point files inside `bicausal/`
+
+These files are especially important for users.
+
+#### Paper reproduction notebooks
+
+- `lisbon_paper.ipynb` — reproduces the figures/tables for the Lisbon benchmark paper.
+- `lxcim_paper.ipynb` — reproduces the figures/tables for the LxCIM paper.
+- `rdmdl_paper.ipynb` — reproduces the figures/tables for the RDMDL paper.
+
+#### Workflow notebooks
+
+- `run.ipynb` — run methods and generate `_scores.csv` files.
+- `evaluate.ipynb` — evaluate saved scores and aggregate results.
+- `time.ipynb` — timing experiments.
+- `utilize.ipynb` — utility and maintenance workflows.
+- `add_your_own_dataset.ipynb` — how to add a new dataset.
+- `test_your_own_method.ipynb` — how to plug in and benchmark a new method.
+
+#### Cross-language entry points
+
+- `run.R` — entry point for R-based workflows.
+- `run.m` — entry point for MATLAB-based workflows.
+
+---
+
+### `dist/`
+
+This folder contains local build artifacts for the Python package, such as:
+
+- wheel files (`.whl`)
+- source distributions (`.tar.gz`)
+
+It is useful mostly for packaging and local distribution.
+
+---
+
+### `pyproject.toml`
+
+This file contains the Python package metadata and build configuration for `bicausal`.
+
+---
+
+### `CITATION.cff`
+
+This file contains citation metadata for the repository.
 
 ---
 
 ## Important notes and caveats
 
-This section consolidates the practical notes already present in the repository.
+The points below consolidate the main practical notes underlying the project.
 
 ### 1. The repository assumes honest use
 
-This repository, library, and its functions assume honesty on the part of the programmer.
+The repository assumes honest use by the experimenter.
 
-For example, a dummy function that always returns the same answer could trivially game some metrics if used dishonestly. In the same spirit, methods that require training should be made robust to variable order and entry order when appropriate.
+As with any benchmarking framework, a deliberately adversarial or degenerate method could game certain metrics if used dishonestly. The toolkit is built for fair evaluation, not for defending against intentionally pathological usage.
 
-### 2. Training-heavy methods are not the main target
+### 2. Training-heavy methods are not the main focus of the current pipeline
 
-In general, the repository is **not built primarily to support methods that require training**, for two main reasons noted in the project itself:
+The repository is not primarily designed around methods that require substantial training.
 
-1. there is no batching framework;
-2. there is no implemented framework to deal with similarity between different pairs in the Lisbon and Tübingen datasets.
+Two practical reasons are explicitly relevant here:
 
-These limitations could be extended in future work, but they are important to keep in mind.
+- there is no batching framework;
+- there is no implemented framework for exploiting similarity between different pairs across Lisbon and Tübingen.
 
-### 3. Some methods were removed from the main process
+So the repository is especially natural for pairwise scoring methods, direct wrappers, and source-preserving benchmark evaluation.
 
-The project notes that **GPLVM** and **RCC** required training and were removed from the main process, as they were not being treated here as direct cause-effect methods in the final benchmarking flow.
+### 3. Some methods were excluded from the main benchmark flow
 
-### 4. Methods were kept self-contained
+The project notes that **GPLVM** and **RCC** were removed from the main process because of their training-related nature and how they fit into the final benchmark design.
 
-Methods were implemented so that they would work with the original implementations and by themselves, which means that **some code repetition is expected**.
+### 4. Methods are kept self-contained
+
+Methods were implemented or wrapped so they can work as independently as possible.
+
+A consequence is that some code repetition is expected across method files.
 
 ### 5. Relative paths matter
 
-The project notes that many functions use directory paths as if they are being called from a specific working-directory layout. If you move files around or run entry points from a different working directory, you may need to adjust paths.
+Some functions assume the original repository layout and relative-path structure.
 
-When using the repository for the first time, it is best to preserve the original structure and run the provided notebooks/scripts before customizing paths.
+If you clone the repository and keep its structure intact, things are much easier. If you move files around or run code from different working directories, you may need to pass explicit paths or adjust defaults.
 
-### 6. `run_ce` flips negative labels
+### 6. Timing reruns may require manual cache cleanup
 
-A specific implementation note in the repository is that `run_ce` inverts vectors for negative labels so that all labels become positive before scoring.
+If you are recomputing timing experiments, you may need to manually clear entries in the timing/cache storage area.
 
-### 7. Timer recalculation may require manual cache cleanup
+### 7. The CDCI variant used here is the CTV variant
 
-The repository notes that recalling/recomputing timers may require deleting entries manually in the storage/cache area.
+The repository uses the **CDCI with CTV** variant.
 
-### 8. CDCI variant used
+### 8. A generalized GPLVM variant was considered in the broader project context
 
-The repository notes that **CDCI with CTV** was chosen because it performed best overall in the published paper associated with the project.
+The notes associated with the project mention the generalized GPLVM variant as preferable for Tübingen/real-world data, together with a compatibility change in `optimization_step` for newer TensorFlow versions.
 
-### 9. GPLVM implementation note
+### 9. Mixed-language methods are intentional
 
-The repository notes that the **generalized GPLVM** variant was chosen because the authors argued it was better for Tübingen (and therefore for real-world data, which is a main focus here), and that a compatibility change was made in the `optimization_step` function to support a newer TensorFlow version.
+If you see R or MATLAB files in the methods folder, that is not technical debt to be “cleaned up” away from the repository’s design.
+
+It is a deliberate reproducibility choice:
+
+- keep the method in its original ecosystem when appropriate;
+- run it there if needed;
+- save raw scores;
+- evaluate the saved scores in Python together with everything else.
 
 ---
 
 ## Outputs produced by the repository
 
-The repository produces and/or stores four main kinds of outputs:
+The repository produces four main kinds of outputs.
 
-### Raw per-example scores
-Saved in files ending with `_scores.csv`.
+### 1. Raw per-example scores
 
-These are the most important outputs for reproducibility.
+These are the files ending in `_scores.csv`.
 
-### Aggregate benchmark results
-Saved in files such as:
+They are the primary reproducibility artifacts.
+
+### 2. Aggregate benchmark results
+
+These are typically stored in files such as:
 
 - `results.csv`
 - `unimplemented_results.csv`
 
-### Timing results
-Saved in:
+### 3. Timing results
+
+These are stored in:
 
 - `times.csv`
 
-### Publication artifacts
-Saved in:
+### 4. Publication artifacts
+
+These are stored in:
 
 - `plots/` for figures
 - `table/` for LaTeX tables
@@ -661,13 +786,16 @@ Saved in:
 
 ## Citation
 
-If you use this repository, please check `CITATION.cff`.
+If you use this repository, please cite the repository itself and, when available, the relevant paper(s).
 
-At the time of writing, the citation metadata points to work by **Tiago Brogueira** and **Mário A. T. Figueiredo**, with the title:
+In practice, the most natural citation targets will usually be:
 
-> *The Lisbon benchmark: a new real-world multi-domain bivariate causal discovery dataset*
+- the repository;
+- the Lisbon benchmark paper;
+- the RDMDL paper;
+- the LxCIM paper.
 
-If you use the code, benchmark, or results in academic work, citing the repository and the associated paper(s) is strongly recommended.
+Please also check `CITATION.cff`.
 
 ---
 
@@ -679,20 +807,18 @@ See [`LICENSE`](LICENSE) for details.
 
 ---
 
-## Final practical advice
+## Final summary
 
-If your goal is **paper reproduction**, **clone the repository**.
+If you want the **full research repository**, clone it.
 
-If your goal is **library-style usage**, **install with pip**.
+If you want the **Python package**, install:
 
-If your goal is **extending the benchmark**, start with:
+```bash
+pip install bicausal
+```
 
-- `add_your_own_dataset.ipynb`
-- `test_your_own_method.ipynb`
-- `evaluate.ipynb`
+If you want to understand the repository in one sentence, it is this:
 
-And if your goal is to understand the philosophy of the project, keep this in mind:
+> **Run methods first, save every per-example score first, and only then compute metrics from the saved score files.**
 
-> **methods are run first, scores are saved first, and only then are metrics applied.**
-
-That separation is the backbone of the repository’s reproducibility model.
+That separation is the backbone of the project’s reproducibility philosophy.

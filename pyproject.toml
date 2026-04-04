@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "bicausal"
-version = "0.1.1"
+version = "0.1.2"
 description = "Bivariate Causal Discovery Toolbox. From the Thesis: Causal Discovery In Exchangeable Data, done at Instituto Superior Técnico, Universidade de Lisboa, Portugal."
 readme = "README.md"
 license = { file = "LICENSE" }
